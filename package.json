@@ -1,0 +1,19 @@
+{
+  "name": "data-integrity-test-suite-assertion",
+  "version": "0.0.1",
+  "description": "Data Integrity Test Suite Assertion Library",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitalbazaar/data-integrity-test-suite-assertion.git"
+  },
+  "author": {
+    "name": "Digital Bazaar, Inc.",
+    "email": "support@digitalbazaar.com",
+    "url": "https://digitalbazaar.com"
+  },
+  "bugs": {
+    "url": "https://github.com/digitalbazaar/data-integrity-test-suite-assertion/issues"
+  },
+  "homepage": "https://github.com/digitalbazaar/data-integrity-test-suite-assertion#readme"
+}
