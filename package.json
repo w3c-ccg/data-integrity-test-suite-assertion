@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Data Integrity Test Suite Assertion Library",
   "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha tests/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/digitalbazaar/data-integrity-test-suite-assertion.git"
@@ -15,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/digitalbazaar/data-integrity-test-suite-assertion/issues"
   },
-  "homepage": "https://github.com/digitalbazaar/data-integrity-test-suite-assertion#readme"
+  "homepage": "https://github.com/digitalbazaar/data-integrity-test-suite-assertion#readme",
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-digitalbazaar": "^2.8.0",
+    "eslint-plugin-jsdoc": "^38.0.6",
+    "mocha": "^9.2.2"
+  },
+  "dependencies": {
+    "chai": "^4.3.6"
+  }
 }
