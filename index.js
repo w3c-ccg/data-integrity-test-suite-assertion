@@ -12,9 +12,8 @@ function checkDataIntergrity(data) {
     const {proof} = data;
     it('"proof" field MUST exist at top-level of data object.', async () => {
       should.exist(proof);
-      if(!(typeof proof === 'object' || Array.isArray(proof))) {
-        throw new Error('"proof" MUST be an object or an array of objects.');
-      }
+      const type = typeof proof;
+      type.should.be.oneOf(['object', 'array']);
     });
     if(proof) {
       if(Array.isArray(proof)) {
