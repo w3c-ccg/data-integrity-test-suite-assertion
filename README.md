@@ -9,7 +9,7 @@
 - [Implementation](#implementation)
 
 ## Background
-This library exports a function `checkDataIntergrity()` that can be called in
+This library exports a function `checkDataIntegrity()` that can be called in
 other test suites (such as Ed25519, BBS+, etc.) to validate the structure of
 the proofs on a document.
 
@@ -29,13 +29,13 @@ npm test
 
 ```js
 // Require `data-integrity-test-suite-assertion` in the test suite
-const {checkDataIntergrity} = require('data-integrity-test-suite-assertion');
+const {checkDataIntegrity} = require('data-integrity-test-suite-assertion');
 
 const implementation = new Implementation(issuer);
 
 describe(implementation.name, function() {
   const {data} = await implementation.issue({credential});
   // Validate the proof on the data
-  checkDataIntergrity(data);
+  checkDataIntegrity(data, implementation.name);
 })
 ```
