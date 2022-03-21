@@ -42,14 +42,20 @@ function checkProof(proof) {
       '([0-5][0-9]):([0-5][0-9]|60)' +
       '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
       '([0-5][0-9]))$', 'i');
-      const valid = dateRegex.test(proof.created);
-      valid.should.equal(true);
+      proof.created.should.match(dateRegex);
     });
   it('"verificationMethod" field MUST exist and be a valid URL.',
     async () => {
       proof.should.have.property('verificationMethod');
-      // Is verificationMethod always a string URL? and does it always start
-      // with https/http? or also did:key/did:v1?
+      let result;
+      let err;
+      try {
+        result = new URL(proof.verificationMethod);
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(err, 'Expected verificationMethod to be a URL');
+      should.exist(result, 'Expected verificationMethod to be a URL');
     });
   it('"proofPurpose" field MUST exist and be a string.', async () => {
     proof.should.have.property('proofPurpose');
