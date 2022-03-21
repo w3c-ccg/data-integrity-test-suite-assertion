@@ -15,7 +15,7 @@ const should = chai.should();
  *
  * @returns {undefined} Just returns on success.
  */
-function checkDataIntergrity(data, vendor) {
+function checkDataIntegrity(data, vendor) {
   describe('Data Integrity', function() {
     const {proof} = data;
     it('"proof" field MUST exist at top-level of data object.', function() {
@@ -81,5 +81,5 @@ function checkProof(proof, vendor) {
 }
 
 module.exports = {
-  checkDataIntergrity
+  checkDataIntegrity
 };
