@@ -3,12 +3,12 @@
  */
 'use strict';
 
-const {checkDataIntegrity} = require('..');
+const {checkDataIntegrityProofFormat} = require('..');
 const validData = require('./valid-mock-data.json');
 
-describe('Test checkDataIntegrity()', function() {
+describe('Test checkDataIntegrityProofFormat()', function() {
   it('should pass if all the required properties exist and are of valid type.',
     function() {
-      checkDataIntegrity(validData);
+      checkDataIntegrityProofFormat({data: validData});
     });
 });
