@@ -10,16 +10,19 @@ const should = chai.should();
 /**
  * Validates the structure of the "proof" property on a digital document.
  *
- * @param {object} data - A digital document with "proof" property on it.
- * @param {string} vendor - The name of the vendor who issued the document.
+ * @param {object} options - Options to use.
+ * @param {object} options.data - A digital document with "proof" property on
+ *   it.
+ * @param {string} [options.vendorName] - The name of the vendor who issued the
+ *   document.
  *
  * @returns {undefined} Just returns on success.
  */
-function checkDataIntegrity(data, vendor) {
+function checkDataIntegrityProofFormat({data, vendorName} = {}) {
   describe('Data Integrity', function() {
     const {proof} = data;
     it('"proof" field MUST exist at top-level of data object.', function() {
-      this.test.cell = {columnId: vendor, rowId: this.test.title};
+      this.test.cell = {columnId: vendorName, rowId: this.test.title};
       should.exist(proof);
       const type = typeof proof;
       type.should.be.oneOf(['object', 'array']);
@@ -27,24 +30,24 @@ function checkDataIntegrity(data, vendor) {
     if(proof) {
       if(Array.isArray(proof)) {
         proof.forEach(p => {
-          checkProof(p, vendor);
+          checkProof({proof: p, vendorName});
         });
       } else {
-        checkProof(proof, vendor);
+        checkProof({proof, vendorName});
       }
     }
   });
 }
 
-function checkProof(proof, vendor) {
+function checkProof({proof, vendorName} = {}) {
   it('"type" field MUST exist and be a string.', function() {
-    this.test.cell = {columnId: vendor, rowId: this.test.title};
+    this.test.cell = {columnId: vendorName, rowId: this.test.title};
     proof.should.have.property('type');
     proof.type.should.be.a('string');
   });
   it('"created" field MUST exist and be a valid XMLSCHEMA-11 datetime value.',
     function() {
-      this.test.cell = {columnId: vendor, rowId: this.test.title};
+      this.test.cell = {columnId: vendorName, rowId: this.test.title};
       proof.should.have.property('created');
       // check if "created" is a valid ISO 8601 datetime value
       const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
@@ -56,7 +59,7 @@ function checkProof(proof, vendor) {
     });
   it('"verificationMethod" field MUST exist and be a valid URL.',
     function() {
-      this.test.cell = {columnId: vendor, rowId: this.test.title};
+      this.test.cell = {columnId: vendorName, rowId: this.test.title};
       proof.should.have.property('verificationMethod');
       let result;
       let err;
@@ -69,17 +72,17 @@ function checkProof(proof, vendor) {
       should.exist(result, 'Expected verificationMethod to be a URL');
     });
   it('"proofPurpose" field MUST exist and be a string.', function() {
-    this.test.cell = {columnId: vendor, rowId: this.test.title};
+    this.test.cell = {columnId: vendorName, rowId: this.test.title};
     proof.should.have.property('proofPurpose');
     proof.proofPurpose.should.be.a('string');
   });
   it('"proofValue" field MUST exist and be a string', function() {
-    this.test.cell = {columnId: vendor, rowId: this.test.title};
+    this.test.cell = {columnId: vendorName, rowId: this.test.title};
     proof.should.have.property('proofValue');
     proof.proofValue.should.be.a('string');
   });
 }
 
 module.exports = {
-  checkDataIntegrity
+  checkDataIntegrityProofFormat
 };
