@@ -19,6 +19,12 @@ const should = chai.should();
  * @returns {undefined} Just returns on success.
  */
 function checkDataIntegrityProofFormat({data, vendorName} = {}) {
+  if(!data) {
+    throw new Error('"data" object is required.');
+  }
+  if(vendorName && typeof vendorName !== 'string') {
+    throw new Error('"vendorName" must be a string.');
+  }
   describe('Data Integrity', function() {
     const {proof} = data;
     it('"proof" field MUST exist at top-level of data object.', function() {
