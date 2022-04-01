@@ -13,17 +13,17 @@ const should = chai.should();
  * @param {object} options - Options to use.
  * @param {object} options.data - A digital document with "proof" property on
  *   it.
- * @param {string} [options.vendorName] - The name of the vendor who issued the
+ * @param {string} options.vendorName - The name of the vendor who issued the
  *   document.
  *
  * @returns {undefined} Just returns on success.
  */
 function checkDataIntegrityProofFormat({data, vendorName} = {}) {
-  if(!data) {
+  if(!(data && typeof data === 'object')) {
     throw new Error('"data" object is required.');
   }
-  if(vendorName && typeof vendorName !== 'string') {
-    throw new Error('"vendorName" must be a string.');
+  if(!(vendorName && typeof vendorName === 'string')) {
+    throw new Error('"vendorName" string is required.');
   }
   describe('Data Integrity', function() {
     const {proof} = data;
