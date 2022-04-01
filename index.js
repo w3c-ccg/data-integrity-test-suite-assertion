@@ -89,6 +89,4 @@ function checkProof({proof, vendorName} = {}) {
   });
 }
 
-module.exports = {
-  checkDataIntegrityProofFormat
-};
+exports.checkDataIntegrityProofFormat = checkDataIntegrityProofFormat;
