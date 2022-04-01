@@ -9,6 +9,7 @@ const validData = require('./valid-mock-data.json');
 describe('Test checkDataIntegrityProofFormat()', function() {
   it('should pass if all the required properties exist and are of valid type.',
     function() {
-      checkDataIntegrityProofFormat({data: validData});
+      checkDataIntegrityProofFormat(
+        {data: validData, vendorName: 'Digital Bazaar'});
     });
 });
