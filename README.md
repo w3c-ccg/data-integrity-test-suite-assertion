@@ -33,6 +33,6 @@ const {checkDataIntegrityProofFormat} = require('data-integrity-test-suite-asser
 
 describe('Check data proof format', function() {
   // Validate the proof on the data
-  checkDataIntegrityProofFormat({data, vendorName: 'Digital Bazaar'});
+  checkDataIntegrityProofFormat({vendors: [{getData, vendorName: 'Digital Bazaar'}]});
 })
 ```
