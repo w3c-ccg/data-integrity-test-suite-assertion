@@ -26,7 +26,7 @@ const should = chai.should();
  * @returns {undefined} Just returns on success.
  */
 function checkDataIntegrityProofFormat({vendors = []} = {}) {
-  describe('Data Integrity', function() {
+  describe('Data Integrity (issuer)', function() {
     // column names for the matrix go here
     const columnNames = [];
     // this will tell the report
