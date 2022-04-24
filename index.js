@@ -4,28 +4,28 @@
 'use strict';
 
 const chai = require('chai');
+const {klona} = require('klona');
+const {v4: uuidv4} = require('uuid');
+const validVc = require('./validVc.json');
 
 const should = chai.should();
-
-/**
- * The vendor being tested.
- *
- * @typedef {object} vendor
- * @property {Function<Promise|object>} getData - A function that returns a
- * digital document with a "proof" property on it.
- * @property {string} vendorName - The name of the vendor who issued the
- *   document.
- */
 
 /**
  * Validates the structure of the "proof" property on a digital document.
  *
  * @param {object} options - Options to use.
- * @param {Array<vendor>} options.vendors - The vendors being tested.
+ * @param {Map<string,object>} options.implemented - The vendors being tested.
+ * @param {Map<string,object>} options.notImplemented - The vendors not being
+ *   tested.
+ * @param {string} options.tag - The tag for the issuer to use.
  *
  * @returns {undefined} Just returns on success.
  */
-function checkDataIntegrityProofFormat({vendors = []} = {}) {
+function checkDataIntegrityProofFormat({
+  implemented,
+  notImplemented,
+  tag
+} = {}) {
   describe('Data Integrity (issuer)', function() {
     // column names for the matrix go here
     const columnNames = [];
@@ -34,20 +34,19 @@ function checkDataIntegrityProofFormat({vendors = []} = {}) {
     this.matrix = true;
     this.report = true;
     this.columns = columnNames;
+    this.notImplemented = [...notImplemented.keys()];
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Issuer';
-    for(const {getData, vendorName} of vendors) {
-      if(!(getData && typeof getData === 'function')) {
-        throw new Error('"getData" function is required.');
-      }
-      if(!(vendorName && typeof vendorName === 'string')) {
-        throw new Error('"vendorName" string is required.');
-      }
+    for(const [vendorName, {issuers}] of implemented) {
       columnNames.push(vendorName);
       let proofs = [];
       let data;
       before(async function() {
-        data = await getData();
+        const issuer = issuers.find(i => i.tags.has(tag));
+        const body = {credential: klona(validVc)};
+        body.credential.id = `urn:uuid:${uuidv4()}`;
+        const {result = {}} = await issuer.issue({body});
+        data = result.data;
         proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
       });
       it('`proof` field MUST exist at top-level of data object.', function() {
