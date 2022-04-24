@@ -45,8 +45,7 @@ function checkDataIntegrityProofFormat({
         const issuer = issuers.find(i => i.tags.has(tag));
         const body = {credential: klona(validVc)};
         body.credential.id = `urn:uuid:${uuidv4()}`;
-        const {result = {}} = await issuer.issue({body});
-        data = result.data;
+        ({data} = await issuer.issue({body}));
         proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
       });
       it('`proof` field MUST exist at top-level of data object.', function() {
