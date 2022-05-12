@@ -19,14 +19,14 @@ const should = chai.should();
  *   tested.
  * @param {string} options.tag - The tag for the issuer to use.
  *
- * @returns {undefined} Just returns on success.
+ * @returns {object} Returns the test suite being run.
  */
 function checkDataIntegrityProofFormat({
   implemented,
   notImplemented,
   tag
 } = {}) {
-  describe('Data Integrity (issuer)', function() {
+  return describe('Data Integrity (issuer)', function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
