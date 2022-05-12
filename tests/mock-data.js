@@ -33,11 +33,11 @@ const invalidIssuer = new MockIssuer({
 });
 
 class MockImplementation {
+  constructor({issuers = []}) {
+    this._issuers = issuers;
+  }
   get issuers() {
-    return [
-      validIssuer,
-      invalidIssuer
-    ];
+    return this._issuers;
   }
   get verifiers() {
     return [];
@@ -45,10 +45,21 @@ class MockImplementation {
   // skipping didResolvers as unneeded here
 }
 
-const mockImplementations = new Map([
-  ['mockImplementation', new MockImplementation()]
+const validImplementations = new Map([
+  ['validImplementation', new MockImplementation({issuers: [validIssuer]})]
+]);
+
+const invalidImplementations = new Map([
+  ['invalidImplementation', new MockImplementation({issuers: [invalidIssuer]})]
+]);
+
+const allImplementations = new Map([
+  ['validImplementation', new MockImplementation({issuers: [validIssuer]})],
+  ['invalidImplementation', new MockImplementation({issuers: [invalidIssuer]})]
 ]);
 
 module.exports = {
-  mockImplementations
+  validImplementations,
+  invalidImplementations,
+  allImplementations
 };
