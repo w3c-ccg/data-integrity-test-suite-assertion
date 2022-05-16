@@ -25,7 +25,15 @@ const validIssuer = new MockIssuer({
 });
 
 const invalidVc = klona(validVc);
-delete invalidVc.proof;
+invalidVc.proof.type = {
+  proofType: 'not-data-integrity'
+};
+invalidVc.proof.created = Date.now().toString();
+invalidVc.proof.verificationMethod = 'not-a-url';
+invalidVc.proof.proofPurpose = {
+  purpose: 'not-data-integrity'
+};
+invalidVc.proof.proofValue = 12390;
 
 const invalidIssuer = new MockIssuer({
   tags: ['Test-Issuer', 'Test-Issuer-Invalid'],
