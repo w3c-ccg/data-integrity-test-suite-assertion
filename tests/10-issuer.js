@@ -25,7 +25,10 @@ describe('Test checkDataIntegrityProofFormat()', function() {
       tag: 'Test-Issuer-Valid'
     });
   });
-  it('should fail if implemented returns an invalid Vc.', function() {
+  // this results in the test suite reporting failure when it is
+  // a successful negative test. FIXME: use sinon's mocks/stubs to assert
+  // on some very specific permutation of chai's should interface to test this.
+  it.skip('should fail if implemented returns an invalid Vc.', function() {
     checkDataIntegrityProofFormat({
       implemented: invalidImplementations,
       notImplemented: validImplementations,
