@@ -10,6 +10,12 @@ class MockIssuer {
   constructor({tags, mockVc}) {
     this._tags = tags;
     this._mockVc = mockVc;
+    this.issuer = {
+      id: 'did:issuer:foo',
+      options: {
+
+      }
+    };
   }
   get tags() {
     return new Set(this._tags);

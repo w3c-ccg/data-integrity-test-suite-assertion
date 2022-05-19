@@ -41,8 +41,12 @@ function checkDataIntegrityProofFormat({
         let data;
         before(async function() {
           const issuer = issuers.find(i => i.tags.has(tag));
-          const body = {credential: klona(validVc)};
+          const {issuer: {id: issuerId, options}} = issuer;
+          const body = {credential: klona(validVc), options};
+          // set a fresh id on the credential
           body.credential.id = `urn:uuid:${uuidv4()}`;
+          // use the issuer's id for the issuer property
+          body.credential.issuer = issuerId;
           ({data} = await issuer.issue({body}));
           proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
         });
