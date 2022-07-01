@@ -10,7 +10,7 @@ class MockIssuer {
   constructor({tags, mockVc}) {
     this._tags = tags;
     this._mockVc = mockVc;
-    this.issuer = {
+    this.settings = {
       id: 'did:issuer:foo',
       options: {
 
@@ -20,7 +20,7 @@ class MockIssuer {
   get tags() {
     return new Set(this._tags);
   }
-  async issue() {
+  async post() {
     return {data: this._mockVc};
   }
 }

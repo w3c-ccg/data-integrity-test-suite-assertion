@@ -41,13 +41,13 @@ function checkDataIntegrityProofFormat({
         let data;
         before(async function() {
           const issuer = issuers.find(i => i.tags.has(tag));
-          const {issuer: {id: issuerId, options}} = issuer;
+          const {settings: {id: issuerId, options}} = issuer;
           const body = {credential: klona(validVc), options};
           // set a fresh id on the credential
           body.credential.id = `urn:uuid:${uuidv4()}`;
           // use the issuer's id for the issuer property
           body.credential.issuer = issuerId;
-          ({data} = await issuer.issue({body}));
+          ({data} = await issuer.post({json: body}));
           proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
         });
         it('`proof` field MUST exist at top-level of data object.', function() {
