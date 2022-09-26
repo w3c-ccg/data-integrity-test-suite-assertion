@@ -4,8 +4,6 @@
 'use strict';
 
 const chai = require('chai');
-const {klona} = require('klona');
-const {v4: uuidv4} = require('uuid');
 const validVc = require('./validVc.json');
 
 const should = chai.should();
@@ -17,14 +15,11 @@ const should = chai.should();
  * @param {Map<string,object>} options.implemented - The vendors being tested.
  * @param {Map<string,object>} options.notImplemented - The vendors not being
  *   tested.
- * @param {string} options.tag - The tag for the issuer to use.
- *
  * @returns {object} Returns the test suite being run.
  */
 function checkDataIntegrityProofFormat({
   implemented,
   notImplemented,
-  tag
 } = {}) {
   return describe('Data Integrity (issuer)', function() {
     // this will tell the report
@@ -35,19 +30,13 @@ function checkDataIntegrityProofFormat({
     this.notImplemented = [...notImplemented.keys()];
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Issuer';
-    for(const [vendorName, {issuers}] of implemented) {
+    for(const [vendorName, {endpoints}] of implemented) {
       describe(vendorName, function() {
         let proofs = [];
         let data;
         before(async function() {
-          const issuer = issuers.find(i => i.tags.has(tag));
-          const {settings: {id: issuerId, options}} = issuer;
-          const body = {credential: klona(validVc), options};
-          // set a fresh id on the credential
-          body.credential.id = `urn:uuid:${uuidv4()}`;
-          // use the issuer's id for the issuer property
-          body.credential.issuer = issuerId;
-          ({data} = await issuer.post({json: body}));
+          const [issuer] = endpoints;
+          data = await createInitialVc({issuer, vc: validVc});
           proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
         });
         it('`proof` field MUST exist at top-level of data object.', function() {
