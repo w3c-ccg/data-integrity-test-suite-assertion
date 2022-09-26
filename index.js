@@ -3,8 +3,9 @@
  */
 'use strict';
 
-const chai = require('chai');
-const validVc = require('./validVc.json');
+import chai from 'chai';
+import {validVc} from './validVc.js';
+import {createInitialVc} from './helpers.js';
 
 const should = chai.should();
 
@@ -17,7 +18,7 @@ const should = chai.should();
  *   tested.
  * @returns {object} Returns the test suite being run.
  */
-function checkDataIntegrityProofFormat({
+export function checkDataIntegrityProofFormat({
   implemented,
   notImplemented,
 } = {}) {
@@ -115,5 +116,3 @@ function checkDataIntegrityProofFormat({
     } // end for loop
   }); // end describe
 }
-
-exports.checkDataIntegrityProofFormat = checkDataIntegrityProofFormat;
