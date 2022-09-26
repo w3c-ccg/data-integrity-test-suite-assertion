@@ -67,6 +67,17 @@ function checkDataIntegrityProofFormat({
             proof.type.should.be.a('string');
           }
         });
+        it('`type` field MUST be `DataIntegrityProof`.', function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          for(const proof of proofs) {
+            proof.should.have.property('type');
+            proof.type.should.be.a(
+              'string',
+              'Expected `proof.type` to be a string.'
+            );
+            proof.type.should.equal('DataIntegrityProof');
+          }
+        });
         it('`created` field MUST exist and be a valid XMLSCHEMA-11 datetime' +
             'value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
