@@ -3,8 +3,8 @@
  */
 'use strict';
 
-const validVc = require('./valid-mock-data.json');
-const {klona} = require('klona');
+import {validVc} from './valid-mock-data.js';
+import {klona} from 'klona';
 
 class MockIssuer {
   constructor({tags, mockVc}) {
@@ -46,34 +46,15 @@ const invalidIssuer = new MockIssuer({
   mockVc: invalidVc
 });
 
-class MockImplementation {
-  constructor({issuers = []}) {
-    this._issuers = issuers;
-  }
-  get issuers() {
-    return this._issuers;
-  }
-  get verifiers() {
-    return [];
-  }
-  // skipping didResolvers as unneeded here
-}
-
-const validImplementations = new Map([
-  ['validImplementation', new MockImplementation({issuers: [validIssuer]})]
+export const validImplementations = new Map([
+  ['validImplementation', {endpoints: [validIssuer]}]
 ]);
 
-const invalidImplementations = new Map([
-  ['invalidImplementation', new MockImplementation({issuers: [invalidIssuer]})]
+export const invalidImplementations = new Map([
+  ['invalidImplementation', {endpoints: [invalidIssuer]}]
 ]);
 
-const allImplementations = new Map([
-  ['validImplementation', new MockImplementation({issuers: [validIssuer]})],
-  ['invalidImplementation', new MockImplementation({issuers: [invalidIssuer]})]
+export const allImplementations = new Map([
+  ['validImplementation', {endpoints: [validIssuer]}],
+  ['invalidImplementation', {endpoints: [invalidIssuer]}]
 ]);
-
-module.exports = {
-  validImplementations,
-  invalidImplementations,
-  allImplementations
-};

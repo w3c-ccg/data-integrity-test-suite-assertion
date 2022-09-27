@@ -3,12 +3,12 @@
  */
 'use strict';
 
-const {checkDataIntegrityProofFormat} = require('..');
-const {
+import {checkDataIntegrityProofFormat} from '../index.js';
+import {
   allImplementations,
   validImplementations,
   invalidImplementations
-} = require('./mock-data');
+} from './mock-data.js';
 
 describe('Test checkDataIntegrityProofFormat()', function() {
   it('should accept empty implemented and notImplemented.', function() {
