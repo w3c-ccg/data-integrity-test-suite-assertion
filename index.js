@@ -32,11 +32,17 @@ export function checkDataIntegrityProofFormat({
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Issuer';
     for(const [vendorName, {endpoints}] of implemented) {
+      if(!endpoints) {
+        throw new Error(`Expected ${vendorName} to have endpoints.`);
+      }
       describe(vendorName, function() {
         let proofs = [];
         let data;
         before(async function() {
           const [issuer] = endpoints;
+          if(!issuer) {
+            throw new Error(`Expected ${vendorName} to have an issuer.`);
+          }
           data = await createInitialVc({issuer, vc: validVc});
           proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
         });

@@ -1,6 +1,17 @@
 import {klona} from 'klona';
 import {v4 as uuidv4} from 'uuid';
 
+/**
+ * Calls on an issuer to create a Vc for the test.
+ *
+ * @param {object} options - Options to use.
+ * @param {object} options.issuer - An issuer endpoint.
+ * @param {object} options.vc - A vc to be issued.
+ *
+ * @throws {Error} Throws if the issuer fails.
+ *
+ * @returns {Promise<object>} The resulting data from the issuer.
+ */
 export const createInitialVc = async ({issuer, vc}) => {
   const {settings: {id: issuerId, options}} = issuer;
   const body = {credential: klona(vc), options};
