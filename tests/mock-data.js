@@ -3,7 +3,7 @@
  */
 'use strict';
 
-import {validVc} from './valid-mock-data.js';
+import {issuedVc} from './test-credentials.js';
 import {klona} from 'klona';
 
 class MockIssuer {
@@ -27,10 +27,10 @@ class MockIssuer {
 
 const validIssuer = new MockIssuer({
   tags: ['Test-Issuer', 'Test-Issuer-Valid'],
-  mockVc: klona(validVc)
+  mockVc: klona(issuedVc)
 });
 
-const invalidVc = klona(validVc);
+const invalidVc = klona(issuedVc);
 invalidVc.proof.type = {
   proofType: 'not-data-integrity'
 };
