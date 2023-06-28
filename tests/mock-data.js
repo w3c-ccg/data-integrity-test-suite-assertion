@@ -1,8 +1,6 @@
 /*!
  * Copyright (c) 2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
 import {issuedVc} from './test-credentials.js';
 import {klona} from 'klona';
 

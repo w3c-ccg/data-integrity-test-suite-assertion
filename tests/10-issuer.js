@@ -1,14 +1,10 @@
 /*!
  * Copyright (c) 2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-import {checkDataIntegrityProofFormat} from '../index.js';
 import {
-  allImplementations,
-  validImplementations,
-  invalidImplementations
+  allImplementations, invalidImplementations, validImplementations
 } from './mock-data.js';
+import {checkDataIntegrityProofFormat} from '../index.js';
 
 describe('Test checkDataIntegrityProofFormat()', function() {
   it('should accept empty implemented and notImplemented.', function() {
