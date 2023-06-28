@@ -9,4 +9,4 @@ export const validVc = {
   credentialSubject: {
     id: 'did:key:z6MktKwz7Ge1Yxzr4JHavN33wiwa8y81QdcMRLXQsrH9T53b'
   }
-}
+};
