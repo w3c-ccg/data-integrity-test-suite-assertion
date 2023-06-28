@@ -1,11 +1,9 @@
 /*!
  * Copyright (c) 2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
 import chai from 'chai';
-import {validVc} from './validVc.js';
 import {createInitialVc} from './helpers.js';
+import {validVc} from './validVc.js';
 
 const should = chai.should();
 
