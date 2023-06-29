@@ -106,23 +106,22 @@ export function checkDataIntegrityProofFormat({
             proof.created.should.match(dateRegex);
           }
         });
-        it('if "verificationMethod" field exists, it MUST be a valid URL.',
+        it('"verificationMethod" field MUST exist and be a valid URL.',
           function() {
             this.test.cell = {columnId: vendorName, rowId: this.test.title};
             for(const proof of proofs) {
-              if(proof.verificationMethod) {
-                let result;
-                let err;
-                try {
-                  result = new URL(proof.verificationMethod);
-                } catch(e) {
-                  err = e;
-                }
-                should.not.exist(err, 'Expected URL check of the ' +
-                  '"proof.verificationMethod" to not error.');
-                should.exist(result, 'Expected "proof.verificationMethod" ' +
-                  'to be a URL');
+              proof.should.have.property('verificationMethod');
+              let result;
+              let err;
+              try {
+                result = new URL(proof.verificationMethod);
+              } catch(e) {
+                err = e;
               }
+              should.not.exist(err, 'Expected URL check of the ' +
+                '"verificationMethod" to not error.');
+              should.exist(result, 'Expected "verificationMethod" ' +
+                'to be a URL');
             }
           });
         it('"proofPurpose" field MUST exist and be a string.', function() {
