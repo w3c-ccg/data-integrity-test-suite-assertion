@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
+ */
 import {klona} from 'klona';
 import {v4 as uuidv4} from 'uuid';
 
@@ -25,3 +28,9 @@ export const createInitialVc = async ({issuer, vc}) => {
   }
   return data;
 };
+
+// RegExp with bs58 characters in it
+const bs58 =
+  /^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/;
+// assert something is entirely bs58 encoded
+export const shouldBeBs58 = s => bs58.test(s);
