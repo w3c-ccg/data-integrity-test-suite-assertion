@@ -76,20 +76,21 @@ export function checkDataIntegrityProofFormat({
           for(const proof of proofs) {
             proof.should.have.property('type');
             proof.type.should.be.a(
-              'string', 'Expected `proof.type` to be a string.');
+              'string', 'Expected "proof.type" to be a string.');
           }
         });
-        it('"type" field MAY be either "DataIntegrityProof" or ' +
-          '"Ed25519Signature2020".', function() {
+        it('"type" field MUST be "DataIntegrityProof".', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             proof.should.have.property('type');
-            proof.type.should.be.a('string');
-            const expectedTypes = [
-              'DataIntegrityProof', 'Ed25519Signature2020'
-            ];
-            const hasExpectedType = expectedTypes.includes(proof.type);
-            hasExpectedType.should.equal(true);
+            proof.type.should.be.a(
+              'string',
+              'Expected "proof.type" to be a string.'
+            );
+            proof.type.should.equal(
+              'DataIntegrityProof',
+              'Expected "proof.type" to be "DataIntegrityProof".'
+            );
           }
         });
         it('"created" field MUST exist and be a valid XMLSCHEMA-11 datetime' +
