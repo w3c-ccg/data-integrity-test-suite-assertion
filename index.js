@@ -93,7 +93,8 @@ export function checkDataIntegrityProofFormat({
                 'string',
                 'Expected "proof.type" to be a string.'
               );
-              proof.type.should.equal(`${expectedProofTypes.join(',')}`);
+              const hasExpectedType = expectedProofTypes.includes(proof.type);
+              hasExpectedType.should.equal(true);
             }
           });
         it('"cryptosuite" field MUST exist and be a string.', function() {
