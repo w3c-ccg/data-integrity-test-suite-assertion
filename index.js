@@ -16,11 +16,15 @@ const should = chai.should();
  * @param {Map<string,object>} options.implemented - The vendors being tested.
  * @param {Map<string,object>} options.notImplemented - The vendors not being
  *   tested.
+ * @param {string} [options.proofType='DataIntegrityProof'] - The expected
+ *   type of the proof.
+ *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
   implemented,
   notImplemented,
+  proofType = 'DataIntegrityProof'
 } = {}) {
   return describe('Data Integrity (issuer)', function() {
     // this will tell the report
@@ -63,7 +67,7 @@ export function checkDataIntegrityProofFormat({
             proof.type.should.be.a('string');
           }
         });
-        it('`type` field MUST be `DataIntegrityProof`.', function() {
+        it(`\`type\` field MUST be \`${proofType}\`.`, function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             proof.should.have.property('type');
@@ -71,7 +75,7 @@ export function checkDataIntegrityProofFormat({
               'string',
               'Expected `proof.type` to be a string.'
             );
-            proof.type.should.equal('DataIntegrityProof');
+            proof.type.should.equal(proofType);
           }
         });
         it('`created` field MUST exist and be a valid XMLSCHEMA-11 datetime' +
