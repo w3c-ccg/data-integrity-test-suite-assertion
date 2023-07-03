@@ -14,15 +14,16 @@ const should = chai.should();
  * @param {Map<string,object>} options.implemented - The vendors being tested.
  * @param {Map<string,object>} options.notImplemented - The vendors not being
  *   tested.
- * @param {Array<string>} [options.expectedTypes] - An option to specify the
- *   expected proof types. The default value is set to ['DataIntegrityProof'].
+ * @param {Array<string>} [options.expectedProofTypes] - An option to specify
+ *   the expected proof types. The default value is set to
+ *   ['DataIntegrityProof'].
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
   implemented,
   notImplemented,
-  expectedTypes = ['DataIntegrityProof']
+  expectedProofTypes = ['DataIntegrityProof']
 } = {}) {
   return describe('Data Integrity (issuer)', function() {
     // this will tell the report
@@ -83,17 +84,18 @@ export function checkDataIntegrityProofFormat({
               'string', 'Expected "proof.type" to be a string.');
           }
         });
-        it(`"type" field MUST be "${expectedTypes.join(',')}".`, function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          for(const proof of proofs) {
-            proof.should.have.property('type');
-            proof.type.should.be.a(
-              'string',
-              'Expected "proof.type" to be a string.'
-            );
-            proof.type.should.equal(`${expectedTypes.join(',')}`);
-          }
-        });
+        it(`"type" field MUST be "${expectedProofTypes.join(',')}".`,
+          function() {
+            this.test.cell = {columnId: vendorName, rowId: this.test.title};
+            for(const proof of proofs) {
+              proof.should.have.property('type');
+              proof.type.should.be.a(
+                'string',
+                'Expected "proof.type" to be a string.'
+              );
+              proof.type.should.equal(`${expectedProofTypes.join(',')}`);
+            }
+          });
         it('"cryptosuite" field MUST exist and be a string.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
