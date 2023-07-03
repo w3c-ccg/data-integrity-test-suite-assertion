@@ -93,6 +93,14 @@ export function checkDataIntegrityProofFormat({
             );
           }
         });
+        it('"cryptosuite" field MUST exist and be a string.', function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          for(const proof of proofs) {
+            proof.should.have.property('cryptosuite');
+            proof.cryptosuite.should.be.a('string', 'Expected "cryptosuite" ' +
+              'property to be a string.');
+          }
+        });
         it('"created" field MUST exist and be a valid XMLSCHEMA-11 datetime' +
           'value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
