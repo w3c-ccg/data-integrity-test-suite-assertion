@@ -208,8 +208,21 @@ export function checkDataIntegrityProofFormat({
   }); // end describe
 }
 
+/**
+ * Verifies a proof on Verifiable Credential.
+ *
+ * @param {object} options - Options to use.
+ * @param {Map<string,object>} options.implemented - The vendors being tested.
+ * @param {Map<string,object>} options.notImplemented - The vendors not being
+ *   tested.
+ * @param {Array<string>} [options.expectedProofTypes] - An option to specify
+ *   the expected proof types. The default value is set to
+ *   ['DataIntegrityProof'].
+ *
+ * @returns {object} Returns the test suite being run.
+ */
 export function checkDataIntegrityProofVerifyErrors({
-  implemented, notImplemented
+  implemented, notImplemented, expectedProofTypes = ['DataIntegrityProof']
 } = {}) {
   return describe('Data Integrity (verifier)', function() {
     // this will tell the report
@@ -266,7 +279,7 @@ export function checkDataIntegrityProofVerifyErrors({
         it('If the "proof.verificationMethod" field is invalid, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          credential.proof.verificationMethod = null;
+          credential.proof.verificationMethod = 'did:key:invalidVm';
           await verificationFail({credential, verifier});
         });
         it('If the "proof.proofPurpose" field is missing, a ' +
@@ -278,7 +291,29 @@ export function checkDataIntegrityProofVerifyErrors({
         it('If the "proof.proofPurpose" field is invalid, a  ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          credential.proof.proofPurpose = null;
+          credential.proof.proofPurpose = 'invalidPurpose';
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.proofValue" field is missing, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          // proofValue is added after signing so we can
+          // safely delete it for this test
+          delete credential.proof.proofValue;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.proofValue" field is invalid, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          // null should be an invalid proofValue for almost any proof
+          credential.proof.proofValue = null;
+          await verificationFail({credential, verifier});
+        });
+        it(`If the "proof.type" field is not the string ` +
+          `"${expectedProofTypes.join(',')}", an "UNKNOWN_CRYPTOSUITE_TYPE" ` +
+          `error MUST be raised.`, async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          credential.proof.type = 'UnknownProofType';
           await verificationFail({credential, verifier});
         });
       });
