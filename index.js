@@ -221,7 +221,6 @@ export function checkDataIntegrityProofVerifyErrors({
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Verifier';
     for(const [vendorName, {endpoints}] of implemented) {
-      console.log(implemented, 'implemented');
       if(!endpoints) {
         throw new Error(`Expected ${vendorName} to have endpoints.`);
       }
@@ -238,7 +237,6 @@ export function checkDataIntegrityProofVerifyErrors({
           'returned.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           delete credential.proof;
-          console.log(verifier, '<><><>verifier');
           await verificationFail({credential, verifier});
         });
       });
