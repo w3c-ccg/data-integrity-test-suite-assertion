@@ -1,7 +1,7 @@
 /*!
- * Copyright (c) 2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
-import {issuedVc} from './test-credentials.js';
+import {issuedVc} from '../issuedVc.js';
 import {klona} from 'klona';
 
 class MockIssuer {
