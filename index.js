@@ -1,11 +1,9 @@
 /*!
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
-import {
-  endpoints as allEndpoints, filterImplementations
-} from 'vc-api-test-suite-implementations';
 import {createInitialVc, shouldBeBs58, verificationFail} from './helpers.js';
 import chai from 'chai';
+import {issuedVc} from './issuedVc.js';
 import {klona} from 'klona';
 import {validVc} from './validVc.js';
 
@@ -211,7 +209,7 @@ export function checkDataIntegrityProofFormat({
 }
 
 export function checkDataIntegrityProofVerifyErrors({
-  implemented, notImplemented, tag = 'eddsa-2022'
+  implemented, notImplemented
 } = {}) {
   return describe('Data Integrity (verifier)', function() {
     // this will tell the report
@@ -223,38 +221,24 @@ export function checkDataIntegrityProofVerifyErrors({
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Verifier';
     for(const [vendorName, {endpoints}] of implemented) {
+      console.log(implemented, 'implemented');
       if(!endpoints) {
         throw new Error(`Expected ${vendorName} to have endpoints.`);
       }
       describe(vendorName, function() {
-        let issuedVc;
         const [verifier] = endpoints;
         if(!verifier) {
           throw new Error(`Expected ${vendorName} to have a verifier.`);
         }
-        before(async function() {
-          // use DB issuer as default issuer to issue a valid VC.
-          const {match} = filterImplementations({
-            filter: ({key}) => key === 'Digital Bazaar'
-          });
-          // only use the issuer with the tag specified when
-          // checkVerifyProofErrors() is called.
-          const {match: matchingIssuer} = allEndpoints.filterByTag({
-            implementations: match,
-            tags: [tag],
-            property: 'issuers'
-          });
-          const {endpoints: [issuer]} = matchingIssuer.get('Digital Bazaar');
-          issuedVc = await createInitialVc({issuer, vc: validVc});
-        });
-        it('.', function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+        let credential;
+        beforeEach(async function() {
+          credential = klona(issuedVc);
         });
         it('If the "proof" field is missing, a MALFORMED error MUST be ' +
           'returned.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = klona(issuedVc);
           delete credential.proof;
+          console.log(verifier, '<><><>verifier');
           await verificationFail({credential, verifier});
         });
       });
