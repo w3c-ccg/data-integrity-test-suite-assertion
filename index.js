@@ -233,10 +233,52 @@ export function checkDataIntegrityProofVerifyErrors({
         beforeEach(async function() {
           credential = klona(issuedVc);
         });
-        it('If the "proof" field is missing, a MALFORMED error MUST be ' +
-          'returned.', async function() {
+        it('If the "proof" field is missing, a "MALFORMED_PROOF_ERROR" MUST ' +
+          'be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           delete credential.proof;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof" field is invalid, a "MALFORMED_PROOF_ERROR" ' +
+          'MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          credential.proof = null;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.type" field is missing, a "MALFORMED_PROOF_ERROR" ' +
+          'MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          delete credential.proof.type;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.type" field is invalid, a "MALFORMED_PROOF_ERROR" ' +
+          'MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          credential.proof.type = null;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.verificationMethod" field is missing, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          delete credential.proof.verificationMethod;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.verificationMethod" field is invalid, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          credential.proof.verificationMethod = null;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.proofPurpose" field is missing, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          delete credential.proof.proofPurpose;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.proofPurpose" field is invalid, a  ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          credential.proof.proofPurpose = null;
           await verificationFail({credential, verifier});
         });
       });
