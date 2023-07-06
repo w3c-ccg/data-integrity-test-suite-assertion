@@ -38,11 +38,14 @@ const bs58 =
 // assert something is entirely bs58 encoded
 export const shouldBeBs58 = s => bs58.test(s);
 
-export const verificationFail = async ({credential, verifier} = {}) => {
+export const verificationFail = async ({
+  credential, verifier, options = {}
+} = {}) => {
   const body = {
     verifiableCredential: credential,
     options: {
-      checks: ['proof']
+      checks: ['proof'],
+      ...options
     }
   };
   const {result, error} = await verifier.post({json: body});
