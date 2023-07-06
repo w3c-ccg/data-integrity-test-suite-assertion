@@ -340,10 +340,28 @@ export function checkDataIntegrityProofVerifyErrors({
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           // FIXME: Fix test to check if a cryptographic suite requires the
-          // “proof.created” value, and if it is not set, a
-          // “MALFORMED_PROOF_ERROR” MUST be raised.
+          // “proof.created” value
           const credential = credentials.clone('invalidCreated');
           await verificationFail({credential, verifier});
+        });
+        it('If the "proof.created" field is set and it deviates more than ' +
+          '"options.acceptableCreatedTimeDeviationInSeconds" seconds, a ' +
+          '"CREATED_TIME_DEVIATION_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          // FIXME: Fix test to check if a cryptographic suite requires the
+          // “proof.created” value
+          const credential = credentials.clone('issuedVc');
+          // intentionally set the created date to be a week ago
+          const created = new Date();
+          created.setDate(created.getDate() - 7);
+          credential.proof.created =
+            created.toISOString().replace(/\.\d+Z$/, 'Z');
+          await verificationFail({
+            credential, verifier, options: {
+              // set acceptable created time deviation to one day => 86400s
+              acceptableCreatedTimeDeviationInSeconds: 86400
+            }
+          });
         });
         it('If the "proof.proofValue" field is not a multibase-encoded ' +
           'base58-btc value, an "INVALID_PROOF_VALUE" error MUST be raised.',
