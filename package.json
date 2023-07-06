@@ -22,16 +22,25 @@
   },
   "homepage": "https://github.com/digitalbazaar/data-integrity-test-suite-assertion#readme",
   "devDependencies": {
+    "chai": "^4.3.7",
     "eslint": "^8.43.0",
     "eslint-config-digitalbazaar": "^5.0.1",
     "eslint-plugin-jsdoc": "^46.4.0",
-    "mocha": "^10.2.0",
-    "chai": "^4.3.7"
+    "mocha": "^10.2.0"
   },
   "engines": {
     "node": ">= 18"
   },
   "dependencies": {
+    "@digitalbazaar/data-integrity": "^1.4.0",
+    "@digitalbazaar/data-integrity-context": "^1.0.0",
+    "@digitalbazaar/ed25519-multikey": "^1.0.1",
+    "@digitalbazaar/eddsa-2022-cryptosuite": "^1.0.0",
+    "@digitalbazaar/multikey-context": "^1.0.0",
+    "@digitalbazaar/vc": "^6.0.1",
+    "@digitalcredentials/did-context": "^1.0.0",
+    "bnid": "^3.0.0",
+    "jsonld-document-loader": "^2.0.0",
     "klona": "^2.0.5",
     "uuid": "^9.0.0"
   }
