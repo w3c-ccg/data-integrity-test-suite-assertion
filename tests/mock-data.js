@@ -23,9 +23,34 @@ class MockIssuer {
   }
 }
 
+class MockVerifier {
+  constructor({tags}) {
+    this._tags = tags;
+    this.settings = {
+      id: 'did:verifier:foo',
+      options: {
+
+      }
+    };
+  }
+  get tags() {
+    return new Set(this._tags);
+  }
+  async post() {
+    // verifier must return error for all the tests to pass.
+    const error = new Error('vc is invalid');
+    error.code = 400;
+    return {error};
+  }
+}
+
 const validIssuer = new MockIssuer({
   tags: ['Test-Issuer', 'Test-Issuer-Valid'],
   mockVc: klona(issuedVc)
+});
+
+const validVerifier = new MockVerifier({
+  tags: ['Test-Verifier', 'Test-Verifier-Valid'],
 });
 
 const invalidVc = klona(issuedVc);
@@ -44,15 +69,23 @@ const invalidIssuer = new MockIssuer({
   mockVc: invalidVc
 });
 
-export const validImplementations = new Map([
-  ['validImplementation', {endpoints: [validIssuer]}]
+export const validIssuerImplementations = new Map([
+  ['validIssuerImplementation', {endpoints: [validIssuer]}],
 ]);
 
-export const invalidImplementations = new Map([
-  ['invalidImplementation', {endpoints: [invalidIssuer]}]
+export const validVerifierImplementations = new Map([
+  ['validVerifierImplementation', {endpoints: [validVerifier]}],
 ]);
 
-export const allImplementations = new Map([
-  ['validImplementation', {endpoints: [validIssuer]}],
-  ['invalidImplementation', {endpoints: [invalidIssuer]}]
+export const invalidIssuerImplementations = new Map([
+  ['invalidIssuerImplementation', {endpoints: [invalidIssuer]}]
+]);
+
+export const allIssuerImplementations = new Map([
+  ['validIssuerImplementation', {endpoints: [validIssuer]}],
+  ['invalidIssuerImplementation', {endpoints: [invalidIssuer]}]
+]);
+
+export const allVerifierImplementations = new Map([
+  ['validVerifierImplementation', {endpoints: [validVerifier]}],
 ]);
