@@ -3,8 +3,7 @@
  */
 import {createInitialVc, shouldBeBs58, verificationFail} from './helpers.js';
 import chai from 'chai';
-import {issuedVc} from './issuedVc.js';
-import {klona} from 'klona';
+import {generateTestData} from './vc-generator/index.js';
 import {validVc} from './validVc.js';
 
 const should = chai.should();
@@ -242,56 +241,60 @@ export function checkDataIntegrityProofVerifyErrors({
         if(!verifier) {
           throw new Error(`Expected ${vendorName} to have a verifier.`);
         }
-        let credential;
-        beforeEach(async function() {
-          credential = klona(issuedVc);
+        let credentials;
+        before(async function() {
+          credentials = await generateTestData();
         });
         it('If the "proof" field is missing, a "MALFORMED_PROOF_ERROR" MUST ' +
           'be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          const credential = credentials.clone('issuedVc');
           delete credential.proof;
           await verificationFail({credential, verifier});
         });
         it('If the "proof" field is invalid, a "MALFORMED_PROOF_ERROR" ' +
           'MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          const credential = credentials.clone('issuedVc');
           credential.proof = null;
           await verificationFail({credential, verifier});
         });
         it('If the "proof.type" field is missing, a "MALFORMED_PROOF_ERROR" ' +
           'MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          const credential = credentials.clone('issuedVc');
           delete credential.proof.type;
           await verificationFail({credential, verifier});
         });
-        it('If the "proof.type" field is invalid, a "MALFORMED_PROOF_ERROR" ' +
-          'MUST be raised.', async function() {
+        it(`If the "proof.type" field is not the string ` +
+          `"${expectedProofTypes.join(',')}", an "UNKNOWN_CRYPTOSUITE_TYPE" ` +
+          `error MUST be raised.`, async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          credential.proof.type = null;
+          const credential = credentials.clone('invalidProofType');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.verificationMethod" field is missing, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          delete credential.proof.verificationMethod;
+          const credential = credentials.clone('noVm');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.verificationMethod" field is invalid, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          credential.proof.verificationMethod = 'did:key:invalidVm';
+          const credential = credentials.clone('invalidVm');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.proofPurpose" field is missing, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          delete credential.proof.proofPurpose;
+          const credential = credentials.clone('noProofPurpose');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.proofPurpose" field is invalid, a  ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          credential.proof.proofPurpose = 'invalidPurpose';
+          const credential = credentials.clone('invalidProofPurpose');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.proofValue" field is missing, a ' +
@@ -299,6 +302,7 @@ export function checkDataIntegrityProofVerifyErrors({
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           // proofValue is added after signing so we can
           // safely delete it for this test
+          const credential = credentials.clone('issuedVc');
           delete credential.proof.proofValue;
           await verificationFail({credential, verifier});
         });
@@ -306,31 +310,27 @@ export function checkDataIntegrityProofVerifyErrors({
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           // null should be an invalid proofValue for almost any proof
+          const credential = credentials.clone('issuedVc');
           credential.proof.proofValue = null;
-          await verificationFail({credential, verifier});
-        });
-        it(`If the "proof.type" field is not the string ` +
-          `"${expectedProofTypes.join(',')}", an "UNKNOWN_CRYPTOSUITE_TYPE" ` +
-          `error MUST be raised.`, async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          credential.proof.type = 'UnknownProofType';
           await verificationFail({credential, verifier});
         });
         it('If the "proof.created" field is missing, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          delete credential.proof.created;
+          const credential = credentials.clone('noCreated');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.created" field is invalid, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          const credential = credentials.clone('invalidCreated');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.proofValue" field is not a multibase-encoded ' +
           'base58-btc value, an "INVALID_PROOF_VALUE" error MUST be raised.',
         async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          const credential = credentials.clone('issuedVc');
           // remove the initial z
           credential.proof.proofValue = credential.proof.proofValue.slice(1);
           await verificationFail({credential, verifier});
