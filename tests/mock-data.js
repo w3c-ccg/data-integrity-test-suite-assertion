@@ -39,7 +39,7 @@ class MockVerifier {
   async post() {
     // verifier must return error for all the tests to pass.
     const error = new Error('vc is invalid');
-    error.code = 400;
+    error.status = 400;
     return {error};
   }
 }

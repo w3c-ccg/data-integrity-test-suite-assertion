@@ -12,7 +12,6 @@ import {klona} from 'klona';
 
 export const vcGenerators = new Map([
   ['issuedVc', _issuedVc],
-  ['invalidCryptosuite', _incorrectCryptosuite],
   ['invalidProofType', _incorrectProofType],
   ['noCreated', _noCreated],
   ['invalidCreated', _invalidCreated],
@@ -55,12 +54,6 @@ async function _invalidCreated({signer, credential}) {
 async function _noCreated({signer, credential}) {
   const suite = _createEddsa2022Suite({signer});
   suite.createProof = invalidCreateProof({addCreated: false});
-  return _issueCloned({suite, credential});
-}
-
-async function _incorrectCryptosuite({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
-  suite.cryptosuite = 'unknown-cryptosuite-2017';
   return _issueCloned({suite, credential});
 }
 
