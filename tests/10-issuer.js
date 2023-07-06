@@ -2,7 +2,8 @@
  * Copyright (c) 2022 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  allImplementations, invalidImplementations, validImplementations
+  allIssuerImplementations, invalidIssuerImplementations,
+  validIssuerImplementations
 } from './mock-data.js';
 import {checkDataIntegrityProofFormat} from '../index.js';
 
@@ -16,8 +17,8 @@ describe('Test checkDataIntegrityProofFormat()', function() {
   });
   it('should pass if implemented returns a valid Vc.', function() {
     checkDataIntegrityProofFormat({
-      implemented: validImplementations,
-      notImplemented: invalidImplementations,
+      implemented: validIssuerImplementations,
+      notImplemented: new Map(),
       tag: 'Test-Issuer-Valid'
     });
   });
@@ -26,15 +27,15 @@ describe('Test checkDataIntegrityProofFormat()', function() {
   // on some very specific permutation of chai's should interface to test this.
   it.skip('should fail if implemented returns an invalid Vc.', function() {
     checkDataIntegrityProofFormat({
-      implemented: invalidImplementations,
-      notImplemented: validImplementations,
+      implemented: invalidIssuerImplementations,
+      notImplemented: validIssuerImplementations,
       tag: 'Test-Issuer-Invalid'
     });
   });
   it('should succeed if all notImplemented.', function() {
     checkDataIntegrityProofFormat({
       implemented: new Map(),
-      notImplemented: allImplementations,
+      notImplemented: allIssuerImplementations,
       tag: 'Test-Issuer'
     });
   });
