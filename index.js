@@ -17,13 +17,14 @@ const should = chai.should();
  * @param {Array<string>} [options.expectedProofTypes] - An option to specify
  *   the expected proof types. The default value is set to
  *   ['DataIntegrityProof'].
- *
+ * @param {boolean} [options.expectedCryptoSuite] - A boolean option to specify
+ *   if "cryptosuite" field is expected in the proof or not. The default value
+ *   is set to true.
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
-  implemented,
-  notImplemented,
-  expectedProofTypes = ['DataIntegrityProof']
+  implemented, notImplemented, expectedProofTypes = ['DataIntegrityProof'],
+  expectedCryptoSuite = true
 } = {}) {
   return describe('Data Integrity (issuer)', function() {
     // this will tell the report
@@ -59,7 +60,7 @@ export function checkDataIntegrityProofFormat({
             'Expected proof to be either an object or an array.'
           );
         });
-        it('if "id" field exists, it MUST be a valid URL.', function() {
+        it('if "proof.id" field exists, it MUST be a valid URL.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             if(proof.id) {
@@ -76,7 +77,7 @@ export function checkDataIntegrityProofFormat({
             }
           }
         });
-        it('"type" field MUST exist and be a string.', function() {
+        it('"proof.type" field MUST exist and be a string.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             proof.should.have.property('type');
@@ -84,7 +85,7 @@ export function checkDataIntegrityProofFormat({
               'string', 'Expected "proof.type" to be a string.');
           }
         });
-        it(`"type" field MUST be "${expectedProofTypes.join(',')}".`,
+        it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}".`,
           function() {
             this.test.cell = {columnId: vendorName, rowId: this.test.title};
             for(const proof of proofs) {
@@ -97,16 +98,19 @@ export function checkDataIntegrityProofFormat({
               hasExpectedType.should.equal(true);
             }
           });
-        it('"cryptosuite" field MUST exist and be a string.', function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          for(const proof of proofs) {
-            proof.should.have.property('cryptosuite');
-            proof.cryptosuite.should.be.a('string', 'Expected "cryptosuite" ' +
-              'property to be a string.');
-          }
-        });
-        it('"created" field MUST exist and be a valid XMLSCHEMA-11 datetime' +
-          'value.', function() {
+        if(expectedCryptoSuite) {
+          it('"proof.cryptosuite" field MUST exist and be a string.',
+            function() {
+              this.test.cell = {columnId: vendorName, rowId: this.test.title};
+              for(const proof of proofs) {
+                proof.should.have.property('cryptosuite');
+                proof.cryptosuite.should.be.a('string', 'Expected ' +
+                  '"cryptosuite" property to be a string.');
+              }
+            });
+        }
+        it('"proof.created" field MUST exist and be a valid XMLSCHEMA-11 ' +
+          'datetime value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             proof.should.have.property('created');
@@ -119,7 +123,7 @@ export function checkDataIntegrityProofFormat({
             proof.created.should.match(dateRegex);
           }
         });
-        it('"verificationMethod" field MUST exist and be a valid URL.',
+        it('"proof.verificationMethod" field MUST exist and be a valid URL.',
           function() {
             this.test.cell = {columnId: vendorName, rowId: this.test.title};
             for(const proof of proofs) {
@@ -137,22 +141,23 @@ export function checkDataIntegrityProofFormat({
                 'to be a URL');
             }
           });
-        it('"proofPurpose" field MUST exist and be a string.', function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          for(const proof of proofs) {
-            proof.should.have.property('proofPurpose');
-            proof.proofPurpose.should.be.a('string');
-          }
-        });
-        it('"proofValue" field MUST exist and be a string.', function() {
+        it('"proof.proofPurpose" field MUST exist and be a string.',
+          function() {
+            this.test.cell = {columnId: vendorName, rowId: this.test.title};
+            for(const proof of proofs) {
+              proof.should.have.property('proofPurpose');
+              proof.proofPurpose.should.be.a('string');
+            }
+          });
+        it('"proof.proofValue" field MUST exist and be a string.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             proof.should.have.property('proofValue');
             proof.proofValue.should.be.a('string');
           }
         });
-        it('The "proofValue" field MUST be a multibase-encoded base58-btc ' +
-          'encoded value.', function() {
+        it('The "proof.proofValue" field MUST be a multibase-encoded ' +
+          'base58-btc encoded value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           const multibase = 'z';
           proofs.some(proof => {
@@ -164,7 +169,7 @@ export function checkDataIntegrityProofFormat({
             'value.'
           );
         });
-        it('if "domain" field exists, it MUST be a string.', function() {
+        it('if "proof.domain" field exists, it MUST be a string.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             if(proof.domain) {
@@ -173,27 +178,29 @@ export function checkDataIntegrityProofFormat({
             }
           }
         });
-        it('if "challenge" field exists, it MUST be a string.', function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          for(const proof of proofs) {
-            if(proof.challenge) {
-              // domain must be specified
-              should.exist(proof.domain, 'Expected "proof.domain" ' +
-                'to be specified.');
-              proof.challenge.should.be.a('string', 'Expected ' +
-                '"proof.challenge" to be a string.');
+        it('if "proof.challenge" field exists, it MUST be a string.',
+          function() {
+            this.test.cell = {columnId: vendorName, rowId: this.test.title};
+            for(const proof of proofs) {
+              if(proof.challenge) {
+                // domain must be specified
+                should.exist(proof.domain, 'Expected "proof.domain" ' +
+                  'to be specified.');
+                proof.challenge.should.be.a('string', 'Expected ' +
+                  '"proof.challenge" to be a string.');
+              }
             }
-          }
-        });
-        it('if "previousProof" field exists, it MUST be a string.', function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          for(const proof of proofs) {
-            if(proof.previousProof) {
-              proof.previousProof.should.be.a('string', 'Expected ' +
-                '"proof.previousProof" to be a string.');
+          });
+        it('if "proof.previousProof" field exists, it MUST be a string.',
+          function() {
+            this.test.cell = {columnId: vendorName, rowId: this.test.title};
+            for(const proof of proofs) {
+              if(proof.previousProof) {
+                proof.previousProof.should.be.a('string', 'Expected ' +
+                  '"proof.previousProof" to be a string.');
+              }
             }
-          }
-        });
+          });
       });
     } // end for loop
   }); // end describe
