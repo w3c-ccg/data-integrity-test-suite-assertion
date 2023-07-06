@@ -316,6 +316,25 @@ export function checkDataIntegrityProofVerifyErrors({
           credential.proof.type = 'UnknownProofType';
           await verificationFail({credential, verifier});
         });
+        it('If the "proof.created" field is missing, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          delete credential.proof.created;
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.created" field is invalid, a ' +
+          '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          await verificationFail({credential, verifier});
+        });
+        it('If the "proof.proofValue" field is not a multibase-encoded ' +
+          'base58-btc value, an "INVALID_PROOF_VALUE" error MUST be raised.',
+        async function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          // remove the initial z
+          credential.proof.proofValue = credential.proof.proofValue.slice(1);
+          await verificationFail({credential, verifier});
+        });
       });
     } // end for loop
   }); // end describe
