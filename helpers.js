@@ -48,4 +48,5 @@ export const verificationFail = async ({credential, verifier} = {}) => {
   const {result, error} = await verifier.post({json: body});
   should.not.exist(result, 'Expected no result from verifier.');
   should.exist(error, 'Expected verifier to error.');
+  // FIXME: Assert on error status code.
 };

@@ -1,3 +1,6 @@
+/*!
+ * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
+ */
 export const validVc = {
   '@context': [
     'https://www.w3.org/2018/credentials/v1'
