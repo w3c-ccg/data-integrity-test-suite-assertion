@@ -317,12 +317,18 @@ export function checkDataIntegrityProofVerifyErrors({
         it('If the "proof.created" field is missing, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          // FIXME: Fix test to check if a cryptographic suite requires the
+          // “proof.created” value, and if it is not set, a
+          // “MALFORMED_PROOF_ERROR” MUST be raised.
           const credential = credentials.clone('noCreated');
           await verificationFail({credential, verifier});
         });
         it('If the "proof.created" field is invalid, a ' +
           '"MALFORMED_PROOF_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          // FIXME: Fix test to check if a cryptographic suite requires the
+          // “proof.created” value, and if it is not set, a
+          // “MALFORMED_PROOF_ERROR” MUST be raised.
           const credential = credentials.clone('invalidCreated');
           await verificationFail({credential, verifier});
         });
