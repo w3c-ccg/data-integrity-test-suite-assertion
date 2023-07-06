@@ -214,14 +214,14 @@ export function checkDataIntegrityProofFormat({
  * @param {Map<string,object>} options.implemented - The vendors being tested.
  * @param {Map<string,object>} options.notImplemented - The vendors not being
  *   tested.
- * @param {Array<string>} [options.expectedProofTypes] - An option to specify
- *   the expected proof types. The default value is set to
- *   ['DataIntegrityProof'].
+ * @param {string} [options.expectedProofType] - An option to specify
+ *   the expected proof type that is used to generate test titles.
+ *   The default value is set to 'DataIntegrityProof'.
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
-  implemented, notImplemented, expectedProofTypes = ['DataIntegrityProof']
+  implemented, notImplemented, expectedProofType = 'DataIntegrityProof'
 } = {}) {
   return describe('Data Integrity (verifier)', function() {
     // this will tell the report
@@ -267,8 +267,8 @@ export function checkDataIntegrityProofVerifyErrors({
           await verificationFail({credential, verifier});
         });
         it(`If the "proof.type" field is not the string ` +
-          `"${expectedProofTypes.join(',')}", an "UNKNOWN_CRYPTOSUITE_TYPE" ` +
-          `error MUST be raised.`, async function() {
+          `"${expectedProofType}", an "UNKNOWN_CRYPTOSUITE_TYPE" error ` +
+          `MUST be raised.`, async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           const credential = credentials.clone('invalidProofType');
           await verificationFail({credential, verifier});
