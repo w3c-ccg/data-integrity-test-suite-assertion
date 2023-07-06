@@ -6,7 +6,6 @@
 - [Install](#install)
 - [Test](#test)
 - [Usage](#usage)
-- [Implementation](#implementation)
 
 ## Background
 This library exports a function `checkDataIntegrityProofFormat()` that can be
@@ -28,11 +27,38 @@ npm test
 ## Usage
 
 ```js
-// Require `data-integrity-test-suite-assertion` in the test suite
-const {checkDataIntegrityProofFormat} = require('data-integrity-test-suite-assertion');
+// Import `data-integrity-test-suite-assertion` in the test suite
+import {endpoints} from 'vc-api-test-suite-implementations';
+import {
+  checkDataIntegrityProofFormat,
+  checkDataIntegrityProofVerifyErrors
+} from 'data-integrity-test-suite-assertion';
 
-describe('Check data proof format', function() {
-  // Validate the proof on the data
-  checkDataIntegrityProofFormat({vendors: [{getData, vendorName: 'Digital Bazaar'}]});
-})
+// examples =>
+const tag = 'eddsa-2022';
+const {
+  match: matchingIssuers,
+  nonMatch: nonMatchingIssuers
+} = endpoints.filterByTag({
+  tags: [tag],
+  property: 'issuers'
+});
+
+const {
+  match: matchingVerifiers,
+  nonMatch: nonMatchingVerifiers
+} = endpoints.filterByTag({
+  tags: [tag],
+  property: 'verifiers'
+});
+
+checkDataIntegrityProofFormat({
+  implemented: matchingIssuers,
+  notImplemented: nonMatchingIssuers
+});
+
+checkDataIntegrityProofVerifyErrors({
+  implemented: matchingVerifiers,
+  notImplemented: nonMatchingVerifiers
+});
 ```
