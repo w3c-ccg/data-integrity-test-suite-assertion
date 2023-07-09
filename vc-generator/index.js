@@ -3,7 +3,7 @@
  */
 import {getMultikey} from './helpers.js';
 import {klona} from 'klona';
-import {testDataGeneratorSeedMultibase} from './secret.js';
+import {TEST_KEY_SEED} from './secret.js';
 import {validVc} from '../validVc.js';
 import {vcGenerators} from './generators.js';
 
@@ -20,7 +20,7 @@ const vcCache = new Map([
  */
 export async function generateTestData() {
   const {signer, issuer} = await getMultikey({
-    seedMultibase: testDataGeneratorSeedMultibase
+    seedMultibase: TEST_KEY_SEED
   });
   const credential = klona(validVc);
   credential.issuer = issuer;
