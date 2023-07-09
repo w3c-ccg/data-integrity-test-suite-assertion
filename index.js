@@ -267,7 +267,7 @@ export function checkDataIntegrityProofVerifyErrors({
           await verificationFail({credential, verifier});
         });
         it(`If the "proof.type" field is not the string ` +
-          `"${expectedProofType}", an "UNKNOWN_CRYPTOSUITE_TYPE" error ` +
+          `"${expectedProofType}", an "INVALID_PROOF_CONFIGURATION" error ` +
           `MUST be raised.`, async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           const credential = credentials.clone('invalidProofType');
