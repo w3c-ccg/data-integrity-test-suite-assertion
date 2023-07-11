@@ -8,10 +8,16 @@ import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {invalidCreateProof} from './helpers.js';
+import jsigs from 'jsonld-signatures';
 import {klona} from 'klona';
+
+const {AuthenticationProofPurpose} = jsigs.purposes;
+const {CredentialIssuancePurpose} = vc;
 
 export const vcGenerators = new Map([
   ['issuedVc', _issuedVc],
+  ['invalidDomain', _invalidDomain],
+  ['invalidChallenge', _invalidChallenge],
   ['invalidProofType', _incorrectProofType],
   ['noCreated', _noCreated],
   ['invalidCreated', _invalidCreated],
@@ -25,6 +31,22 @@ async function _invalidProofPurpose({signer, credential}) {
   const suite = _createEddsa2022Suite({signer});
   suite.createProof = invalidCreateProof({mockPurpose: 'invalidPurpose'});
   return _issueCloned({suite, credential});
+}
+
+async function _invalidDomain({signer, credential}) {
+  const suite = _createEddsa2022Suite({signer});
+  const domain = 'invalid-vc-domain.example.com';
+  const challenge = '1235abcd6789';
+  const purpose = new AuthenticationProofPurpose({challenge, domain});
+  return _issueCloned({suite, credential, purpose});
+}
+
+async function _invalidChallenge({signer, credential}) {
+  const suite = _createEddsa2022Suite({signer});
+  const domain = 'domain.example';
+  const challenge = 'invalid-challenge';
+  const purpose = new AuthenticationProofPurpose({challenge, domain});
+  return _issueCloned({suite, credential, purpose});
 }
 
 async function _noProofPurpose({signer, credential}) {
@@ -75,10 +97,14 @@ function _createEddsa2022Suite({signer}) {
   return new DataIntegrityProof({signer, date, cryptosuite});
 }
 
-async function _issueCloned({suite, credential, loader = documentLoader}) {
+async function _issueCloned({
+  suite, credential, loader = documentLoader,
+  purpose = new CredentialIssuancePurpose(),
+}) {
   return vc.issue({
     credential: klona(credential),
     suite,
-    documentLoader: loader
+    documentLoader: loader,
+    purpose
   });
 }
