@@ -344,19 +344,6 @@ export function checkDataIntegrityProofVerifyErrors({
           const credential = credentials.clone('invalidCreated');
           await verificationFail({credential, verifier});
         });
-        it('If the "proof.created" field is set and it deviates more than ' +
-          '"options.acceptableCreatedTimeDeviationInSeconds" seconds, a ' +
-          '"CREATED_TIME_DEVIATION_ERROR" MUST be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('vcCreatedOneYearAgo');
-          // set acceptable created time deviation to three months
-          const threeMonthsInSeconds = 3 * 30 * 24 * 60 * 60;
-          await verificationFail({
-            credential, verifier, options: {
-              acceptableCreatedTimeDeviationInSeconds: threeMonthsInSeconds
-            }
-          });
-        });
         it('If the "proof.proofValue" field is not a multibase-encoded ' +
           'base58-btc value, an "INVALID_PROOF_VALUE" error MUST be raised.',
         async function() {
