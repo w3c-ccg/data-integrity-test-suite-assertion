@@ -348,18 +348,12 @@ export function checkDataIntegrityProofVerifyErrors({
           '"options.acceptableCreatedTimeDeviationInSeconds" seconds, a ' +
           '"CREATED_TIME_DEVIATION_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          // FIXME: Fix test to check if a cryptographic suite requires the
-          // “proof.created” value
-          const credential = credentials.clone('issuedVc');
-          // intentionally set the created date to be a week ago
-          const created = new Date();
-          created.setDate(created.getDate() - 7);
-          credential.proof.created =
-            created.toISOString().replace(/\.\d+Z$/, 'Z');
+          const credential = credentials.clone('vcCreatedOneYearAgo');
+          // set acceptable created time deviation to three months
+          const threeMonthsInSeconds = 3 * 30 * 24 * 60 * 60;
           await verificationFail({
             credential, verifier, options: {
-              // set acceptable created time deviation to one day => 86400s
-              acceptableCreatedTimeDeviationInSeconds: 86400
+              acceptableCreatedTimeDeviationInSeconds: threeMonthsInSeconds
             }
           });
         });
