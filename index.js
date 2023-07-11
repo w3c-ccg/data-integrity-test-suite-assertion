@@ -302,11 +302,11 @@ export function checkDataIntegrityProofVerifyErrors({
           '"MISMATCHED_PROOF_PURPOSE_ERROR" MUST be raised.', async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           const credential = credentials.clone('issuedVc');
-          // intentionally change the proofPurpose to authentication
-          credential.proof.proofPurpose = 'authentication';
           await verificationFail({
             credential, verifier, options: {
-              expectedProofPurpose: 'assertionMethod'
+              // this will fail since the vc generated is created with the
+              // assertionMethod proof purpose.
+              expectedProofPurpose: 'authentication'
             }
           });
         });
