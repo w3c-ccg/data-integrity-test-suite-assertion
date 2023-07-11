@@ -21,6 +21,7 @@ export const vcGenerators = new Map([
   ['invalidProofType', _incorrectProofType],
   ['noCreated', _noCreated],
   ['invalidCreated', _invalidCreated],
+  ['vcCreatedOneYearAgo', _vcCreatedOneYearAgo],
   ['noVm', _noVm],
   ['invalidVm', _invalidVm],
   ['noProofPurpose', _noProofPurpose],
@@ -70,6 +71,15 @@ async function _noVm({signer, credential}) {
 async function _invalidCreated({signer, credential}) {
   const suite = _createEddsa2022Suite({signer});
   suite.date = 'invalidDate';
+  return _issueCloned({suite, credential});
+}
+
+async function _vcCreatedOneYearAgo({signer, credential}) {
+  const suite = _createEddsa2022Suite({signer});
+  // intentionally set the created date to be a year ago
+  const created = new Date();
+  created.setDate(created.getDate() - 365);
+  suite.date = created.toISOString().replace(/\.\d+Z$/, 'Z');
   return _issueCloned({suite, credential});
 }
 
