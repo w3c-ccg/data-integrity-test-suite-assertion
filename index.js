@@ -376,10 +376,7 @@ export function checkDataIntegrityProofVerifyErrors({
           '"proof.domain", an "INVALID_DOMAIN_ERROR" MUST be raised.',
         async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('issuedVc');
-          // intentionally set the domain to be different from the expected
-          // domain in options
-          credential.proof.domain = 'not-domain.example';
+          const credential = credentials.clone('invalidDomain');
           await verificationFail({
             credential, verifier, options: {
               domain: 'domain.example'
@@ -390,15 +387,11 @@ export function checkDataIntegrityProofVerifyErrors({
           '"proof.challenge", an "INVALID_CHALLENGE_ERROR" MUST be raised.',
         async function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('issuedVc');
-          credential.proof.domain = 'domain.example';
-          // intentionally set the challenge to be different from the expected
-          // challenge in options
-          credential.proof.challenge = '1235abcd6789';
+          const credential = credentials.clone('invalidChallenge');
           await verificationFail({
             credential, verifier, options: {
               domain: 'domain.example',
-              challenge: '79d34551-ae81-44ae-823b-6dadbab9ebd4'
+              challenge: '1235abcd6789'
             }
           });
         });

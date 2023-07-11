@@ -42,6 +42,7 @@
     "bnid": "^3.0.0",
     "credentials-context": "^2.0.0",
     "jsonld-document-loader": "^2.0.0",
+    "jsonld-signatures": "^11.2.1",
     "klona": "^2.0.5",
     "uuid": "^9.0.0"
   }
