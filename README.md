@@ -53,12 +53,10 @@ const {
 });
 
 checkDataIntegrityProofFormat({
-  implemented: matchingIssuers,
-  notImplemented: nonMatchingIssuers
+  implemented: matchingIssuers
 });
 
 checkDataIntegrityProofVerifyErrors({
-  implemented: matchingVerifiers,
-  notImplemented: nonMatchingVerifiers
+  implemented: matchingVerifiers
 });
 ```
