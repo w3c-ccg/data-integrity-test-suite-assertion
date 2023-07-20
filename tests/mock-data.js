@@ -80,12 +80,3 @@ export const validVerifierImplementations = new Map([
 export const invalidIssuerImplementations = new Map([
   ['invalidIssuerImplementation', {endpoints: [invalidIssuer]}]
 ]);
-
-export const allIssuerImplementations = new Map([
-  ['validIssuerImplementation', {endpoints: [validIssuer]}],
-  ['invalidIssuerImplementation', {endpoints: [invalidIssuer]}]
-]);
-
-export const allVerifierImplementations = new Map([
-  ['validVerifierImplementation', {endpoints: [validVerifier]}],
-]);

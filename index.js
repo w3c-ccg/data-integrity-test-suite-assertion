@@ -13,8 +13,6 @@ const should = chai.should();
  *
  * @param {object} options - Options to use.
  * @param {Map<string,object>} options.implemented - The vendors being tested.
- * @param {Map<string,object>} options.notImplemented - The vendors not being
- *   tested.
  * @param {Array<string>} [options.expectedProofTypes] - An option to specify
  *   the expected proof types. The default value is set to
  *   ['DataIntegrityProof'].
@@ -24,7 +22,7 @@ const should = chai.should();
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
-  implemented, notImplemented, expectedProofTypes = ['DataIntegrityProof'],
+  implemented, expectedProofTypes = ['DataIntegrityProof'],
   expectedCryptoSuite = true
 } = {}) {
   return describe('Data Integrity (issuer)', function() {
@@ -33,7 +31,6 @@ export function checkDataIntegrityProofFormat({
     this.matrix = true;
     this.report = true;
     this.implemented = [...implemented.keys()];
-    this.notImplemented = [...notImplemented.keys()];
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Issuer';
     for(const [vendorName, {endpoints}] of implemented) {
@@ -212,8 +209,6 @@ export function checkDataIntegrityProofFormat({
  *
  * @param {object} options - Options to use.
  * @param {Map<string,object>} options.implemented - The vendors being tested.
- * @param {Map<string,object>} options.notImplemented - The vendors not being
- *   tested.
  * @param {string} [options.expectedProofType] - An option to specify
  *   the expected proof type that is used to generate test titles.
  *   The default value is set to 'DataIntegrityProof'.
@@ -221,7 +216,7 @@ export function checkDataIntegrityProofFormat({
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
-  implemented, notImplemented, expectedProofType = 'DataIntegrityProof'
+  implemented, expectedProofType = 'DataIntegrityProof'
 } = {}) {
   return describe('Data Integrity (verifier)', function() {
     // this will tell the report
@@ -229,7 +224,6 @@ export function checkDataIntegrityProofVerifyErrors({
     this.matrix = true;
     this.report = true;
     this.implemented = [...implemented.keys()];
-    this.notImplemented = [...notImplemented.keys()];
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Verifier';
     for(const [vendorName, {endpoints}] of implemented) {
