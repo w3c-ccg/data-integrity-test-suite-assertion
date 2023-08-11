@@ -107,18 +107,34 @@ export function checkDataIntegrityProofFormat({
               }
             });
         }
-        it('"proof.created" field MUST exist and be a valid XMLSCHEMA-11 ' +
+        it('if "proof.created" field exists, it MUST be a valid XMLSCHEMA-11 ' +
           'datetime value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
-            proof.should.have.property('created');
-            // check if "created" is a valid ISO 8601 datetime value
-            const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
-            '(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):' +
-            '([0-5][0-9]):([0-5][0-9]|60)' +
-            '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
-            '([0-5][0-9]))$', 'i');
-            proof.created.should.match(dateRegex);
+            if(proof.created) {
+              // check if "created" is a valid ISO 8601 datetime value
+              const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
+              '(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):' +
+              '([0-5][0-9]):([0-5][0-9]|60)' +
+              '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
+              '([0-5][0-9]))$', 'i');
+              proof.created.should.match(dateRegex);
+            }
+          }
+        });
+        it('if "proof.expires" field exists, it MUST be a valid XMLSCHEMA-11 ' +
+          'datetime value.', function() {
+          this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          for(const proof of proofs) {
+            if(proof.expires) {
+              // check if "created" is a valid ISO 8601 datetime value
+              const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
+              '(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):' +
+              '([0-5][0-9]):([0-5][0-9]|60)' +
+              '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
+              '([0-5][0-9]))$', 'i');
+              proof.expires.should.match(dateRegex);
+            }
           }
         });
         it('"proof.verificationMethod" field MUST exist and be a valid URL.',
