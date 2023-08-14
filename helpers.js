@@ -57,3 +57,10 @@ export const verificationFail = async ({
     'Expected HTTP Status code 400 invalid input!'
   );
 };
+
+// Regex for valid ISO 8601 datetime value
+export const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
+  '(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):' +
+  '([0-5][0-9]):([0-5][0-9]|60)' +
+  '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
+  '([0-5][0-9]))$', 'i');
