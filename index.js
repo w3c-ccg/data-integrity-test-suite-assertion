@@ -1,7 +1,9 @@
 /*!
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
-import {createInitialVc, shouldBeBs58, verificationFail} from './helpers.js';
+import {
+  createInitialVc, dateRegex, shouldBeBs58, verificationFail
+} from './helpers.js';
 import chai from 'chai';
 import {generateTestData} from './vc-generator/index.js';
 import {validVc} from './validVc.js';
@@ -113,11 +115,6 @@ export function checkDataIntegrityProofFormat({
           for(const proof of proofs) {
             if(proof.created) {
               // check if "created" is a valid ISO 8601 datetime value
-              const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
-              '(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):' +
-              '([0-5][0-9]):([0-5][0-9]|60)' +
-              '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
-              '([0-5][0-9]))$', 'i');
               proof.created.should.match(dateRegex);
             }
           }
@@ -128,11 +125,6 @@ export function checkDataIntegrityProofFormat({
           for(const proof of proofs) {
             if(proof.expires) {
               // check if "created" is a valid ISO 8601 datetime value
-              const dateRegex = new RegExp('^(\\d{4})-(0[1-9]|1[0-2])-' +
-              '(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):' +
-              '([0-5][0-9]):([0-5][0-9]|60)' +
-              '(\\.[0-9]+)?(Z|(\\+|-)([01][0-9]|2[0-3]):' +
-              '([0-5][0-9]))$', 'i');
               proof.expires.should.match(dateRegex);
             }
           }
