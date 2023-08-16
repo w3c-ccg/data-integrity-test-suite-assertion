@@ -114,7 +114,8 @@ export function checkDataIntegrityProofFormat({
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             if(proof.created) {
-              // check if "created" is a valid ISO 8601 datetime value
+              // check if "created" is a valid XML Schema 1.1 dateTimeStamp
+              // value
               proof.created.should.match(dateRegex);
             }
           }
@@ -124,7 +125,8 @@ export function checkDataIntegrityProofFormat({
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             if(proof.expires) {
-              // check if "created" is a valid ISO 8601 datetime value
+              // check if "created" is a valid XML Schema 1.1 dateTimeStamp
+              // value
               proof.expires.should.match(dateRegex);
             }
           }
