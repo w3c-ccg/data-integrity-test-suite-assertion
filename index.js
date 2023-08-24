@@ -110,7 +110,7 @@ export function checkDataIntegrityProofFormat({
             });
         }
         it('if "proof.created" field exists, it MUST be a valid XMLSCHEMA-11 ' +
-          'datetime value.', function() {
+          'dateTimeStamp value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             if(proof.created) {
@@ -121,7 +121,7 @@ export function checkDataIntegrityProofFormat({
           }
         });
         it('if "proof.expires" field exists, it MUST be a valid XMLSCHEMA-11 ' +
-          'datetime value.', function() {
+          'dateTimeStamp value.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           for(const proof of proofs) {
             if(proof.expires) {
