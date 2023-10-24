@@ -2,7 +2,8 @@
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  createInitialVc, dateRegex, shouldBeBs58, verificationFail
+  createInitialVc, dateRegex, isObjectOrArrayOfObjects,
+  isStringOrArrayOfStrings, shouldBeBs58, verificationFail
 } from './helpers.js';
 import chai from 'chai';
 import {generateTestData} from './vc-generator/index.js';
@@ -54,17 +55,9 @@ export function checkDataIntegrityProofFormat({
           'an unordered set of objects.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           should.exist(data, 'Expected data.');
-          should.exist(data.proof, 'Expected proof to be top-level');
-          function isObjectOrArrayOfObjects({proof}) {
-            if(Array.isArray(proof)) {
-              return proof.every(
-                item => typeof item === 'object' && item !== null);
-            }
-            return typeof proof === 'object' && data.proof !== null;
-          }
-          const validType = isObjectOrArrayOfObjects({
-            proof: data.proof
-          });
+          const proof = data.proof;
+          should.exist(proof, 'Expected proof to exist.');
+          const validType = isObjectOrArrayOfObjects(proof);
           validType.should.equal(true, 'Expected proof to be' +
             'either an object or an unordered set of objects.');
         });
@@ -188,15 +181,9 @@ export function checkDataIntegrityProofFormat({
         it('if "proof.domain" field exists, it MUST be either a string, ' +
           'or an unordered set of strings.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          function isStringOrArrayOfStrings({domain}) {
-            if(Array.isArray(domain)) {
-              return domain.every(item => typeof item === 'string');
-            }
-            return typeof domain === 'string';
-          }
           for(const proof of proofs) {
             if(proof.domain) {
-              const validType = isStringOrArrayOfStrings({proof: data.proof});
+              const validType = isStringOrArrayOfStrings(proof.domain);
               validType.should.equal(true, 'Expected ' +
                 '"proof.domain" to be either a string or an unordered ' +
                 'set of strings.');
