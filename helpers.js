@@ -64,3 +64,18 @@ export const dateRegex = new RegExp('-?([1-9][0-9]{3,}|0[0-9]{3})' +
   '-(0[1-9]|[12][0-9]|3[01])' +
   'T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))' +
   '(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))');
+
+export function isObjectOrArrayOfObjects(data) {
+  if(Array.isArray(data)) {
+    return data.every(
+      item => typeof item === 'object' && item !== null);
+  }
+  return typeof data === 'object' && data !== null;
+}
+
+export function isStringOrArrayOfStrings(data) {
+  if(Array.isArray(data)) {
+    return data.every(item => typeof item === 'string');
+  }
+  return typeof data === 'string';
+}
