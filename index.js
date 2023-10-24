@@ -50,15 +50,23 @@ export function checkDataIntegrityProofFormat({
           data = await createInitialVc({issuer, vc: validVc});
           proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
         });
-        it('"proof" field MUST exist at top-level of data object.', function() {
+        it('"proof" field MUST exist and MUST be either a single object or ' +
+          'an unordered set of objects.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
           should.exist(data, 'Expected data.');
           should.exist(data.proof, 'Expected proof to be top-level');
-          const type = typeof data.proof;
-          type.should.be.oneOf(
-            ['object', 'array'],
-            'Expected proof to be either an object or an array.'
-          );
+          function isObjectOrArrayOfObjects({proof}) {
+            if(Array.isArray(proof)) {
+              return proof.every(
+                item => typeof item === 'object' && item !== null);
+            }
+            return typeof proof === 'object' && data.proof !== null;
+          }
+          const validType = isObjectOrArrayOfObjects({
+            proof: data.proof
+          });
+          validType.should.equal(true, 'Expected proof to be' +
+            'either an object or an unordered set of objects.');
         });
         it('if "proof.id" field exists, it MUST be a valid URL.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
@@ -177,12 +185,21 @@ export function checkDataIntegrityProofFormat({
             'value.'
           );
         });
-        it('if "proof.domain" field exists, it MUST be a string.', function() {
+        it('if "proof.domain" field exists, it MUST be either a string, ' +
+          'or an unordered set of strings.', function() {
           this.test.cell = {columnId: vendorName, rowId: this.test.title};
+          function isStringOrArrayOfStrings({domain}) {
+            if(Array.isArray(domain)) {
+              return domain.every(item => typeof item === 'string');
+            }
+            return typeof domain === 'string';
+          }
           for(const proof of proofs) {
             if(proof.domain) {
-              proof.domain.should.be.a('string', 'Expected "proof.domain" ' +
-                'to be a string.');
+              const validType = isStringOrArrayOfStrings({proof: data.proof});
+              validType.should.equal(true, 'Expected ' +
+                '"proof.domain" to be either a string or an unordered ' +
+                'set of strings.');
             }
           }
         });
