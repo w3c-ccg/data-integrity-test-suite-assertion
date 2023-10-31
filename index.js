@@ -213,6 +213,16 @@ export function checkDataIntegrityProofFormat({
               }
             }
           });
+        it('if "proof.nonce" field exists, it MUST be a string.',
+          function() {
+            this.test.cell = {columnId: vendorName, rowId: this.test.title};
+            for(const proof of proofs) {
+              if(proof.nonce) {
+                proof.nonce.should.be.a('string', 'Expected "proof.nonce" ' +
+                  'to be a string.');
+              }
+            }
+          });
       });
     } // end for loop
   }); // end describe
