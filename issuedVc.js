@@ -3,15 +3,15 @@
  */
 export const issuedVc = {
   '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://w3id.org/security/data-integrity/v1'
+    'https://www.w3.org/ns/credentials/v2',
+    'https://w3id.org/security/data-integrity/v2'
   ],
   id: 'urn:uuid:cb6a2b0b-a749-40dc-9ce2-dd3d938508fc',
   type: [
     'VerifiableCredential'
   ],
   issuer: 'did:key:z6MkiimK73pVRzGLpj869NybZQqPTGGogmdPMmBaAHJF4uZD',
-  issuanceDate: '2020-03-16T22:37:26.544Z',
+  validFrom: '2020-03-16T22:37:26.544Z',
   credentialSubject: {
     id: 'did:key:z6MktKwz7Ge1Yxzr4JHavN33wiwa8y81QdcMRLXQsrH9T53b'
   },
