@@ -37,19 +37,11 @@ export function checkDataIntegrityProofFormat({
     this.matrix = true;
     this.report = true;
     if(isEcdsaTests) {
-      const names = [...implemented.keys()];
       this.implemented = [];
-      for(const name of names) {
-        const {endpoints} = implemented.get(name);
-        if(endpoints.length > 1) {
-          for(const endpoint of endpoints) {
-            const {tags} = endpoint.settings;
-            const keyType = getKeyType(tags);
-            this.implemented.push(`${name}: ${keyType}`);
-          }
-        } else {
-          const {tags} = endpoints[0].settings;
-          const keyType = getKeyType(tags);
+      for(const [name, {endpoints}] of implemented) {
+        for(const endpoint of endpoints) {
+          const {supportedEcdsaKeyTypes} = endpoint.settings;
+          const keyType = getKeyType(supportedEcdsaKeyTypes);
           this.implemented.push(`${name}: ${keyType}`);
         }
       }
@@ -65,8 +57,8 @@ export function checkDataIntegrityProofFormat({
       for(const endpoint of endpoints) {
         let testDescription;
         if(isEcdsaTests) {
-          const tags = endpoint.settings.tags;
-          const keyType = getKeyType(tags);
+          const {supportedEcdsaKeyTypes} = endpoint.settings;
+          const keyType = getKeyType(supportedEcdsaKeyTypes);
           testDescription = `${vendorName}: ${keyType}`;
         } else {
           testDescription = vendorName;
