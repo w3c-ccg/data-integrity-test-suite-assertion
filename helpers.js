@@ -80,10 +80,10 @@ export function isStringOrArrayOfStrings(data) {
   return typeof data === 'string';
 }
 
-export function getKeyType(tags) {
+export function getKeyType(supportedEcdsaKeyTypes) {
   const supportedKeyTypes = ['P-256', 'P-384'];
   for(const keyType of supportedKeyTypes) {
-    if(tags.includes(keyType)) {
+    if(supportedEcdsaKeyTypes.includes(keyType)) {
       return keyType;
     }
   }
