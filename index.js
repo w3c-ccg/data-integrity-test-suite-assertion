@@ -2,7 +2,7 @@
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  createInitialVc, dateRegex, isObjectOrArrayOfObjects,
+  createInitialVc, dateRegex, getKeyType, isObjectOrArrayOfObjects,
   isStringOrArrayOfStrings, shouldBeBs58, verificationFail
 } from './helpers.js';
 import chai from 'chai';
@@ -22,18 +22,40 @@ const should = chai.should();
  * @param {boolean} [options.expectedCryptoSuite] - A boolean option to specify
  *   if "cryptosuite" field is expected in the proof or not. The default value
  *   is set to true.
+ * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
+ *   if it is used in ecdsa test suite or not. The default value
+ *   is set to false.
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
-  expectedCryptoSuite = true
+  expectedCryptoSuite = true, isEcdsaTests = false
 } = {}) {
   return describe('Data Integrity (issuer)', function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
     this.report = true;
-    this.implemented = [...implemented.keys()];
+    if(isEcdsaTests) {
+      const names = [...implemented.keys()];
+      this.implemented = [];
+      for(const name of names) {
+        const {endpoints} = implemented.get(name);
+        if(endpoints.length > 1) {
+          for(const endpoint of endpoints) {
+            const {tags} = endpoint.settings;
+            const keyType = getKeyType(tags);
+            this.implemented.push(`${name}: ${keyType}`);
+          }
+        } else {
+          const {tags} = endpoints[0].settings;
+          const keyType = getKeyType(tags);
+          this.implemented.push(`${name}: ${keyType}`);
+        }
+      }
+    } else {
+      this.implemented = [...implemented.keys()];
+    }
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Issuer';
     for(const [vendorName, {endpoints}] of implemented) {
