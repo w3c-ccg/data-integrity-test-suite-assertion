@@ -281,153 +281,180 @@ export function checkDataIntegrityProofFormat({
  * @param {string} [options.expectedProofType] - An option to specify
  *   the expected proof type that is used to generate test titles.
  *   The default value is set to 'DataIntegrityProof'.
+ * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
+ *   if it is used in ecdsa test suite or not. The default value
+ *   is set to false.
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
-  implemented, expectedProofType = 'DataIntegrityProof'
+  implemented, expectedProofType = 'DataIntegrityProof',
+  isEcdsaTests = false
 } = {}) {
   return describe('Data Integrity (verifier)', function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
     this.report = true;
-    this.implemented = [...implemented.keys()];
+    if(isEcdsaTests) {
+      this.implemented = [];
+      for(const [name, {endpoints}] of implemented) {
+        for(const endpoint of endpoints) {
+          const {supportedEcdsaKeyTypes} = endpoint.settings;
+          const keyType = getKeyType(supportedEcdsaKeyTypes);
+          this.implemented.push(`${name}: ${keyType}`);
+        }
+      }
+    } else {
+      this.implemented = [...implemented.keys()];
+    }
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Verifier';
     for(const [vendorName, {endpoints}] of implemented) {
       if(!endpoints) {
         throw new Error(`Expected ${vendorName} to have endpoints.`);
       }
-      describe(vendorName, function() {
-        const [verifier] = endpoints;
-        if(!verifier) {
-          throw new Error(`Expected ${vendorName} to have a verifier.`);
+      for(const endpoint of endpoints) {
+        let testDescription;
+        if(isEcdsaTests) {
+          const {supportedEcdsaKeyTypes} = endpoint.settings;
+          const keyType = getKeyType(supportedEcdsaKeyTypes);
+          testDescription = `${vendorName}: ${keyType}`;
+        } else {
+          testDescription = vendorName;
         }
-        let credentials;
-        before(async function() {
-          credentials = await generateTestData();
-        });
-        it('If the "proof" field is missing, an error MUST be raised.',
+        const columnId = testDescription;
+        describe(testDescription, function() {
+          const [verifier] = endpoints;
+          if(!verifier) {
+            throw new Error(`Expected ${vendorName} to have a verifier.`);
+          }
+          let credentials;
+          before(async function() {
+            credentials = await generateTestData();
+          });
+          it('If the "proof" field is missing, an error MUST be raised.',
+            async function() {
+              this.test.cell = {columnId, rowId: this.test.title};
+              const credential = credentials.clone('issuedVc');
+              delete credential.proof;
+              await verificationFail({credential, verifier});
+            });
+          it('If the "proof" field is invalid, an error MUST be raised.',
+            async function() {
+              this.test.cell = {columnId, rowId: this.test.title};
+              const credential = credentials.clone('issuedVc');
+              credential.proof = null;
+              await verificationFail({credential, verifier});
+            });
+          it('If the "proof.type" field is missing, an error MUST be raised.',
+            async function() {
+              this.test.cell = {columnId, rowId: this.test.title};
+              const credential = credentials.clone('issuedVc');
+              delete credential.proof.type;
+              await verificationFail({credential, verifier});
+            });
+          it(`If the "proof.type" field is not the string ` +
+            `"${expectedProofType}", an error MUST be raised.`,
           async function() {
-            this.test.cell = {columnId: vendorName, rowId: this.test.title};
-            const credential = credentials.clone('issuedVc');
-            delete credential.proof;
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('invalidProofType');
             await verificationFail({credential, verifier});
           });
-        it('If the "proof" field is invalid, an error MUST be raised.',
-          async function() {
-            this.test.cell = {columnId: vendorName, rowId: this.test.title};
-            const credential = credentials.clone('issuedVc');
-            credential.proof = null;
+          it('If the "proof.verificationMethod" field is missing, an error ' +
+            'MUST be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('noVm');
             await verificationFail({credential, verifier});
           });
-        it('If the "proof.type" field is missing, an error MUST be raised.',
-          async function() {
-            this.test.cell = {columnId: vendorName, rowId: this.test.title};
-            const credential = credentials.clone('issuedVc');
-            delete credential.proof.type;
+          it('If the "proof.verificationMethod" field is invalid, an error ' +
+            'MUST be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('invalidVm');
             await verificationFail({credential, verifier});
           });
-        it(`If the "proof.type" field is not the string ` +
-          `"${expectedProofType}", an error MUST be raised.`, async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('invalidProofType');
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.verificationMethod" field is missing, an error ' +
-          'MUST be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('noVm');
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.verificationMethod" field is invalid, an error ' +
-          'MUST be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('invalidVm');
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.proofPurpose" field is missing, an error MUST ' +
-          'be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('noProofPurpose');
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.proofPurpose" field is invalid, an error MUST ' +
-          'be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('invalidProofPurpose');
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.proofPurpose" value does not match ' +
-          '"options.expectedProofPurpose", an error MUST be raised.',
-        async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('issuedVc');
-          await verificationFail({
-            credential, verifier, options: {
-              // this will fail since the vc generated is created with the
-              // assertionMethod proof purpose.
-              expectedProofPurpose: 'authentication'
-            }
+          it('If the "proof.proofPurpose" field is missing, an error MUST ' +
+            'be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('noProofPurpose');
+            await verificationFail({credential, verifier});
+          });
+          it('If the "proof.proofPurpose" field is invalid, an error MUST ' +
+            'be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('invalidProofPurpose');
+            await verificationFail({credential, verifier});
+          });
+          it('If the "proof.proofPurpose" value does not match ' +
+            '"options.expectedProofPurpose", an error MUST be raised.',
+          async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('issuedVc');
+            await verificationFail({
+              credential, verifier, options: {
+                // this will fail since the vc generated is created with the
+                // assertionMethod proof purpose.
+                expectedProofPurpose: 'authentication'
+              }
+            });
+          });
+          it('If the "proof.proofValue" field is missing, an error MUST ' +
+            'be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            // proofValue is added after signing so we can
+            // safely delete it for this test
+            const credential = credentials.clone('issuedVc');
+            delete credential.proof.proofValue;
+            await verificationFail({credential, verifier});
+          });
+          it('If the "proof.proofValue" field is invalid, an error MUST be ' +
+            'raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            // null should be an invalid proofValue for almost any proof
+            const credential = credentials.clone('issuedVc');
+            credential.proof.proofValue = null;
+            await verificationFail({credential, verifier});
+          });
+          it('If the "proof.created" field is invalid, an error MUST be ' +
+            'raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            // FIXME: Fix test to check if a cryptographic suite requires the
+            // “proof.created” value
+            const credential = credentials.clone('invalidCreated');
+            await verificationFail({credential, verifier});
+          });
+          it('If the "proof.proofValue" field is not a multibase-encoded ' +
+            'base58-btc value, an error MUST be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('issuedVc');
+            // remove the initial z
+            credential.proof.proofValue = credential.proof.proofValue.slice(1);
+            await verificationFail({credential, verifier});
+          });
+          it('If the "options.domain" is set and it does not match ' +
+            '"proof.domain", an error MUST be raised.',
+          async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('invalidDomain');
+            await verificationFail({
+              credential, verifier, options: {
+                domain: 'domain.example'
+              }
+            });
+          });
+          it('If the "options.challenge" is set and it does not match ' +
+            '"proof.challenge", an error MUST be raised.', async function() {
+            this.test.cell = {columnId, rowId: this.test.title};
+            const credential = credentials.clone('invalidChallenge');
+            await verificationFail({
+              credential, verifier, options: {
+                domain: 'domain.example',
+                challenge: '1235abcd6789'
+              }
+            });
           });
         });
-        it('If the "proof.proofValue" field is missing, an error MUST ' +
-          'be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          // proofValue is added after signing so we can
-          // safely delete it for this test
-          const credential = credentials.clone('issuedVc');
-          delete credential.proof.proofValue;
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.proofValue" field is invalid, an error MUST be ' +
-          'raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          // null should be an invalid proofValue for almost any proof
-          const credential = credentials.clone('issuedVc');
-          credential.proof.proofValue = null;
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.created" field is invalid, an error MUST be ' +
-          'raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          // FIXME: Fix test to check if a cryptographic suite requires the
-          // “proof.created” value
-          const credential = credentials.clone('invalidCreated');
-          await verificationFail({credential, verifier});
-        });
-        it('If the "proof.proofValue" field is not a multibase-encoded ' +
-          'base58-btc value, an error MUST be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('issuedVc');
-          // remove the initial z
-          credential.proof.proofValue = credential.proof.proofValue.slice(1);
-          await verificationFail({credential, verifier});
-        });
-        it('If the "options.domain" is set and it does not match ' +
-          '"proof.domain", an error MUST be raised.',
-        async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('invalidDomain');
-          await verificationFail({
-            credential, verifier, options: {
-              domain: 'domain.example'
-            }
-          });
-        });
-        it('If the "options.challenge" is set and it does not match ' +
-          '"proof.challenge", an error MUST be raised.', async function() {
-          this.test.cell = {columnId: vendorName, rowId: this.test.title};
-          const credential = credentials.clone('invalidChallenge');
-          await verificationFail({
-            credential, verifier, options: {
-              domain: 'domain.example',
-              challenge: '1235abcd6789'
-            }
-          });
-        });
-      });
+      }
     } // end for loop
   }); // end describe
 }
