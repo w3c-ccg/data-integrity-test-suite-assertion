@@ -38,11 +38,7 @@ export function checkDataIntegrityProofFormat({
     this.report = true;
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Issuer';
-    if(isEcdsaTests) {
-      this.implemented = [];
-    } else {
-      this.implemented = [...implemented.keys()];
-    }
+    this.implemented = [];
     for(const [vendorName, {endpoints}] of implemented) {
       if(!endpoints) {
         throw new Error(`Expected ${vendorName} to have endpoints.`);
@@ -59,6 +55,7 @@ export function checkDataIntegrityProofFormat({
             });
           }
         } else {
+          this.implemented.push(vendorName);
           runDataIntegrityProofFormatTests({
             endpoints, expectedCryptoSuite, expectedProofTypes,
             testDescription: vendorName, vendorName
@@ -86,14 +83,14 @@ function runDataIntegrityProofFormatTests({
       proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
     });
     it('"proof" field MUST exist and MUST be either a single object or ' +
-        'an unordered set of objects.', function() {
+      'an unordered set of objects.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
       should.exist(data, 'Expected data.');
       const proof = data.proof;
       should.exist(proof, 'Expected proof to exist.');
       const validType = isObjectOrArrayOfObjects(proof);
       validType.should.equal(true, 'Expected proof to be' +
-          'either an object or an unordered set of objects.');
+        'either an object or an unordered set of objects.');
     });
     it('if "proof.id" field exists, it MUST be a valid URL.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
@@ -107,7 +104,7 @@ function runDataIntegrityProofFormatTests({
             err = e;
           }
           should.not.exist(err, 'Expected URL check of the "proof.id" ' +
-              'to not error.');
+            'to not error.');
           should.exist(result, 'Expected "proof.id" to be a URL.');
         }
       }
@@ -121,7 +118,7 @@ function runDataIntegrityProofFormatTests({
       }
     });
     it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
-        `and the associated document MUST include expected contexts.`,
+      `and the associated document MUST include expected contexts.`,
     function() {
       this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
@@ -145,9 +142,9 @@ function runDataIntegrityProofFormatTests({
 
         if(proof.type === 'Ed25519Signature2020') {
           const expectedContext =
-              'https://w3id.org/security/suites/ed25519-2020/v1';
+            'https://w3id.org/security/suites/ed25519-2020/v1';
           const hasExpectedContext =
-              data['@context'].includes(expectedContext);
+            data['@context'].includes(expectedContext);
           hasExpectedContext.should.equal(true);
         }
       }
@@ -159,12 +156,12 @@ function runDataIntegrityProofFormatTests({
           for(const proof of proofs) {
             proof.should.have.property('cryptosuite');
             proof.cryptosuite.should.be.a('string', 'Expected ' +
-                '"cryptosuite" property to be a string.');
+              '"cryptosuite" property to be a string.');
           }
         });
     }
     it('if "proof.created" field exists, it MUST be a valid ' +
-        'XMLSCHEMA-11 dateTimeStamp value.', function() {
+      'XMLSCHEMA-11 dateTimeStamp value.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.created) {
@@ -175,7 +172,7 @@ function runDataIntegrityProofFormatTests({
       }
     });
     it('if "proof.expires" field exists, it MUST be a valid ' +
-        'XMLSCHEMA-11 dateTimeStamp value.', function() {
+      'XMLSCHEMA-11 dateTimeStamp value.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.expires) {
@@ -198,9 +195,9 @@ function runDataIntegrityProofFormatTests({
             err = e;
           }
           should.not.exist(err, 'Expected URL check of the ' +
-              '"verificationMethod" to not error.');
+            '"verificationMethod" to not error.');
           should.exist(result, 'Expected "verificationMethod" ' +
-              'to be a URL');
+            'to be a URL');
         }
       });
     it('"proof.proofPurpose" field MUST exist and be a string.',
@@ -220,7 +217,7 @@ function runDataIntegrityProofFormatTests({
         }
       });
     it('The "proof.proofValue" field MUST be a multibase-encoded ' +
-        'base58-btc encoded value.', function() {
+      'base58-btc encoded value.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const multibase = 'z';
       proofs.some(proof => {
@@ -233,14 +230,14 @@ function runDataIntegrityProofFormatTests({
       );
     });
     it('if "proof.domain" field exists, it MUST be either a string, ' +
-        'or an unordered set of strings.', function() {
+      'or an unordered set of strings.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.domain) {
           const validType = isStringOrArrayOfStrings(proof.domain);
           validType.should.equal(true, 'Expected ' +
-              '"proof.domain" to be either a string or an unordered ' +
-              'set of strings.');
+            '"proof.domain" to be either a string or an unordered ' +
+            'set of strings.');
         }
       }
     });
@@ -251,9 +248,9 @@ function runDataIntegrityProofFormatTests({
           if(proof.challenge) {
             // domain must be specified
             should.exist(proof.domain, 'Expected "proof.domain" ' +
-                'to be specified.');
+              'to be specified.');
             proof.challenge.should.be.a('string', 'Expected ' +
-                '"proof.challenge" to be a string.');
+              '"proof.challenge" to be a string.');
           }
         }
       });
@@ -263,7 +260,7 @@ function runDataIntegrityProofFormatTests({
         for(const proof of proofs) {
           if(proof.previousProof) {
             proof.previousProof.should.be.a('string', 'Expected ' +
-                '"proof.previousProof" to be a string.');
+              '"proof.previousProof" to be a string.');
           }
         }
       });
@@ -273,7 +270,7 @@ function runDataIntegrityProofFormatTests({
         for(const proof of proofs) {
           if(proof.nonce) {
             proof.nonce.should.be.a('string', 'Expected "proof.nonce" ' +
-                'to be a string.');
+              'to be a string.');
           }
         }
       });
@@ -305,11 +302,7 @@ export function checkDataIntegrityProofVerifyErrors({
     this.report = true;
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Verifier';
-    if(isEcdsaTests) {
-      this.implemented = [];
-    } else {
-      this.implemented = [...implemented.keys()];
-    }
+    this.implemented = [];
     for(const [vendorName, {endpoints}] of implemented) {
       if(!endpoints) {
         throw new Error(`Expected ${vendorName} to have endpoints.`);
@@ -326,6 +319,7 @@ export function checkDataIntegrityProofVerifyErrors({
             });
           }
         } else {
+          this.implemented.push(vendorName);
           runDataIntegrityProofVerifyTests({
             endpoints, expectedProofType, testDescription: vendorName,
             vendorName
@@ -371,38 +365,38 @@ function runDataIntegrityProofVerifyTests({
         await verificationFail({credential, verifier});
       });
     it(`If the "proof.type" field is not the string ` +
-            `"${expectedProofType}", an error MUST be raised.`,
+      `"${expectedProofType}", an error MUST be raised.`,
     async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('invalidProofType');
       await verificationFail({credential, verifier});
     });
     it('If the "proof.verificationMethod" field is missing, an error ' +
-            'MUST be raised.', async function() {
+      'MUST be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('noVm');
       await verificationFail({credential, verifier});
     });
     it('If the "proof.verificationMethod" field is invalid, an error ' +
-            'MUST be raised.', async function() {
+      'MUST be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('invalidVm');
       await verificationFail({credential, verifier});
     });
     it('If the "proof.proofPurpose" field is missing, an error MUST ' +
-            'be raised.', async function() {
+      'be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('noProofPurpose');
       await verificationFail({credential, verifier});
     });
     it('If the "proof.proofPurpose" field is invalid, an error MUST ' +
-            'be raised.', async function() {
+      'be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('invalidProofPurpose');
       await verificationFail({credential, verifier});
     });
     it('If the "proof.proofPurpose" value does not match ' +
-            '"options.expectedProofPurpose", an error MUST be raised.',
+      '"options.expectedProofPurpose", an error MUST be raised.',
     async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('issuedVc');
@@ -415,7 +409,7 @@ function runDataIntegrityProofVerifyTests({
       });
     });
     it('If the "proof.proofValue" field is missing, an error MUST ' +
-            'be raised.', async function() {
+      'be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       // proofValue is added after signing so we can
       // safely delete it for this test
@@ -424,7 +418,7 @@ function runDataIntegrityProofVerifyTests({
       await verificationFail({credential, verifier});
     });
     it('If the "proof.proofValue" field is invalid, an error MUST be ' +
-            'raised.', async function() {
+      'raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       // null should be an invalid proofValue for almost any proof
       const credential = credentials.clone('issuedVc');
@@ -432,7 +426,7 @@ function runDataIntegrityProofVerifyTests({
       await verificationFail({credential, verifier});
     });
     it('If the "proof.created" field is invalid, an error MUST be ' +
-            'raised.', async function() {
+      'raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       // FIXME: Fix test to check if a cryptographic suite requires the
       // “proof.created” value
@@ -440,7 +434,7 @@ function runDataIntegrityProofVerifyTests({
       await verificationFail({credential, verifier});
     });
     it('If the "proof.proofValue" field is not a multibase-encoded ' +
-            'base58-btc value, an error MUST be raised.', async function() {
+      'base58-btc value, an error MUST be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('issuedVc');
       // remove the initial z
@@ -448,7 +442,7 @@ function runDataIntegrityProofVerifyTests({
       await verificationFail({credential, verifier});
     });
     it('If the "options.domain" is set and it does not match ' +
-            '"proof.domain", an error MUST be raised.',
+      '"proof.domain", an error MUST be raised.',
     async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('invalidDomain');
@@ -459,7 +453,7 @@ function runDataIntegrityProofVerifyTests({
       });
     });
     it('If the "options.challenge" is set and it does not match ' +
-            '"proof.challenge", an error MUST be raised.', async function() {
+      '"proof.challenge", an error MUST be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('invalidChallenge');
       await verificationFail({
