@@ -308,23 +308,18 @@ export function checkDataIntegrityProofVerifyErrors({
         throw new Error(`Expected ${vendorName} to have endpoints.`);
       }
       for(const endpoint of endpoints) {
+        let name;
         if(isEcdsaTests) {
           const {supportedEcdsaKeyTypes} = endpoint.settings;
-          for(const supportedEcdsaKeyType of supportedEcdsaKeyTypes) {
-            const keyType = checkKeyType(supportedEcdsaKeyType);
-            this.implemented.push(`${vendorName}: ${keyType}`);
-            runDataIntegrityProofVerifyTests({
-              endpoints, expectedProofType,
-              testDescription: `${vendorName}: ${keyType}`, vendorName
-            });
-          }
+          const keyTypes = supportedEcdsaKeyTypes.join(', ');
+          name = `${vendorName}: ${keyTypes}`;
         } else {
-          this.implemented.push(vendorName);
-          runDataIntegrityProofVerifyTests({
-            endpoints, expectedProofType, testDescription: vendorName,
-            vendorName
-          });
+          name = vendorName;
         }
+        this.implemented.push(name);
+        runDataIntegrityProofVerifyTests({
+          endpoints, expectedProofType, testDescription: name, vendorName
+        });
       }
     } // end for loop
   }); // end describe
