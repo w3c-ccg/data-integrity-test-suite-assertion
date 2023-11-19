@@ -2,7 +2,7 @@
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  createInitialVc, dateRegex, getKeyType, isObjectOrArrayOfObjects,
+  checkKeyType, createInitialVc, dateRegex, isObjectOrArrayOfObjects,
   isStringOrArrayOfStrings, shouldBeBs58, verificationFail
 } from './helpers.js';
 import chai from 'chai';
@@ -38,13 +38,6 @@ export function checkDataIntegrityProofFormat({
     this.report = true;
     if(isEcdsaTests) {
       this.implemented = [];
-      for(const [name, {endpoints}] of implemented) {
-        for(const endpoint of endpoints) {
-          const {supportedEcdsaKeyTypes} = endpoint.settings;
-          const keyType = getKeyType(supportedEcdsaKeyTypes);
-          this.implemented.push(`${name}: ${keyType}`);
-        }
-      }
     } else {
       this.implemented = [...implemented.keys()];
     }
@@ -58,8 +51,11 @@ export function checkDataIntegrityProofFormat({
         let testDescription;
         if(isEcdsaTests) {
           const {supportedEcdsaKeyTypes} = endpoint.settings;
-          const keyType = getKeyType(supportedEcdsaKeyTypes);
-          testDescription = `${vendorName}: ${keyType}`;
+          for(const supportedEcdsaKeyType of supportedEcdsaKeyTypes) {
+            const keyType = checkKeyType(supportedEcdsaKeyType);
+            this.implemented.push(`${vendorName}: ${keyType}`);
+            testDescription = `${vendorName}: ${keyType}`;
+          }
         } else {
           testDescription = vendorName;
         }
@@ -298,13 +294,6 @@ export function checkDataIntegrityProofVerifyErrors({
     this.report = true;
     if(isEcdsaTests) {
       this.implemented = [];
-      for(const [name, {endpoints}] of implemented) {
-        for(const endpoint of endpoints) {
-          const {supportedEcdsaKeyTypes} = endpoint.settings;
-          const keyType = getKeyType(supportedEcdsaKeyTypes);
-          this.implemented.push(`${name}: ${keyType}`);
-        }
-      }
     } else {
       this.implemented = [...implemented.keys()];
     }
@@ -318,8 +307,11 @@ export function checkDataIntegrityProofVerifyErrors({
         let testDescription;
         if(isEcdsaTests) {
           const {supportedEcdsaKeyTypes} = endpoint.settings;
-          const keyType = getKeyType(supportedEcdsaKeyTypes);
-          testDescription = `${vendorName}: ${keyType}`;
+          for(const supportedEcdsaKeyType of supportedEcdsaKeyTypes) {
+            const keyType = checkKeyType(supportedEcdsaKeyType);
+            this.implemented.push(`${vendorName}: ${keyType}`);
+            testDescription = `${vendorName}: ${keyType}`;
+          }
         } else {
           testDescription = vendorName;
         }
