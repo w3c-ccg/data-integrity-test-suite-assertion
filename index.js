@@ -25,13 +25,18 @@ const should = chai.should();
  * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
+ * @param {boolean} [options.testDescription] - An option to specify
+ *   the test description.
+ *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
-  expectedCryptoSuite = true, isEcdsaTests = false
+  expectedCryptoSuite = true, isEcdsaTests = false,
+  testDescription
 } = {}) {
-  return describe('Data Integrity (issuer)', function() {
+  const description = testDescription || 'Data Integrity (issuer)';
+  return describe(description, function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
@@ -288,14 +293,17 @@ function runDataIntegrityProofFormatTests({
  * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
+ * @param {boolean} [options.testDescription] - An option to specify
+ *   the test description.
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
-  isEcdsaTests = false
+  isEcdsaTests = false, testDescription
 } = {}) {
-  return describe('Data Integrity (verifier)', function() {
+  const description = testDescription || 'Data Integrity (verifier)';
+  return describe(description, function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
@@ -326,7 +334,7 @@ export function checkDataIntegrityProofVerifyErrors({
 }
 
 function runDataIntegrityProofVerifyTests({
-  endpoints, expectedProofType, testDescription, vendorName
+  endpoints, expectedProofType, testDescription, vendorName,
 }) {
   const columnId = testDescription;
   describe(testDescription, function() {
