@@ -26,17 +26,17 @@ const should = chai.should();
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
  * @param {string} [options.testDescription] - An option to define
- *   the test description.
+ *   the test description. The default value is set to
+ *   `Data Integrity (issuer)`.
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
   expectedCryptoSuite = true, isEcdsaTests = false,
-  testDescription
+  testDescription = 'Data Integrity (issuer)'
 } = {}) {
-  const description = testDescription || 'Data Integrity (issuer)';
-  return describe(description, function() {
+  return describe(testDescription, function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
@@ -294,16 +294,16 @@ function runDataIntegrityProofFormatTests({
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
  * @param {string} [options.testDescription] - An option to define
- *   the test description.
+ *   the test description. The default value is set to
+ *   `Data Integrity (verifier)`.
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
-  isEcdsaTests = false, testDescription
+  isEcdsaTests = false, testDescription = 'Data Integrity (verifier)'
 } = {}) {
-  const description = testDescription || 'Data Integrity (verifier)';
-  return describe(description, function() {
+  return describe(testDescription, function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
