@@ -25,7 +25,7 @@ const should = chai.should();
  * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
- * @param {boolean} [options.testDescription] - An option to specify
+ * @param {string} [options.testDescription] - An option to define
  *   the test description.
  *
  * @returns {object} Returns the test suite being run.
@@ -293,7 +293,7 @@ function runDataIntegrityProofFormatTests({
  * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
- * @param {boolean} [options.testDescription] - An option to specify
+ * @param {string} [options.testDescription] - An option to define
  *   the test description.
  *
  * @returns {object} Returns the test suite being run.
