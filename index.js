@@ -287,11 +287,8 @@ function runDataIntegrityProofFormatTests({
             this.cell = {columnId, rowId: this.title};
             if(data.image?.digestMultibase) {
               const value = data.image.digestMultibase;
-              const validType = isStringOrArrayOfStrings(value);
 
-              validType.should.equal(true, 'Expected ' +
-                '"data.image.digestMultibase" to be either a string ' +
-                'or an unordered set of strings.');
+              isStringOrArrayOfStrings(value).should.be.true;
             }
           });
         });
