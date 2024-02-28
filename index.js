@@ -279,6 +279,24 @@ function runDataIntegrityProofFormatTests({
           }
         }
       });
+
+    describe('2.6 Resource Integrity', function() {
+      describe('with optional associated object named "image"', function() {
+        describe('when "digestMultibase" exists', () => {
+          it('MUST be a string or array of strings', () => {
+            this.cell = {columnId, rowId: this.title};
+            if(data.image?.digestMultibase) {
+              const value = data.image.digestMultibase;
+              const validType = isStringOrArrayOfStrings(value);
+
+              validType.should.equal(true, 'Expected ' +
+                '"data.image.digestMultibase" to be either a string ' +
+                'or an unordered set of strings.');
+            }
+          });
+        });
+      });
+    });
   });
 }
 

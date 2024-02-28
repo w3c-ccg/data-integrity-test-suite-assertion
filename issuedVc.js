@@ -15,6 +15,10 @@ export const issuedVc = {
   credentialSubject: {
     id: 'did:key:z6MktKwz7Ge1Yxzr4JHavN33wiwa8y81QdcMRLXQsrH9T53b'
   },
+  image: {
+    id: 'https://university.example.org/images/58473',
+    digestMultibase: 'zQmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
+  },
   proof: {
     type: 'DataIntegrityProof',
     created: '2022-09-27T13:29:25Z',
