@@ -35,8 +35,19 @@ export const createInitialVc = async ({issuer, vc} = {}) => {
 // RegExp with bs58 characters in it
 const bs58 =
   /^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/;
+
+/**
+ *  Regex to test conformity to base-64-url-no-pad character set.
+ *
+ * @see {@link https://www.w3.org/TR/vc-data-integrity/#multibase-0} for
+ * specification.
+*/
+const BASE_64URL_NOPAD_REGEX = /^[A-Za-z0-9\-_]+$/;
+
 // assert something is entirely bs58 encoded
 export const shouldBeBs58 = s => bs58.test(s);
+
+export const shouldBeBase64NoPadUrl = s => BASE_64URL_NOPAD_REGEX.test(s);
 
 export const verificationFail = async ({
   credential, verifier, options = {}

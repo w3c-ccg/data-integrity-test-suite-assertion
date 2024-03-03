@@ -3,7 +3,8 @@
  */
 import {
   checkKeyType, createInitialVc, dateRegex, isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, shouldBeBs58, verificationFail
+  isStringOrArrayOfStrings, shouldBeBase64NoPadUrl,
+  shouldBeBs58, verificationFail
 } from './helpers.js';
 import chai from 'chai';
 import {generateTestData} from './vc-generator/index.js';
@@ -221,19 +222,32 @@ function runDataIntegrityProofFormatTests({
           proof.proofValue.should.be.a('string');
         }
       });
-    it('The "proof.proofValue" field MUST be a multibase-encoded ' +
-      'base58-btc encoded value.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
-      const multibase = 'z';
-      proofs.some(proof => {
-        const value = proof?.proofValue;
-        return value.startsWith(multibase) && shouldBeBs58(value);
-      }).should.equal(
-        true,
-        'Expected "proof.proofValue" to be multibase-encoded ' +
-          'base58-btc value.'
-      );
-    });
+    it('"proof.proofValue" MUST be a valid multibase-encoded value.',
+      function() {
+        this.test.cell = {columnId, rowId: this.test.title};
+
+        const b64Suites = ['ecdsa-sd-2023', 'bbs-2023'];
+
+        const expectedPrefix = cryptosuite =>
+          b64Suites.includes(cryptosuite) ? 'u' : 'z';
+        const isExpectedEncoding = ({cryptosuite, proofValue}) =>
+          b64Suites.includes(cryptosuite) ?
+            shouldBeBase64NoPadUrl(proofValue) : shouldBeBs58(proofValue);
+
+        for(const proof of proofs) {
+          proof.proofValue.slice(0, 1)
+            .should.equal(
+              expectedPrefix(proof.cryptosuite),
+              b64Suites.includes(proof.cryptosuite) ?
+                'Expected "proof.proofValue" to be a base64url value' :
+                'Expected "proof.proofValue" to be a base58btc value'
+            );
+
+          isExpectedEncoding(proof).should.equal(true,
+            'Expected "proof.proofValue" to be correctly encoded'
+          );
+        }
+      });
     it('if "proof.domain" field exists, it MUST be either a string, ' +
       'or an unordered set of strings.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
