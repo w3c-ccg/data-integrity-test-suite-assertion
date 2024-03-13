@@ -454,7 +454,7 @@ function runDataIntegrityProofVerifyTests({
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('issuedVc');
 
-      // Remove the multibase header
+      // Remove the multibase header to cause validation error
       credential.proof.proofValue = credential.proof.proofValue.slice(1);
 
       await verificationFail({credential, verifier});
