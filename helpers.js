@@ -69,6 +69,33 @@ export const verificationFail = async ({
   );
 };
 
+export function expectedMultibasePrefix(cryptosuite) {
+  const b64urlNoPadSuites = ['ecdsa-sd-2023', 'bbs-2023'];
+
+  if(b64urlNoPadSuites.includes(cryptosuite)) {
+    return {
+      prefix: 'u',
+      name: 'base64url-no-pad'
+    };
+  }
+
+  return {
+    prefix: 'z',
+    name: 'base58btc'
+  };
+}
+
+export function isValidMultibaseEncoded(rawValue, multibasePrefix) {
+  switch(multibasePrefix) {
+    case 'z':
+      return shouldBeBs58(rawValue);
+    case 'u':
+      return shouldBeBase64NoPadUrl(rawValue);
+    default:
+      throw new Error(`Unhandled encoding prefix: ${multibasePrefix}.`);
+  }
+}
+
 // Regex for valid  XML Schema 1.1 dateTimeStamp value
 export const dateRegex = new RegExp('-?([1-9][0-9]{3,}|0[0-9]{3})' +
   '-(0[1-9]|1[0-2])' +
