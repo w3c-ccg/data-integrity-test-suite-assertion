@@ -2,9 +2,10 @@
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  checkKeyType, createInitialVc, dateRegex, isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, shouldBeBase64NoPadUrl,
-  shouldBeBs58, verificationFail
+  checkKeyType, createInitialVc, dateRegex, expectedMultibasePrefix,
+  isObjectOrArrayOfObjects,
+  isStringOrArrayOfStrings, isValidMultibaseEncoded,
+  verificationFail
 } from './helpers.js';
 import chai from 'chai';
 import {generateTestData} from './vc-generator/index.js';
@@ -222,32 +223,30 @@ function runDataIntegrityProofFormatTests({
           proof.proofValue.should.be.a('string');
         }
       });
-    it('"proof.proofValue" MUST be a valid multibase-encoded value.',
-      function() {
-        this.test.cell = {columnId, rowId: this.test.title};
+    it('"proof.proofValue" MUST be a valid multibase-encoded value according ' +
+      'to the format required by "proof.cryptosuite".',
+    function() {
+      this.test.cell = {columnId, rowId: this.test.title};
 
-        const b64Suites = ['ecdsa-sd-2023', 'bbs-2023'];
+      for(const proof of proofs) {
+        const {
+          prefix: expectedPrefix,
+          name: encodingName
+        } = expectedMultibasePrefix(proof.cryptosuite);
 
-        const expectedPrefix = cryptosuite =>
-          b64Suites.includes(cryptosuite) ? 'u' : 'z';
-        const isExpectedEncoding = ({cryptosuite, proofValue}) =>
-          b64Suites.includes(cryptosuite) ?
-            shouldBeBase64NoPadUrl(proofValue) : shouldBeBs58(proofValue);
-
-        for(const proof of proofs) {
-          proof.proofValue.slice(0, 1)
-            .should.equal(
-              expectedPrefix(proof.cryptosuite),
-              b64Suites.includes(proof.cryptosuite) ?
-                'Expected "proof.proofValue" to be a base64url value' :
-                'Expected "proof.proofValue" to be a base58btc value'
-            );
-
-          isExpectedEncoding(proof).should.equal(true,
-            'Expected "proof.proofValue" to be correctly encoded'
+        proof.proofValue.slice(0, 1)
+          .should.equal(
+            expectedPrefix,
+            `Expected "proof.proofValue" to be a ${encodingName} value`
           );
-        }
-      });
+
+        isValidMultibaseEncoded(proof.proofValue, expectedPrefix).should
+          .equal(
+            true,
+            `Expected "proof.proofValue" to be a valid ${encodingName} value`
+          );
+      }
+    });
     it('if "proof.domain" field exists, it MUST be either a string, ' +
       'or an unordered set of strings.', function() {
       this.test.cell = {columnId, rowId: this.test.title};
@@ -450,12 +449,14 @@ function runDataIntegrityProofVerifyTests({
       const credential = credentials.clone('invalidCreated');
       await verificationFail({credential, verifier});
     });
-    it('If the "proof.proofValue" field is not a multibase-encoded ' +
-      'base58-btc value, an error MUST be raised.', async function() {
+    it('If the "proof.proofValue" field is not multibase-encoded, an error ' +
+      'MUST be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
       const credential = credentials.clone('issuedVc');
-      // remove the initial z
+
+      // Remove the multibase header
       credential.proof.proofValue = credential.proof.proofValue.slice(1);
+
       await verificationFail({credential, verifier});
     });
     it('If the "options.domain" is set and it does not match ' +
