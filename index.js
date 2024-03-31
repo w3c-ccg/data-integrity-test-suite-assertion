@@ -223,8 +223,8 @@ function runDataIntegrityProofFormatTests({
           proof.proofValue.should.be.a('string');
         }
       });
-    it('"proof.proofValue" MUST be a valid multibase-encoded value according ' +
-      'to the format required by "proof.cryptosuite".',
+    it('The contents of the value ("proof.proofValue") MUST be expressed ' +
+    'with a header and encoding as described in Section 2.4 Multibase.',
     function() {
       this.test.cell = {columnId, rowId: this.test.title};
 
