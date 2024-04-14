@@ -4,3 +4,4 @@
 
 ### Added
 - Initial release, see individual commits for history.
+- Exports for helper functions that can be used in other test suites.
