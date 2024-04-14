@@ -4,8 +4,8 @@
 import {
   checkKeyType, createInitialVc, dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, isValidMultibaseEncoded, shouldBeBs58,
-  shouldBeBase64NoPadUrl, verificationFail
+  isStringOrArrayOfStrings, isValidMultibaseEncoded, shouldBeBase64NoPadUrl,
+  shouldBeBs58, verificationFail
 } from './helpers.js';
 import chai from 'chai';
 import {generateTestData} from './vc-generator/index.js';
