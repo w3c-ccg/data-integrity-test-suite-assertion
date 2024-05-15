@@ -9,11 +9,14 @@ import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import {
   cryptosuite as ecdsaRdfc2019Cryptosuite
 } from '@digitalbazaar/ecdsa-rdfc-2019-cryptosuite';
+import {cryptosuite as eddsaRdfc2022CryptoSuite} from
+  '@digitalbazaar/eddsa-rdfc-2022-cryptosuite';
 
 const cryptosuites = new Map([
   ['ecdsa-sd-2023', ecdsaSd2023Cryptosuite],
   ['bbs-2023', bbs2023Cryptosuite],
-  ['ecdsa-rdf-2019', ecdsaRdfc2019Cryptosuite]
+  ['ecdsa-rdf-2019', ecdsaRdfc2019Cryptosuite],
+  ['eddsa-rdfc-2022', eddsaRdfc2022CryptoSuite]
 ]);
 
 export const getSuite = ({
@@ -34,12 +37,12 @@ export const getSuite = ({
       });
     }
     case 'ecdsa-rdfc-2019': {
-      return new DataIntegrityProof({
-        signer,
-        cryptosuite: ecdsaRdfc2019Cryptosuite
+      return _getProof({
+        suite,
+        signer
       });
     }
-    case `ecdsa-sd-2023`: {
+    case 'ecdsa-sd-2023': {
       return _getPointersProof({
         suite,
         signer,
@@ -48,10 +51,26 @@ export const getSuite = ({
         verify
       });
     }
+    case 'eddsa-rdfc-2022': {
+      return _getProof({
+        suite,
+        signer
+      });
+    }
     default:
       throw new Error(`Unsupported cryptosuite suite: ${suite}`);
   }
 };
+
+function _getProof({
+  suite,
+  signer
+}) {
+  return new DataIntegrityProof({
+    signer,
+    cryptosuite: cryptosuites.get(suite)
+  });
+}
 
 function _getPointersProof({
   suite,
