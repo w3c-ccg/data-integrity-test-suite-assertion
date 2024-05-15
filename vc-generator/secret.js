@@ -29,11 +29,11 @@ export async function getSerializedKeyPair({suite, keyType}) {
     throw new Error(`Unrecognized suite: ${suite}`);
   }
   if(typeof keySection === 'string') {
-    return keySection;
+    return keyDir + keySection;
   }
   const keyPath = keySection[keyType];
   if(!keyPath) {
     throw new Error(`Unrecognized keyType ${keyType} for suite ${suite}`);
   }
-  return keyPath;
+  return keyDir + keyPath;
 }

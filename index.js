@@ -347,7 +347,7 @@ export function checkDataIntegrityProofVerifyErrors({
 }
 
 function runDataIntegrityProofVerifyTests({
-  endpoints, expectedProofType, testDescription, vendorName,
+  endpoints, expectedProofType, testDescription, vendorName, testDataOptions
 }) {
   const columnId = testDescription;
   describe(testDescription, function() {
@@ -357,7 +357,7 @@ function runDataIntegrityProofVerifyTests({
     }
     let credentials;
     before(async function() {
-      credentials = await generateTestData();
+      credentials = await generateTestData(testDataOptions);
     });
     it('If the "proof" field is missing, an error MUST be raised.',
       async function() {
