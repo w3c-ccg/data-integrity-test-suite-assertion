@@ -10,6 +10,12 @@ import {
   cryptosuite as ecdsaRdfc2019Cryptosuite
 } from '@digitalbazaar/ecdsa-rdfc-2019-cryptosuite';
 
+const cryptosuites = new Map([
+  ['ecdsa-sd-2023', ecdsaSd2023Cryptosuite],
+  ['bbs-2023', bbs2023Cryptosuite],
+  ['ecdsa-rdf-2019', ecdsaRdfc2019Cryptosuite]
+]);
+
 export const getSuite = ({
   suite,
   signer,
@@ -19,46 +25,63 @@ export const getSuite = ({
 }) => {
   switch(suite) {
     case `bbs-2023`: {
-      if(mandatoryPointers) {
-        return new DataIntegrityProof({
-          signer,
-          cryptosuite: bbs2023Cryptosuite.createSignCryptosuite({
-            mandatoryPointers
-          })
-        });
-      }
-      if(selectivePointers) {
-        return new DataIntegrityProof({
-          signer,
-          cryptosuite: bbs2023Cryptosuite.createDiscloseCryptosuite({
-            selectivePointers
-          })
-        });
-      }
-      if(verify) {
-        return new DataIntegrityProof({
-          cryptosuite: bbs2023Cryptosuite.createVerifyCryptosuite()
-        });
-      }
-      throw new Error('Suite "bbs-2023" requires either mandatory or ' +
-        'selective pointers');
+      return _getPointersProof({
+        suite,
+        signer,
+        mandatoryPointers,
+        selectivePointers,
+        verify
+      });
     }
     case 'ecdsa-rdfc-2019': {
-      return ecdsaRdfc2019Cryptosuite;
+      return new DataIntegrityProof({
+        signer,
+        cryptosuite: ecdsaRdfc2019Cryptosuite
+      });
     }
     case `ecdsa-sd-2023`: {
-      if(mandatoryPointers) {
-        return ecdsaSd2023Cryptosuite.createSignCryptosuite({
-          mandatoryPointers
-        });
-      }
-      if(selectivePointers) {
-        return ecdsaSd2023Cryptosuite.createDiscloseCryptosuite({
-          selectivePointers
-        });
-      }
+      return _getPointersProof({
+        suite,
+        signer,
+        mandatoryPointers,
+        selectivePointers,
+        verify
+      });
     }
     default:
       throw new Error(`Unsupported cryptosuite suite: ${suite}`);
   }
 };
+
+function _getPointersProof({
+  suite,
+  signer,
+  mandatoryPointers,
+  selectivePointers,
+  verify
+}) {
+  const _cryptosuite = cryptosuites.get(suite);
+  if(mandatoryPointers) {
+    return new DataIntegrityProof({
+      signer,
+      cryptosuite: _cryptosuite.createSignCryptosuite({
+        mandatoryPointers
+      })
+    });
+  }
+  if(selectivePointers) {
+    return new DataIntegrityProof({
+      signer,
+      cryptosuite: _cryptosuite.createDiscloseCryptosuite({
+        selectivePointers
+      })
+    });
+  }
+  if(verify) {
+    return new DataIntegrityProof({
+      cryptosuite: _cryptosuite.createVerifyCryptosuite()
+    });
+  }
+  throw new Error(`Suite "${suite}" requires either mandatoryPointers, ` +
+      `selectivePointers, or verify.`);
+}
