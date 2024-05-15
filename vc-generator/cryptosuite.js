@@ -9,6 +9,9 @@ import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import {
   cryptosuite as ecdsaRdfc2019Cryptosuite
 } from '@digitalbazaar/ecdsa-rdfc-2019-cryptosuite';
+import {
+  cryptosuite as eddsa2022CryptoSuite
+} from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {cryptosuite as eddsaRdfc2022CryptoSuite} from
   '@digitalbazaar/eddsa-rdfc-2022-cryptosuite';
 
@@ -16,6 +19,7 @@ const cryptosuites = new Map([
   ['ecdsa-sd-2023', ecdsaSd2023Cryptosuite],
   ['bbs-2023', bbs2023Cryptosuite],
   ['ecdsa-rdf-2019', ecdsaRdfc2019Cryptosuite],
+  ['eddsa-2022', eddsa2022CryptoSuite],
   ['eddsa-rdfc-2022', eddsaRdfc2022CryptoSuite]
 ]);
 
@@ -49,6 +53,12 @@ export const getSuite = ({
         mandatoryPointers,
         selectivePointers,
         verify
+      });
+    }
+    case 'eddsa-2022': {
+      return _getProof({
+        suite,
+        signer
       });
     }
     case 'eddsa-rdfc-2022': {
