@@ -2,11 +2,7 @@
  * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
  */
 import * as vc from '@digitalbazaar/vc';
-import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import {documentLoader} from './documentLoader.js';
-import {
-  cryptosuite as eddsa2022CryptoSuite
-} from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {invalidCreateProof} from './helpers.js';
 import jsigs from 'jsonld-signatures';
 import {klona} from 'klona';
@@ -28,54 +24,47 @@ export const vcGenerators = new Map([
   ['invalidProofPurpose', _invalidProofPurpose]
 ]);
 
-async function _invalidProofPurpose({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _invalidProofPurpose({suite, credential}) {
   suite.createProof = invalidCreateProof({mockPurpose: 'invalidPurpose'});
   return _issueCloned({suite, credential});
 }
 
-async function _invalidDomain({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _invalidDomain({suite, credential}) {
   const domain = 'invalid-vc-domain.example.com';
   const challenge = '1235abcd6789';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
   return _issueCloned({suite, credential, purpose});
 }
 
-async function _invalidChallenge({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _invalidChallenge({suite, credential}) {
   const domain = 'domain.example';
   const challenge = 'invalid-challenge';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
   return _issueCloned({suite, credential, purpose});
 }
 
-async function _noProofPurpose({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _noProofPurpose({suite, credential}) {
   suite.createProof = invalidCreateProof({addProofPurpose: false});
   return _issueCloned({suite, credential});
 }
 
-async function _invalidVm({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _invalidVm({suite, credential}) {
   suite.verificationMethod = 'did:key:invalidVm';
   return _issueCloned({suite, credential});
 }
 
-async function _noVm({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _noVm({suite, credential}) {
   suite.createProof = invalidCreateProof({addVm: false});
   return _issueCloned({suite, credential});
 }
 
-async function _invalidCreated({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _invalidCreated({suite, credential}) {
+  // FIXME does this actually sign with an invalid created?
   suite.date = 'invalidDate';
   return _issueCloned({suite, credential});
 }
 
-async function _vcCreatedOneYearAgo({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _vcCreatedOneYearAgo({suite, credential}) {
   // intentionally set the created date to be a year ago
   const created = new Date();
   created.setDate(created.getDate() - 365);
@@ -83,28 +72,18 @@ async function _vcCreatedOneYearAgo({signer, credential}) {
   return _issueCloned({suite, credential});
 }
 
-async function _noCreated({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _noCreated({suite, credential}) {
   suite.createProof = invalidCreateProof({addCreated: false});
   return _issueCloned({suite, credential});
 }
 
-async function _incorrectProofType({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _incorrectProofType({suite, credential}) {
   suite.type = 'UnknownProofType';
   return _issueCloned({suite, credential});
 }
 
-async function _issuedVc({signer, credential}) {
-  const suite = _createEddsa2022Suite({signer});
+async function _issuedVc({suite, credential}) {
   return _issueCloned({suite, credential});
-}
-
-function _createEddsa2022Suite({signer}) {
-  // remove milliseconds precision
-  const date = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
-  const cryptosuite = eddsa2022CryptoSuite;
-  return new DataIntegrityProof({signer, date, cryptosuite});
 }
 
 async function _issueCloned({
