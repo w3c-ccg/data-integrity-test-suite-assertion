@@ -80,3 +80,15 @@ export const validVerifierImplementations = new Map([
 export const invalidIssuerImplementations = new Map([
   ['invalidIssuerImplementation', {endpoints: [invalidIssuer]}]
 ]);
+
+export const mockTestOptions = [{
+  suiteName: 'eddsa-2022'
+}, {
+  suiteName: 'eddsa-rdfc-2022'
+}, {
+  suiteName: 'ecdsa-rdfc-2019',
+  keyType: 'P-256'
+}, {
+  suiteName: 'ecdsa-sd-2023',
+  keyType: 'P-256'
+}];
