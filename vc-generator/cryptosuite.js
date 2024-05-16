@@ -2,27 +2,22 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  * SPDX-License-Identifier: BSD-3-Clause
  */
-import * as bbs2023Cryptosuite from '@digitalbazaar/bbs-2023-cryptosuite';
-import * as ecdsaSd2023Cryptosuite from
-  '@digitalbazaar/ecdsa-sd-2023-cryptosuite';
+import {cryptosuites} from './constants.js';
 import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
-import {
-  cryptosuite as ecdsaRdfc2019Cryptosuite
-} from '@digitalbazaar/ecdsa-rdfc-2019-cryptosuite';
-import {
-  cryptosuite as eddsa2022CryptoSuite
-} from '@digitalbazaar/eddsa-2022-cryptosuite';
-import {cryptosuite as eddsaRdfc2022CryptoSuite} from
-  '@digitalbazaar/eddsa-rdfc-2022-cryptosuite';
 
-const cryptosuites = new Map([
-  ['ecdsa-sd-2023', ecdsaSd2023Cryptosuite],
-  ['bbs-2023', bbs2023Cryptosuite],
-  ['ecdsa-rdfc-2019', ecdsaRdfc2019Cryptosuite],
-  ['eddsa-2022', eddsa2022CryptoSuite],
-  ['eddsa-rdfc-2022', eddsaRdfc2022CryptoSuite]
-]);
-
+/**
+ * Takes in a suite and signer and create a DataIntegrityProof with
+ * the correct cryptosuite and options.
+ *
+ * @param {object} options - Options to use.
+ * @param {string} options.suite - A cryptosuite name.
+ * @param {object} options.signer - A key to sign with.
+ * @param {Array<string>} options.mandatoryPointers - An Array of JSON pointers.
+ * @param {Array<string>} options.selectivePointers -An Array of JSON pointers.
+ * @param {boolean} options.verify - Is the suite for verification?
+ *
+ * @returns {DataIntegrityProof} Returns a D.I. Proof w/ cryptosuite set.
+ */
 export const getSuite = ({
   suite,
   signer,
@@ -76,9 +71,10 @@ function _getProof({
   suite,
   signer
 }) {
+  const {cryptosuite} = cryptosuites.get(suite);
   return new DataIntegrityProof({
     signer,
-    cryptosuite: cryptosuites.get(suite)
+    cryptosuite
   });
 }
 
@@ -89,11 +85,11 @@ function _getPointersProof({
   selectivePointers,
   verify
 }) {
-  const _cryptosuite = cryptosuites.get(suite);
+  const {cryptosuite} = cryptosuites.get(suite);
   if(mandatoryPointers) {
     return new DataIntegrityProof({
       signer,
-      cryptosuite: _cryptosuite.createSignCryptosuite({
+      cryptosuite: cryptosuite.createSignCryptosuite({
         mandatoryPointers
       })
     });
@@ -101,14 +97,14 @@ function _getPointersProof({
   if(selectivePointers) {
     return new DataIntegrityProof({
       signer,
-      cryptosuite: _cryptosuite.createDiscloseCryptosuite({
+      cryptosuite: cryptosuite.createDiscloseCryptosuite({
         selectivePointers
       })
     });
   }
   if(verify) {
     return new DataIntegrityProof({
-      cryptosuite: _cryptosuite.createVerifyCryptosuite()
+      cryptosuite: cryptosuite.createVerifyCryptosuite()
     });
   }
   throw new Error(`Suite "${suite}" requires either mandatoryPointers, ` +
