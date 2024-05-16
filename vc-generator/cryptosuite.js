@@ -10,7 +10,7 @@ import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
  * the correct cryptosuite and options.
  *
  * @param {object} options - Options to use.
- * @param {string} options.suite - A cryptosuite name.
+ * @param {string} options.suiteName - A cryptosuite name.
  * @param {object} options.signer - A key to sign with.
  * @param {Array<string>} options.mandatoryPointers - An Array of JSON pointers.
  * @param {Array<string>} options.selectivePointers -An Array of JSON pointers.
@@ -19,16 +19,16 @@ import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
  * @returns {DataIntegrityProof} Returns a D.I. Proof w/ cryptosuite set.
  */
 export const getSuite = ({
-  suite,
+  suiteName,
   signer,
   mandatoryPointers,
   selectivePointers,
   verify
 }) => {
-  switch(suite) {
+  switch(suiteName) {
     case `bbs-2023`: {
       return _getPointersProof({
-        suite,
+        suiteName,
         signer,
         mandatoryPointers,
         selectivePointers,
@@ -37,13 +37,13 @@ export const getSuite = ({
     }
     case 'ecdsa-rdfc-2019': {
       return _getProof({
-        suite,
+        suiteName,
         signer
       });
     }
     case 'ecdsa-sd-2023': {
       return _getPointersProof({
-        suite,
+        suiteName,
         signer,
         mandatoryPointers,
         selectivePointers,
@@ -52,13 +52,13 @@ export const getSuite = ({
     }
     case 'eddsa-2022': {
       return _getProof({
-        suite,
+        suiteName,
         signer
       });
     }
     case 'eddsa-rdfc-2022': {
       return _getProof({
-        suite,
+        suiteName,
         signer
       });
     }
@@ -68,10 +68,10 @@ export const getSuite = ({
 };
 
 function _getProof({
-  suite,
+  suiteName,
   signer
 }) {
-  const {cryptosuite} = cryptosuites.get(suite);
+  const {cryptosuite} = cryptosuites.get(suiteName);
   return new DataIntegrityProof({
     signer,
     cryptosuite
@@ -79,13 +79,13 @@ function _getProof({
 }
 
 function _getPointersProof({
-  suite,
+  suiteName,
   signer,
   mandatoryPointers,
   selectivePointers,
   verify
 }) {
-  const {cryptosuite} = cryptosuites.get(suite);
+  const {cryptosuite} = cryptosuites.get(suiteName);
   if(mandatoryPointers) {
     return new DataIntegrityProof({
       signer,
