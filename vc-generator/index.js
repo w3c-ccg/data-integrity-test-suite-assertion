@@ -1,7 +1,7 @@
 /*!
  * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
  */
-import {getMultikey} from './helpers.js';
+import {getMultiKey} from './secret.js';
 import {getSuite} from './cryptosuite.js';
 import {klona} from 'klona';
 import {validVc} from '../validVc.js';
@@ -32,9 +32,9 @@ export async function generateTestData({
   selectivePointers,
   verify
 } = {}) {
-  const {signer, issuer} = await getMultikey({
+  const {signer, issuer} = await getMultiKey({
     keyType,
-    suite
+    suiteName
   });
   const credential = klona(validVc);
   credential.issuer = issuer;
