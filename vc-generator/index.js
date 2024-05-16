@@ -45,7 +45,6 @@ export async function generateTestData({
     const suite = getSuite({
       suiteName,
       signer,
-      keyType,
       mandatoryPointers,
       selectivePointers,
       verify
