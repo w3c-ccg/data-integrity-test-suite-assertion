@@ -1,8 +1,8 @@
 /*!
  * Copyright (c) 2023 Digital Bazaar, Inc. All rights reserved.
  */
+import {mockTestOptions, validVerifierImplementations} from './mock-data.js';
 import {checkDataIntegrityProofVerifyErrors} from '../index.js';
-import {validVerifierImplementations} from './mock-data.js';
 
 describe('Test checkDataIntegrityProofVerifyErrors()', function() {
   it('should accept empty implemented.', function() {
@@ -14,7 +14,15 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
   it('should pass if verifier implementation returns error.', function() {
     checkDataIntegrityProofVerifyErrors({
       implemented: validVerifierImplementations,
-      tag: 'Test-Issuer-Valid'
     });
   });
+  for(const testDataOptions of mockTestOptions) {
+    describe(`should run tests with suite ${testDataOptions.suiteName}`,
+      async function() {
+        await checkDataIntegrityProofVerifyErrors({
+          implemented: validVerifierImplementations,
+          testDataOptions
+        });
+      });
+  }
 });

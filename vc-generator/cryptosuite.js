@@ -63,7 +63,7 @@ export const getSuite = ({
       });
     }
     default:
-      throw new Error(`Unsupported cryptosuite suite: ${suite}`);
+      throw new Error(`Unsupported cryptosuite suite: ${suiteName}`);
   }
 };
 
@@ -107,6 +107,6 @@ function _getPointersProof({
       cryptosuite: cryptosuite.createVerifyCryptosuite()
     });
   }
-  throw new Error(`Suite "${suite}" requires either mandatoryPointers, ` +
+  throw new Error(`Suite "${suiteName}" requires either mandatoryPointers, ` +
       `selectivePointers, or verify.`);
 }
