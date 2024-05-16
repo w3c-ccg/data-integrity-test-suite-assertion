@@ -312,14 +312,14 @@ function runDataIntegrityProofFormatTests({
  * @param {object} options.testDataOptions - Options for test data creation
  *   such as suite.
  *
- * @returns {object} Returns the test suite being run.
+ * @returns {Promise<object>} Returns the test suite being run.
  */
-export function checkDataIntegrityProofVerifyErrors({
+export async function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
   isEcdsaTests = false, testDescription = 'Data Integrity (verifier)',
   testDataOptions
 } = {}) {
-  return describe(testDescription, function() {
+  return describe(testDescription, async function() {
     // this will tell the report
     // to make an interop matrix with this suite
     this.matrix = true;
@@ -341,7 +341,7 @@ export function checkDataIntegrityProofVerifyErrors({
           name = vendorName;
         }
         this.implemented.push(name);
-        runDataIntegrityProofVerifyTests({
+        await runDataIntegrityProofVerifyTests({
           endpoints,
           expectedProofType,
           testDescription: name,
@@ -353,7 +353,7 @@ export function checkDataIntegrityProofVerifyErrors({
   }); // end describe
 }
 
-function runDataIntegrityProofVerifyTests({
+async function runDataIntegrityProofVerifyTests({
   endpoints, expectedProofType, testDescription, vendorName, testDataOptions
 }) {
   const columnId = testDescription;
