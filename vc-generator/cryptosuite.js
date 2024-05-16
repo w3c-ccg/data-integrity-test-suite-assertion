@@ -18,7 +18,7 @@ import {cryptosuite as eddsaRdfc2022CryptoSuite} from
 const cryptosuites = new Map([
   ['ecdsa-sd-2023', ecdsaSd2023Cryptosuite],
   ['bbs-2023', bbs2023Cryptosuite],
-  ['ecdsa-rdf-2019', ecdsaRdfc2019Cryptosuite],
+  ['ecdsa-rdfc-2019', ecdsaRdfc2019Cryptosuite],
   ['eddsa-2022', eddsa2022CryptoSuite],
   ['eddsa-rdfc-2022', eddsaRdfc2022CryptoSuite]
 ]);
