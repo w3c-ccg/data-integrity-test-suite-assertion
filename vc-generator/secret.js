@@ -1,6 +1,10 @@
 /*!
  * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
  */
+import {createRequire} from 'node:module';
+
+const require = createRequire(import.meta.url);
+
 // This is only used inside this test suite for generating vcs for the verify
 // proof tests.
 export const TEST_KEY_SEED =
@@ -22,18 +26,22 @@ const serializedKeyPairs = {
   }
 };
 
-export async function getSerializedKeyPair({suite, keyType}) {
+export function getSerializedKeyPair({suite, keyType}) {
   const keySection = serializedKeyPairs[suite];
-  const keyDir = './keys/';
+  const keyDir = './keys';
   if(!keySection) {
     throw new Error(`Unrecognized suite: ${suite}`);
   }
   if(typeof keySection === 'string') {
-    return keyDir + keySection;
+    return require(`${keyDir}/${keySection}`);
   }
   const keyPath = keySection[keyType];
   if(!keyPath) {
     throw new Error(`Unrecognized keyType ${keyType} for suite ${suite}`);
   }
-  return keyDir + keyPath;
+  return require(`${keyDir}/${keyPath}`);
+}
+
+export async function getMultiKey({suite, keyType}) {
+  const keyDoc = getSerializedKeyPair({suite, keyType});
 }
