@@ -309,12 +309,15 @@ function runDataIntegrityProofFormatTests({
  * @param {string} [options.testDescription] - An option to define
  *   the test description. The default value is set to
  *   `Data Integrity (verifier)`.
+ * @param {object} options.testDataOptions - Options for test data creation
+ *   such as suite.
  *
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
-  isEcdsaTests = false, testDescription = 'Data Integrity (verifier)'
+  isEcdsaTests = false, testDescription = 'Data Integrity (verifier)',
+  testDataOptions
 } = {}) {
   return describe(testDescription, function() {
     // this will tell the report
@@ -339,7 +342,11 @@ export function checkDataIntegrityProofVerifyErrors({
         }
         this.implemented.push(name);
         runDataIntegrityProofVerifyTests({
-          endpoints, expectedProofType, testDescription: name, vendorName
+          endpoints,
+          expectedProofType,
+          testDescription: name,
+          vendorName,
+          testDataOptions
         });
       }
     } // end for loop
