@@ -91,9 +91,11 @@ export const mockTestOptions = [{
 }, {
   suiteName: 'ecdsa-sd-2023',
   keyType: 'P-256',
-  mandatoryPointers: ['/issuer']
+  mandatoryPointers: ['/issuer'],
+  selectivePointers: ['/credentialSubject/id']
 }, {
   suiteName: 'bbs-2023',
   keyType: 'P-381',
-  mandatoryPointers: ['/issuer']
+  mandatoryPointers: ['/issuer'],
+  selectivePointers: ['/credentialSubject/id']
 }];
