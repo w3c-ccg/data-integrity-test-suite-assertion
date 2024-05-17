@@ -58,7 +58,7 @@ invalidVc.proof.type = {
   proofType: 'not-data-integrity'
 };
 invalidVc.proof.created = Date.now().toString();
-invalidVc.proof.verificationMethod = 'not-a-url';
+invalidVc.proof.verificationMethod = ['not-a-url'];
 invalidVc.proof.proofPurpose = {
   purpose: 'not-data-integrity'
 };
