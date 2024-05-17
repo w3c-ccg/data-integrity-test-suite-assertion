@@ -5,6 +5,31 @@
 import {cryptosuites} from './constants.js';
 import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 
+export function getSuites({
+  suiteName,
+  signer,
+  mandatoryPointers,
+  selectivePointers,
+  verify
+}) {
+  const suite = getSuite({
+    suiteName,
+    signer,
+    mandatoryPointers,
+    verify
+  });
+  let selectiveSuite;
+  if(selectivePointers) {
+    selectiveSuite = getSuite({
+      suiteName,
+      signer,
+      selectivePointers,
+      verify
+    });
+  }
+  return {suite, selectiveSuite};
+}
+
 /**
  * Takes in a suite and signer and create a DataIntegrityProof with
  * the correct cryptosuite and options.
@@ -18,13 +43,13 @@ import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
  *
  * @returns {DataIntegrityProof} Returns a D.I. Proof w/ cryptosuite set.
  */
-export const getSuite = ({
+export function getSuite({
   suiteName,
   signer,
   mandatoryPointers,
   selectivePointers,
   verify
-}) => {
+}) {
   switch(suiteName) {
     case `bbs-2023`: {
       return _getPointersProof({
