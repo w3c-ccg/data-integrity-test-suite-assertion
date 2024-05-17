@@ -39,9 +39,6 @@ export async function generateTestData({
   const credential = klona(validVc);
   credential.issuer = issuer;
   for(const [id, generator] of vcGenerators) {
-    if(vcCache.get(id)) {
-      continue;
-    }
     const {suite, selectiveSuite} = getSuites({
       suiteName,
       signer,
