@@ -18,15 +18,12 @@ export function getSuites({
     mandatoryPointers,
     verify
   });
-  let selectiveSuite;
-  if(selectivePointers) {
-    selectiveSuite = getSuite({
-      suiteName,
-      signer,
-      selectivePointers,
-      verify
-    });
-  }
+  const selectiveSuite = selectivePointers ? getSuite({
+    suiteName,
+    signer,
+    selectivePointers,
+    verify
+  }) : null;
   return {suite, selectiveSuite};
 }
 
@@ -90,7 +87,7 @@ export function getSuite({
     default:
       throw new Error(`Unsupported cryptosuite suite: ${suiteName}`);
   }
-};
+}
 
 function _getProof({
   suiteName,
