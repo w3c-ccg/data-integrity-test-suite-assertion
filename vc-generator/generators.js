@@ -24,75 +24,94 @@ export const vcGenerators = new Map([
   ['invalidProofPurpose', _invalidProofPurpose]
 ]);
 
-async function _invalidProofPurpose({suite, credential}) {
+async function _invalidProofPurpose({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({mockPurpose: 'invalidPurpose'});
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _invalidDomain({suite, credential}) {
+async function _invalidDomain({suite, selectiveSuite, credential}) {
   const domain = 'invalid-vc-domain.example.com';
   const challenge = '1235abcd6789';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return _issueCloned({suite, credential, purpose});
+  return _issueCloned({suite, selectiveSuite, credential, purpose});
 }
 
-async function _invalidChallenge({suite, credential}) {
+async function _invalidChallenge({suite, selectiveSuite, credential}) {
   const domain = 'domain.example';
   const challenge = 'invalid-challenge';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return _issueCloned({suite, credential, purpose});
+  return _issueCloned({suite, selectiveSuite, credential, purpose});
 }
 
-async function _noProofPurpose({suite, credential}) {
+async function _noProofPurpose({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addProofPurpose: false});
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _invalidVm({suite, credential}) {
+async function _invalidVm({suite, selectiveSuite, credential}) {
   suite.verificationMethod = 'did:key:invalidVm';
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _noVm({suite, credential}) {
+async function _noVm({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addVm: false});
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _invalidCreated({suite, credential}) {
+async function _invalidCreated({suite, selectiveSuite, credential}) {
   // FIXME does this actually sign with an invalid created?
   suite.date = 'invalidDate';
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _vcCreatedOneYearAgo({suite, credential}) {
+async function _vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
   // intentionally set the created date to be a year ago
   const created = new Date();
   created.setDate(created.getDate() - 365);
   suite.date = created.toISOString().replace(/\.\d+Z$/, 'Z');
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _noCreated({suite, credential}) {
+async function _noCreated({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addCreated: false});
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _incorrectProofType({suite, credential}) {
+async function _incorrectProofType({suite, selectiveSuite, credential}) {
   suite.type = 'UnknownProofType';
-  return _issueCloned({suite, credential});
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _issuedVc({suite, credential}) {
-  return _issueCloned({suite, credential});
+async function _issuedVc({suite, selectiveSuite, credential}) {
+  return _issueCloned({suite, selectiveSuite, credential});
 }
 
 async function _issueCloned({
-  suite, credential, loader = documentLoader,
+  suite, selectiveSuite, credential, loader = documentLoader,
   purpose = new CredentialIssuancePurpose(),
 }) {
-  return vc.issue({
+  const verifiableCredential = await vc.issue({
     credential: klona(credential),
     suite,
+    documentLoader: loader,
+    purpose
+  });
+  if(!selectiveSuite) {
+    return verifiableCredential;
+  }
+  return _deriveCloned({
+    selectiveSuite, verifiableCredential,
+    loader: documentLoader, purpose
+  });
+}
+
+async function _deriveCloned({
+  selectiveSuite, verifiableCredential, loader = documentLoader,
+  purpose = new CredentialIssuancePurpose(),
+}) {
+  return vc.derive({
+    verifiableCredential: klona(verifiableCredential),
+    suite: selectiveSuite,
     documentLoader: loader,
     purpose
   });
