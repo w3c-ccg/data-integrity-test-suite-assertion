@@ -7,10 +7,12 @@ import {klona} from 'klona';
 import {validVc} from '../validVc.js';
 import {vcGenerators} from './generators.js';
 
-// cache test data for a single run
-const vcCache = new Map([
+const _initCache = () => new Map([
   ['validVc', klona(validVc)]
 ]);
+
+// cache test data for a single run
+const vcCache = new Map();
 
 /**
  * Calls the vc generators and then returns a Map
@@ -32,6 +34,9 @@ export async function generateTestData({
   selectivePointers,
   verify
 } = {}) {
+  if(!vcCache.get(suiteName)) {
+    vcCache.set(suiteName, _initCache());
+  }
   const {signer, issuer} = await getMultiKey({
     keyType,
     suiteName
@@ -47,11 +52,11 @@ export async function generateTestData({
       verify
     });
     const testData = await generator({suite, selectiveSuite, credential});
-    vcCache.set(id, testData);
+    vcCache.get(suiteName).set(id, testData);
   }
   return {
     clone(key) {
-      return klona(vcCache.get(key));
+      return klona(vcCache.get(suiteName).get(key));
     }
   };
 }
