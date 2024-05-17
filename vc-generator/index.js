@@ -2,7 +2,7 @@
  * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
  */
 import {getMultiKey} from './secret.js';
-import {getSuite} from './cryptosuite.js';
+import {getSuites} from './cryptosuite.js';
 import {klona} from 'klona';
 import {validVc} from '../validVc.js';
 import {vcGenerators} from './generators.js';
@@ -42,14 +42,14 @@ export async function generateTestData({
     if(vcCache.get(id)) {
       continue;
     }
-    const suite = getSuite({
+    const {suite, selectiveSuite} = getSuites({
       suiteName,
       signer,
       mandatoryPointers,
       selectivePointers,
       verify
     });
-    const testData = await generator({suite, credential});
+    const testData = await generator({suite, selectiveSuite, credential});
     vcCache.set(id, testData);
   }
   return {
