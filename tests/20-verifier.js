@@ -17,12 +17,12 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
     });
   });
   for(const testDataOptions of mockTestOptions) {
-    describe(`should run tests with suite ${testDataOptions.suiteName}`,
-      async function() {
-        await checkDataIntegrityProofVerifyErrors({
-          implemented: validVerifierImplementations,
-          testDataOptions
-        });
+    describe('should run verifier tests with suite ' +
+      testDataOptions.suiteName, async function() {
+      await checkDataIntegrityProofVerifyErrors({
+        implemented: validVerifierImplementations,
+        testDataOptions
       });
+    });
   }
 });
