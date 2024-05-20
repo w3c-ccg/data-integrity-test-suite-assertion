@@ -14,7 +14,7 @@ export const vcGenerators = new Map([
   ['issuedVc', _issuedVc],
   ['invalidDomain', _invalidDomain],
   ['invalidChallenge', _invalidChallenge],
-  ['invalidProofType', _incorrectProofType],
+  ['invalidProofType', _invalidProofType],
   ['noCreated', _noCreated],
   ['invalidCreated', _invalidCreated],
   ['vcCreatedOneYearAgo', _vcCreatedOneYearAgo],
@@ -29,18 +29,18 @@ async function _invalidProofPurpose({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _invalidDomain({suite, selectiveSuite, credential}) {
+async function _invalidDomain({suite, credential}) {
   const domain = 'invalid-vc-domain.example.com';
   const challenge = '1235abcd6789';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return _issueCloned({suite, selectiveSuite, credential, purpose});
+  return _issueCloned({suite, credential, purpose});
 }
 
-async function _invalidChallenge({suite, selectiveSuite, credential}) {
+async function _invalidChallenge({suite, credential}) {
   const domain = 'domain.example';
   const challenge = 'invalid-challenge';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return _issueCloned({suite, selectiveSuite, credential, purpose});
+  return _issueCloned({suite, credential, purpose});
 }
 
 async function _noProofPurpose({suite, selectiveSuite, credential}) {
@@ -77,7 +77,7 @@ async function _noCreated({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
-async function _incorrectProofType({suite, selectiveSuite, credential}) {
+async function _invalidProofType({suite, selectiveSuite, credential}) {
   suite.type = 'UnknownProofType';
   return _issueCloned({suite, selectiveSuite, credential});
 }
@@ -107,12 +107,10 @@ async function _issueCloned({
 
 async function _deriveCloned({
   selectiveSuite, verifiableCredential, loader = documentLoader,
-  purpose = new CredentialIssuancePurpose(),
 }) {
   return vc.derive({
-    verifiableCredential: klona(verifiableCredential),
+    verifiableCredential,
     suite: selectiveSuite,
-    documentLoader: loader,
-    purpose
+    documentLoader: loader
   });
 }
