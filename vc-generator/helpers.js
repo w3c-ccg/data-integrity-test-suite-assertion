@@ -23,6 +23,7 @@ export const getMultikey = async ({seedMultibase}) => {
 export function invalidCreateProof({
   addCreated = true,
   addVm = true,
+  addType = true,
   addProofPurpose = true,
   mockPurpose
 }) {
@@ -40,8 +41,10 @@ export function invalidCreateProof({
       // create proof JSON-LD document
       proof = {};
     }
-    // ensure proof type is set
-    proof.type = this.type;
+    if(addType) {
+      // ensure proof type is set
+      proof.type = this.type;
+    }
 
     if(addCreated) {
     // set default `now` date if not given in `proof` or `options`
