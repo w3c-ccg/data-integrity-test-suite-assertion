@@ -59,7 +59,7 @@ async function _noVm({suite, selectiveSuite, credential}) {
 }
 
 async function _invalidCreated({suite, selectiveSuite, credential}) {
-  // FIXME does this actually sign with an invalid created?
+  // suite.date will be used as created when signing
   suite.date = 'invalidDate';
   return _issueCloned({suite, selectiveSuite, credential});
 }
