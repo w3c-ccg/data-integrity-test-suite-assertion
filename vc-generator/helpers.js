@@ -30,6 +30,7 @@ export function invalidCreateProof({
   return async function({
     document,
     purpose,
+    proofSet,
     documentLoader
   }) {
     // build proof (currently known as `signature options` in spec)
@@ -84,13 +85,31 @@ export function invalidCreateProof({
     }
 
     // create data to sign
-    const verifyData = await this.createVerifyData({
-      document, proof, documentLoader
-    });
+    let verifyData;
+    // use custom cryptosuite `createVerifyData` if available
+    if(this._cryptosuite.createVerifyData) {
+      verifyData = await this._cryptosuite.createVerifyData({
+        cryptosuite: this._cryptosuite,
+        document, proof, proofSet, documentLoader,
+        dataIntegrityProof: this
+      });
+    } else {
+      verifyData = await this.createVerifyData(
+        {document, proof, proofSet, documentLoader});
+    }
 
-    // sign data
-    proof = await this.sign(
-      {verifyData, document, proof, documentLoader});
+    // use custom `createProofValue` if available
+    if(this._cryptosuite.createProofValue) {
+      proof.proofValue = await this._cryptosuite.createProofValue({
+        cryptosuite: this._cryptosuite,
+        verifyData, document, proof, proofSet,
+        documentLoader, dataIntegrityProof: this
+      });
+    } else {
+      // default to simple signing of data
+      proof = await this.sign(
+        {verifyData, document, proof, proofSet, documentLoader});
+    }
 
     return proof;
   };
