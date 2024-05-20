@@ -24,9 +24,9 @@ export const vcGenerators = new Map([
   ['invalidProofPurpose', _invalidProofPurpose]
 ]);
 
-async function _invalidProofPurpose({suite, selectiveSuite, credential}) {
+async function _invalidProofPurpose({suite, credential}) {
   suite.createProof = invalidCreateProof({mockPurpose: 'invalidPurpose'});
-  return _issueCloned({suite, selectiveSuite, credential});
+  return _issueCloned({suite, credential});
 }
 
 async function _invalidDomain({suite, credential}) {
@@ -43,9 +43,9 @@ async function _invalidChallenge({suite, credential}) {
   return _issueCloned({suite, credential, purpose});
 }
 
-async function _noProofPurpose({suite, selectiveSuite, credential}) {
+async function _noProofPurpose({suite, credential}) {
   suite.createProof = invalidCreateProof({addProofPurpose: false});
-  return _issueCloned({suite, selectiveSuite, credential});
+  return _issueCloned({suite, credential});
 }
 
 async function _invalidVm({suite, selectiveSuite, credential}) {
