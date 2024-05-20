@@ -79,6 +79,11 @@ async function _noCreated({suite, selectiveSuite, credential}) {
 
 async function _invalidProofType({suite, selectiveSuite, credential}) {
   suite.type = 'UnknownProofType';
+  if(selectiveSuite) {
+    const proofId = 'urn:uuid:no-proof-type-test';
+    suite.proof = {id: proofId};
+    selectiveSuite._cryptosuite.options.proofId = proofId;
+  }
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
