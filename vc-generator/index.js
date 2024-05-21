@@ -1,11 +1,11 @@
 /*!
  * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
  */
+import {getGenerators} from './generators.js';
 import {getMultiKey} from './secret.js';
 import {getSuites} from './cryptosuite.js';
 import {klona} from 'klona';
 import {validVc} from '../validVc.js';
-import {vcGenerators} from './generators.js';
 
 const _initCache = () => new Map([
   ['validVc', klona(validVc)]
@@ -24,6 +24,7 @@ const vcCache = new Map();
  * @param {Array<string>} options.mandatoryPointers - An array of JSON pointers.
  * @param {Array<string>} options.selectivePointers - An array of JSON pointers.
  * @param {boolean} options.verify - If a verify suite is needed.
+ * @param {object} options.optionalTests - Options for running optional tests.
  *
  * @returns {Promise<Map>} Returns a Map of test data.
  */
@@ -32,7 +33,8 @@ export async function generateTestData({
   keyType,
   mandatoryPointers,
   selectivePointers,
-  verify
+  verify,
+  optionalTests
 } = {}) {
   if(!vcCache.get(suiteName)) {
     vcCache.set(suiteName, _initCache());
@@ -43,6 +45,7 @@ export async function generateTestData({
   });
   const credential = klona(validVc);
   credential.issuer = issuer;
+  const vcGenerators = getGenerators(optionalTests);
   for(const [id, generator] of vcGenerators) {
     const {suite, selectiveSuite} = getSuites({
       suiteName,
