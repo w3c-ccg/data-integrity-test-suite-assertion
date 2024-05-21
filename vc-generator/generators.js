@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
+ * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
  */
 import * as vc from '@digitalbazaar/vc';
 import {documentLoader} from './documentLoader.js';
@@ -24,11 +24,13 @@ export const vcGenerators = new Map([
   ['invalidProofPurpose', _invalidProofPurpose]
 ]);
 
+// derived VCs don't work as proof purpose mismatch
 async function _invalidProofPurpose({suite, credential}) {
   suite.createProof = invalidCreateProof({mockPurpose: 'invalidPurpose'});
   return _issueCloned({suite, credential});
 }
 
+// derived VCs don't work as proof purpose mismatch
 async function _invalidDomain({suite, credential}) {
   const domain = 'invalid-vc-domain.example.com';
   const challenge = '1235abcd6789';
@@ -36,6 +38,7 @@ async function _invalidDomain({suite, credential}) {
   return _issueCloned({suite, credential, purpose});
 }
 
+// derived VCs don't work as proof purpose mismatch
 async function _invalidChallenge({suite, credential}) {
   const domain = 'domain.example';
   const challenge = 'invalid-challenge';
@@ -43,27 +46,33 @@ async function _invalidChallenge({suite, credential}) {
   return _issueCloned({suite, credential, purpose});
 }
 
+// derived VCs don't work as proof purpose mismatch
 async function _noProofPurpose({suite, credential}) {
   suite.createProof = invalidCreateProof({addProofPurpose: false});
-  return _issueCloned({suite, credential});
+  const vc = await _issueCloned({suite, credential});
+  return vc;
 }
 
+// both base and derived VCs will have an invalid verificationMethod
 async function _invalidVm({suite, selectiveSuite, credential}) {
   suite.verificationMethod = 'did:key:invalidVm';
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
+//both base and derived VCs will lack a verificationMethod
 async function _noVm({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addVm: false});
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
+//FIXME BBS suite does not use created
+//both base and derived work with this
 async function _invalidCreated({suite, selectiveSuite, credential}) {
   // suite.date will be used as created when signing
   suite.date = 'invalidDate';
   return _issueCloned({suite, selectiveSuite, credential});
 }
-
+//FIXME BBS suite does not use created
 async function _vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
   // intentionally set the created date to be a year ago
   const created = new Date();
@@ -72,11 +81,13 @@ async function _vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
+//FIXME this is irrelevant for BBS
 async function _noCreated({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addCreated: false});
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
+// both base and derived will have an invalid proof.type
 async function _invalidProofType({suite, selectiveSuite, credential}) {
   suite.type = 'UnknownProofType';
   if(selectiveSuite) {
@@ -87,6 +98,7 @@ async function _invalidProofType({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
+// issues both a base and derived vc
 async function _issuedVc({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
