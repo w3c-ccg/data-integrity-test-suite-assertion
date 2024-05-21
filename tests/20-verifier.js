@@ -21,7 +21,8 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
       testDataOptions.suiteName, async function() {
       await checkDataIntegrityProofVerifyErrors({
         implemented: validVerifierImplementations,
-        testDataOptions
+        testDataOptions,
+        optionalTests: testDataOptions.optionalTests
       });
     });
   }
