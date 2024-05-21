@@ -311,8 +311,8 @@ function runDataIntegrityProofFormatTests({
  *   `Data Integrity (verifier)`.
  * @param {object} options.testDataOptions - Options for test data creation
  *   such as suite.
- * @param {object} [options.optionalTests = {}] - Options for running
- * optional tests from DataIntegrity.
+ * @param {object} [options.optionalTests] - Options for running
+ * optional tests from DataIntegrity such as created and authentication.
  *
  * @returns {Promise<object>} Returns the test suite being run.
  */

@@ -31,6 +31,15 @@ const generators = {
   ]
 };
 
+/**
+ * Takes in optionalTests and creates generators for those tests.
+ *
+ * @param {object} optionalTests - An optionalTests object.
+ * @param {boolean} optionalTests.created - Add the created generators?
+ * @param {boolean} optionalTests.authentication - Add the auth generators?
+ *
+ * @returns {Map<string, Function>} A map of generators.
+ */
 export const getGenerators = ({created, authentication}) => {
   let entries = [...generators.mandatory];
   if(created) {
@@ -83,14 +92,12 @@ async function _noVm({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
-//FIXME BBS suite does not use created
-//both base and derived work with this
 async function _invalidCreated({suite, selectiveSuite, credential}) {
   // suite.date will be used as created when signing
   suite.date = 'invalidDate';
   return _issueCloned({suite, selectiveSuite, credential});
 }
-//FIXME BBS suite does not use created
+
 async function _vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
   // intentionally set the created date to be a year ago
   const created = new Date();
@@ -99,7 +106,6 @@ async function _vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential});
 }
 
-//FIXME this is irrelevant for BBS
 async function _noCreated({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addCreated: false});
   return _issueCloned({suite, selectiveSuite, credential});
