@@ -57,20 +57,18 @@ async function _invalidProofPurpose({suite, credential}) {
   return _issueCloned({suite, credential});
 }
 
-// derived VCs don't work as proof purpose mismatch
-async function _invalidDomain({suite, credential}) {
+async function _invalidDomain({suite, selectiveSuite, credential}) {
   const domain = 'invalid-vc-domain.example.com';
   const challenge = '1235abcd6789';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return _issueCloned({suite, credential, purpose});
+  return _issueCloned({suite, selectiveSuite, credential, purpose});
 }
 
-// derived VCs don't work as proof purpose mismatch
-async function _invalidChallenge({suite, credential}) {
+async function _invalidChallenge({suite, selectiveSuite, credential}) {
   const domain = 'domain.example';
   const challenge = 'invalid-challenge';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return _issueCloned({suite, credential, purpose});
+  return _issueCloned({suite, selectiveSuite, credential, purpose});
 }
 
 // derived VCs don't work as proof purpose mismatch
