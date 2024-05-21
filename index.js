@@ -311,13 +311,19 @@ function runDataIntegrityProofFormatTests({
  *   `Data Integrity (verifier)`.
  * @param {object} options.testDataOptions - Options for test data creation
  *   such as suite.
+ * @param {object} [options.optionalTests = {}] - Options for running
+ * optional tests from DataIntegrity.
  *
  * @returns {Promise<object>} Returns the test suite being run.
  */
 export async function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
   isEcdsaTests = false, testDescription = 'Data Integrity (verifier)',
-  testDataOptions
+  testDataOptions,
+  optionalTests = {
+    created: true,
+    authentication: true
+  }
 } = {}) {
   return describe(testDescription, async function() {
     // this will tell the report
@@ -346,7 +352,8 @@ export async function checkDataIntegrityProofVerifyErrors({
           expectedProofType,
           testDescription: name,
           vendorName,
-          testDataOptions
+          testDataOptions,
+          optionalTests
         });
       }
     } // end for loop
@@ -354,7 +361,12 @@ export async function checkDataIntegrityProofVerifyErrors({
 }
 
 async function runDataIntegrityProofVerifyTests({
-  endpoints, expectedProofType, testDescription, vendorName, testDataOptions
+  endpoints,
+  expectedProofType,
+  testDescription,
+  vendorName,
+  testDataOptions,
+  optionalTests
 }) {
   const columnId = testDescription;
   describe(testDescription, function() {
@@ -364,7 +376,7 @@ async function runDataIntegrityProofVerifyTests({
     }
     let credentials;
     before(async function() {
-      credentials = await generateTestData(testDataOptions);
+      credentials = await generateTestData({...testDataOptions, optionalTests});
     });
     it('If the "proof" field is missing, an error MUST be raised.',
       async function() {
@@ -448,14 +460,16 @@ async function runDataIntegrityProofVerifyTests({
       credential.proof.proofValue = null;
       await verificationFail({credential, verifier});
     });
-    it('If the "proof.created" field is invalid, an error MUST be ' +
-      'raised.', async function() {
-      this.test.cell = {columnId, rowId: this.test.title};
-      // FIXME: Fix test to check if a cryptographic suite requires the
-      // “proof.created” value
-      const credential = credentials.clone('invalidCreated');
-      await verificationFail({credential, verifier});
-    });
+    if(optionalTests?.created) {
+      it('If the "proof.created" field is invalid, an error MUST be ' +
+        'raised.', async function() {
+        this.test.cell = {columnId, rowId: this.test.title};
+        // FIXME: Fix test to check if a cryptographic suite requires the
+        // “proof.created” value
+        const credential = credentials.clone('invalidCreated');
+        await verificationFail({credential, verifier});
+      });
+    }
     it('If the "proof.proofValue" field is not multibase-encoded, an error ' +
       'MUST be raised.', async function() {
       this.test.cell = {columnId, rowId: this.test.title};
@@ -466,28 +480,30 @@ async function runDataIntegrityProofVerifyTests({
 
       await verificationFail({credential, verifier});
     });
-    it('If the "options.domain" is set and it does not match ' +
-      '"proof.domain", an error MUST be raised.',
-    async function() {
-      this.test.cell = {columnId, rowId: this.test.title};
-      const credential = credentials.clone('invalidDomain');
-      await verificationFail({
-        credential, verifier, options: {
-          domain: 'domain.example'
-        }
+    if(optionalTests.authentication) {
+      it('If the "options.domain" is set and it does not match ' +
+        '"proof.domain", an error MUST be raised.',
+      async function() {
+        this.test.cell = {columnId, rowId: this.test.title};
+        const credential = credentials.clone('invalidDomain');
+        await verificationFail({
+          credential, verifier, options: {
+            domain: 'domain.example'
+          }
+        });
       });
-    });
-    it('If the "options.challenge" is set and it does not match ' +
-      '"proof.challenge", an error MUST be raised.', async function() {
-      this.test.cell = {columnId, rowId: this.test.title};
-      const credential = credentials.clone('invalidChallenge');
-      await verificationFail({
-        credential, verifier, options: {
-          domain: 'domain.example',
-          challenge: '1235abcd6789'
-        }
+      it('If the "options.challenge" is set and it does not match ' +
+        '"proof.challenge", an error MUST be raised.', async function() {
+        this.test.cell = {columnId, rowId: this.test.title};
+        const credential = credentials.clone('invalidChallenge');
+        await verificationFail({
+          credential, verifier, options: {
+            domain: 'domain.example',
+            challenge: '1235abcd6789'
+          }
+        });
       });
-    });
+    }
   });
 }
 

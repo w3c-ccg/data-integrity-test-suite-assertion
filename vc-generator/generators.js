@@ -10,19 +10,37 @@ import {klona} from 'klona';
 const {AuthenticationProofPurpose} = jsigs.purposes;
 const {CredentialIssuancePurpose} = vc;
 
-export const vcGenerators = new Map([
-  ['issuedVc', _issuedVc],
-  ['invalidDomain', _invalidDomain],
-  ['invalidChallenge', _invalidChallenge],
-  ['invalidProofType', _invalidProofType],
-  ['noCreated', _noCreated],
-  ['invalidCreated', _invalidCreated],
-  ['vcCreatedOneYearAgo', _vcCreatedOneYearAgo],
-  ['noVm', _noVm],
-  ['invalidVm', _invalidVm],
-  ['noProofPurpose', _noProofPurpose],
-  ['invalidProofPurpose', _invalidProofPurpose]
-]);
+// generator categories
+const generators = {
+  created: [
+    ['noCreated', _noCreated],
+    ['invalidCreated', _invalidCreated],
+    ['vcCreatedOneYearAgo', _vcCreatedOneYearAgo]
+  ],
+  authentication: [
+    ['invalidDomain', _invalidDomain],
+    ['invalidChallenge', _invalidChallenge]
+  ],
+  mandatory: [
+    ['issuedVc', _issuedVc],
+    ['invalidProofType', _invalidProofType],
+    ['noVm', _noVm],
+    ['invalidVm', _invalidVm],
+    ['noProofPurpose', _noProofPurpose],
+    ['invalidProofPurpose', _invalidProofPurpose]
+  ]
+};
+
+export const getGenerators = ({created, authentication}) => {
+  let entries = [...generators.mandatory];
+  if(created) {
+    entries = entries.concat([...generators.created]);
+  }
+  if(authentication) {
+    entries = entries.concat([...generators.authentication]);
+  }
+  return new Map(entries);
+};
 
 // derived VCs don't work as proof purpose mismatch
 async function _invalidProofPurpose({suite, credential}) {
