@@ -82,20 +82,32 @@ export const invalidIssuerImplementations = new Map([
 ]);
 
 export const mockTestOptions = [{
-  suiteName: 'eddsa-2022'
+  suiteName: 'eddsa-2022',
+  optionalTests: {
+    created: true,
+    authentication: true
+  }
 }, {
-  suiteName: 'eddsa-rdfc-2022'
+  suiteName: 'eddsa-rdfc-2022',
+  optionalTests: {
+    created: true,
+    authentication: true
+  }
 }, {
   suiteName: 'ecdsa-rdfc-2019',
-  keyType: 'P-256'
+  keyType: 'P-256',
+  optionalTests: {
+    created: true,
+    authentication: true
+  }
 }, {
   suiteName: 'ecdsa-sd-2023',
   keyType: 'P-256',
   mandatoryPointers: ['/issuer'],
   selectivePointers: ['/credentialSubject'],
   optionalTests: {
-    created: false,
-    authentication: false
+    created: true,
+    authentication: true
   }
 }, {
   suiteName: 'bbs-2023',
@@ -103,7 +115,8 @@ export const mockTestOptions = [{
   mandatoryPointers: ['/issuer'],
   selectivePointers: ['/credentialSubject'],
   optionalTests: {
+    //bbs deletes created in order to prevent data leakages
     created: false,
-    authentication: false
+    authentication: true
   }
 }];
