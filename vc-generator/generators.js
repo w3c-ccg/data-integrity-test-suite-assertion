@@ -51,10 +51,14 @@ export const getGenerators = ({created, authentication}) => {
   return new Map(entries);
 };
 
-// derived VCs don't work as proof purpose mismatch
-async function _invalidProofPurpose({suite, credential}) {
-  suite.createProof = invalidCreateProof({mockPurpose: 'invalidPurpose'});
-  return _issueCloned({suite, credential});
+async function _invalidProofPurpose({suite, selectiveSuite, credential}) {
+  const mockPurpose = 'invalidPurpose';
+  //sets the proofPurpose for the proof
+  suite.createProof = invalidCreateProof({mockPurpose});
+  const purpose = new CredentialIssuancePurpose();
+  // ensures the proofPurpose matches the term when deriving
+  purpose.term = mockPurpose;
+  return _issueCloned({suite, selectiveSuite, credential, purpose});
 }
 
 async function _invalidDomain({suite, selectiveSuite, credential}) {
@@ -71,11 +75,13 @@ async function _invalidChallenge({suite, selectiveSuite, credential}) {
   return _issueCloned({suite, selectiveSuite, credential, purpose});
 }
 
-// derived VCs don't work as proof purpose mismatch
-async function _noProofPurpose({suite, credential}) {
+async function _noProofPurpose({suite, selectiveSuite, credential}) {
+  // do not add a proofPurpose to the proof
   suite.createProof = invalidCreateProof({addProofPurpose: false});
-  const vc = await _issueCloned({suite, credential});
-  return vc;
+  const purpose = new CredentialIssuancePurpose();
+  // ensure the derived proof can find the baseProof
+  purpose.term = undefined;
+  return _issueCloned({suite, selectiveSuite, purpose, credential});
 }
 
 // both base and derived VCs will have an invalid verificationMethod
@@ -138,18 +144,9 @@ async function _issueCloned({
   if(!selectiveSuite) {
     return verifiableCredential;
   }
-  return _deriveCloned({
-    selectiveSuite, verifiableCredential,
-    loader: documentLoader, purpose
-  });
-}
-
-async function _deriveCloned({
-  selectiveSuite, verifiableCredential, loader = documentLoader,
-}) {
-  return vc.derive({
-    verifiableCredential,
-    suite: selectiveSuite,
-    documentLoader: loader
+  return jsigs.derive(verifiableCredential, {
+    documentLoader,
+    purpose,
+    suite: selectiveSuite
   });
 }
