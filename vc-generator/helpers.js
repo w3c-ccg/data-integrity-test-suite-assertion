@@ -1,24 +1,6 @@
 /*!
- * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
+ * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
  */
-import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
-import {decodeSecretKeySeed} from 'bnid';
-
-export const getMultikey = async ({seedMultibase}) => {
-  if(!seedMultibase) {
-    throw new Error('seedMultibase required');
-  }
-  // convert multibase seed to Uint8Array
-  const seed = decodeSecretKeySeed({secretKeySeed: seedMultibase});
-  const key = await Ed25519Multikey.generate({seed});
-  const signer = key.signer();
-  // The issuer needs to match the signer or the controller of the signer
-  const issuer = `did:key:${key.publicKeyMultibase}`;
-  // verificationMethod needs to be a fragment
-  // this only works for did:key
-  signer.id = `${issuer}#${key.publicKeyMultibase}`;
-  return {signer, issuer};
-};
 
 export function invalidCreateProof({
   addCreated = true,
