@@ -145,7 +145,7 @@ async function _issueCloned({
     return verifiableCredential;
   }
   return jsigs.derive(verifiableCredential, {
-    documentLoader,
+    documentLoader: loader,
     purpose,
     suite: selectiveSuite
   });
