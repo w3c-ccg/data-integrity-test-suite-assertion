@@ -314,9 +314,9 @@ function runDataIntegrityProofFormatTests({
  * @param {object} [options.optionalTests] - Options for running
  * optional tests from DataIntegrity such as created and authentication.
  *
- * @returns {Promise<object>} Returns the test suite being run.
+ * @returns {describe} Returns the test suite being run.
  */
-export async function checkDataIntegrityProofVerifyErrors({
+export function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
   isEcdsaTests = false, testDescription = 'Data Integrity (verifier)',
   testDataOptions,
@@ -347,7 +347,7 @@ export async function checkDataIntegrityProofVerifyErrors({
           name = vendorName;
         }
         this.implemented.push(name);
-        await runDataIntegrityProofVerifyTests({
+        runDataIntegrityProofVerifyTests({
           endpoints,
           expectedProofType,
           testDescription: name,
