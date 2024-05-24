@@ -360,7 +360,7 @@ export function checkDataIntegrityProofVerifyErrors({
   }); // end describe
 }
 
-async function runDataIntegrityProofVerifyTests({
+function runDataIntegrityProofVerifyTests({
   endpoints,
   expectedProofType,
   testDescription,
