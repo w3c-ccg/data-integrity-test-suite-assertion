@@ -19,6 +19,14 @@ import {cryptosuite as eddsaRdfc2022CryptoSuite} from
 
 export const cryptosuites = new Map([
   ['ecdsa-sd-2023', {
+    suiteName: 'ecdsa-sd-2023',
+    keyType: 'P-256',
+    mandatoryPointers: ['/issuer'],
+    selectivePointers: ['/credentialSubject'],
+    optionalTests: {
+      created: true,
+      authentication: true
+    },
     cryptosuite: ecdsaSd2023Cryptosuite,
     multikey: EcdsaMultikey,
     serializedKeys: {
@@ -26,6 +34,15 @@ export const cryptosuites = new Map([
     }
   }],
   ['bbs-2023', {
+    suiteName: 'bbs-2023',
+    keyType: 'P-381',
+    mandatoryPointers: ['/issuer'],
+    selectivePointers: ['/credentialSubject'],
+    optionalTests: {
+      //bbs deletes created in order to prevent data leakages
+      created: false,
+      authentication: true
+    },
     cryptosuite: bbs2023Cryptosuite,
     multikey: Bls12381Multikey,
     serializedKeys: {
@@ -33,6 +50,12 @@ export const cryptosuites = new Map([
     }
   }],
   ['ecdsa-rdfc-2019', {
+    suiteName: 'ecdsa-rdfc-2019',
+    keyType: 'P-256',
+    optionalTests: {
+      created: true,
+      authentication: true
+    },
     cryptosuite: ecdsaRdfc2019Cryptosuite,
     multikey: EcdsaMultikey,
     serializedKeys: {
@@ -41,11 +64,21 @@ export const cryptosuites = new Map([
     }
   }],
   ['eddsa-2022', {
+    suiteName: 'eddsa-2022',
+    optionalTests: {
+      created: true,
+      authentication: true
+    },
     cryptosuite: eddsa2022CryptoSuite,
     multikey: Ed25519Multikey,
     serializedKeys: 'eddsa/p25519KeyPair.json'
   }],
   ['eddsa-rdfc-2022', {
+    suiteName: 'eddsa-rdfc-2022',
+    optionalTests: {
+      created: true,
+      authentication: true
+    },
     cryptosuite: eddsaRdfc2022CryptoSuite,
     multikey: Ed25519Multikey,
     serializedKeys: 'eddsa/p25519KeyPair.json'
