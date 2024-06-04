@@ -6,7 +6,7 @@ import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
 
-export async function getKeyPair({serializedKeys, multikey, keyType}) {
+export async function getMultiKey({serializedKeys, multikey, keyType}) {
   const keyDir = './';
   if(typeof serializedKeys === 'string') {
     return multikey.from(require(`${keyDir}/${serializedKeys}`));
@@ -16,9 +16,4 @@ export async function getKeyPair({serializedKeys, multikey, keyType}) {
     throw new Error(`Unrecognized keyType ${keyType}.`);
   }
   return multikey.from(require(`${keyDir}/${keyPath}`));
-}
-
-export async function getMultiKey({serializedKeys, multikey, keyType}) {
-  const keyPair = await getKeyPair({serializedKeys, multikey, keyType});
-  return {issuer: keyPair.controller, signer: keyPair.signer()};
 }
