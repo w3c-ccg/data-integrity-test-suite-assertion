@@ -1,33 +1,12 @@
 /*!
  * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
  */
-import {createRequire} from 'node:module';
-import {cryptosuites} from './constants.js';
-
-const require = createRequire(import.meta.url);
+import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
 
 // This is only used inside this test suite for generating vcs for the verify
 // proof tests.
 export const TEST_KEY_SEED =
   'z1AZVaiqEq3kXaf4DJD5qXUfdJBFbW1JNe4FF58HwMgVE6u';
 
-export async function getKeyPair({suiteName, keyType}) {
-  const {serializedKeys, multikey} = cryptosuites.get(suiteName);
-  const keyDir = './keys';
-  if(!serializedKeys) {
-    throw new Error(`Unrecognized suite: ${suiteName}`);
-  }
-  if(typeof serializedKeys === 'string') {
-    return multikey.from(require(`${keyDir}/${serializedKeys}`));
-  }
-  const keyPath = serializedKeys[keyType];
-  if(!keyPath) {
-    throw new Error(`Unrecognized keyType ${keyType} for suite ${suiteName}`);
-  }
-  return multikey.from(require(`${keyDir}/${keyPath}`));
-}
-
-export async function getMultiKey({suiteName, keyType}) {
-  const keyPair = await getKeyPair({suiteName, keyType});
-  return {issuer: keyPair.controller, signer: keyPair.signer()};
-}
+export const getDefaultKey = async () =>
+  Ed25519Multikey.generate({seed: TEST_KEY_SEED});
