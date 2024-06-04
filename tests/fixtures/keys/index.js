@@ -1,3 +1,9 @@
+/*!
+ * Copyright 2023-2024 Digital Bazaar, Inc.
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+import {cryptosuites} from '../constants.js';
+
 export async function getKeyPair({suiteName, keyType}) {
   const {serializedKeys, multikey} = cryptosuites.get(suiteName);
   const keyDir = './keys';
