@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023 Digital Bazaar, Inc. All Rights Reserved
+ * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
  */
 import {
   cryptosuite as eddsa2022CryptoSuite
@@ -44,6 +44,7 @@ export async function generateTestData({
   optionalTests,
   testVector = validVc
 } = {}) {
+  // if no key was supplied use the eddsa key
   if(!key) {
     key = await getDefaultKey();
   }
