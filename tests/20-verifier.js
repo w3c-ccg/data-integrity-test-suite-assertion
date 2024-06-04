@@ -22,7 +22,6 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
     describe('should run verifier tests with suite ' +
       suiteName, async function() {
       before(async function() {
-        console.log({testDataOptions});
         testDataOptions.key = await getMultiKey({
           ...testDataOptions
         });
