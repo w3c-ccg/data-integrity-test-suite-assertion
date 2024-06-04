@@ -2,8 +2,12 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  * SPDX-License-Identifier: BSD-3-Clause
  */
+import {createRequire} from 'node:module';
+
+const require = createRequire(import.meta.url);
+
 export async function getKeyPair({serializedKeys, multikey, keyType}) {
-  const keyDir = './keys';
+  const keyDir = './';
   if(typeof serializedKeys === 'string') {
     return multikey.from(require(`${keyDir}/${serializedKeys}`));
   }
