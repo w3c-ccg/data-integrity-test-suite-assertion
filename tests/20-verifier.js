@@ -1,8 +1,10 @@
 /*!
  * Copyright (c) 2023 Digital Bazaar, Inc. All rights reserved.
  */
-import {mockTestOptions, validVerifierImplementations} from './mock-data.js';
 import {checkDataIntegrityProofVerifyErrors} from '../index.js';
+import {cryptosuites} from './fixtures/constants.js';
+import {getMultiKey} from './fixtures/keys/index.js';
+import {validVerifierImplementations} from './mock-data.js';
 
 describe('Test checkDataIntegrityProofVerifyErrors()', function() {
   it('should accept empty implemented.', function() {
@@ -16,9 +18,15 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
       implemented: validVerifierImplementations,
     });
   });
-  for(const testDataOptions of mockTestOptions) {
+  for(const [suiteName, testDataOptions] of cryptosuites) {
     describe('should run verifier tests with suite ' +
-      testDataOptions.suiteName, async function() {
+      suiteName, async function() {
+      before(async function() {
+        console.log({testDataOptions});
+        testDataOptions.key = await getMultiKey({
+          ...testDataOptions
+        });
+      });
       await checkDataIntegrityProofVerifyErrors({
         implemented: validVerifierImplementations,
         testDataOptions,
