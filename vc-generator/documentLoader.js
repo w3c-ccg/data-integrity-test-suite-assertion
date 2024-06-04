@@ -15,9 +15,11 @@ for(const [key, value] of contextMap) {
 
 export const documentLoader = async url => {
   const document = contextMap.get(url);
-  return {
-    contextUrl: null,
-    documentUrl: url,
-    document
-  };
+  if(document) {
+    return {
+      contextUrl: null,
+      documentUrl: url,
+      document
+    };
+  }
 };
