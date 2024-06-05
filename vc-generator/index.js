@@ -30,7 +30,7 @@ const vcCache = new Map();
  * @param {boolean} options.verify - If a verify suite is needed.
  * @param {object} options.optionalTests - Options for running optional tests.
  * @param {object} [options.testVector = validVc] - A credential to use for
- * test data.
+ *   test data.
  *
  * @returns {Promise<Map>} Returns a Map of test data.
  */
