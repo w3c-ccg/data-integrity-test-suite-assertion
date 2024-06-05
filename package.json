@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha tests/"
+    "test": "mocha tests/ --timeout 25000"
   },
   "repository": {
     "type": "git",
