@@ -16,13 +16,15 @@ import {
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {cryptosuite as eddsaRdfc2022CryptoSuite} from
   '@digitalbazaar/eddsa-rdfc-2022-cryptosuite';
+import {sdDoc} from './sdDoc.js';
 
 export const cryptosuites = new Map([
   ['ecdsa-sd-2023', {
     suiteName: 'ecdsa-sd-2023',
     keyType: 'P-256',
     mandatoryPointers: ['/issuer'],
-    selectivePointers: ['/credentialSubject'],
+    selectivePointers: ['/credentialSubject/id'],
+    testVector: sdDoc,
     optionalTests: {
       created: true,
       authentication: true
@@ -37,7 +39,8 @@ export const cryptosuites = new Map([
     suiteName: 'bbs-2023',
     keyType: 'P-381',
     mandatoryPointers: ['/issuer'],
-    selectivePointers: ['/credentialSubject'],
+    selectivePointers: ['/credentialSubject/id'],
+    testVector: sdDoc,
     optionalTests: {
       //bbs deletes created in order to prevent data leakages
       created: false,
