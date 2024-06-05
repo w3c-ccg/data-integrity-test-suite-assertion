@@ -1,6 +1,7 @@
 /*!
  * Copyright (c) 2023 Digital Bazaar, Inc. All rights reserved.
  */
+import * as credentialsV2Context from '@digitalbazaar/credentials-v2-context';
 import credentialsCtx from 'credentials-context';
 import dataIntegrityCtx from '@digitalbazaar/data-integrity-context';
 import didCtx from '@digitalcredentials/did-context';
@@ -36,6 +37,12 @@ contextMap.set(
   credentialsCtx.constants.CONTEXT_URL,
   credentialsCtx.contexts.get(
     credentialsCtx.constants.CONTEXT_URL)
+);
+contextMap.set(
+  credentialsV2Context.constants.CONTEXT_URL,
+  credentialsV2Context.contexts.get(
+    credentialsV2Context.constants.CONTEXT_URL
+  )
 );
 
 export {contextMap};
