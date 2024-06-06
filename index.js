@@ -339,10 +339,14 @@ export function checkDataIntegrityProofVerifyErrors({
       }
       for(const endpoint of endpoints) {
         let name;
+        //FIXME remove this in MAJOR release and use testDataOptions.keyType
+        // if defined
         if(isEcdsaTests) {
           const {supportedEcdsaKeyTypes} = endpoint.settings;
           const keyTypes = supportedEcdsaKeyTypes.join(', ');
           name = `${vendorName}: ${keyTypes}`;
+        } else if(testDataOptions.keyType && !isEcdsaTests) {
+          name = `${vendorName}: ${testDataOptions.keyType}`;
         } else {
           name = vendorName;
         }
