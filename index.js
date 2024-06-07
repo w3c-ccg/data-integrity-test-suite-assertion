@@ -345,7 +345,7 @@ export function checkDataIntegrityProofVerifyErrors({
           const {supportedEcdsaKeyTypes} = endpoint.settings;
           const keyTypes = supportedEcdsaKeyTypes.join(', ');
           name = `${vendorName}: ${keyTypes}`;
-        } else if(testDataOptions.keyType && !isEcdsaTests) {
+        } else if(testDataOptions?.keyType && !isEcdsaTests) {
           name = `${vendorName}: ${testDataOptions.keyType}`;
         } else {
           name = vendorName;
