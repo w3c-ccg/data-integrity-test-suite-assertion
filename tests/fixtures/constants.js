@@ -8,6 +8,7 @@ import * as EcdsaMultikey from '@digitalbazaar/ecdsa-multikey';
 import * as ecdsaSd2023Cryptosuite from
   '@digitalbazaar/ecdsa-sd-2023-cryptosuite';
 import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
+import {createRequire} from 'node:module';
 import {
   cryptosuite as ecdsaRdfc2019Cryptosuite
 } from '@digitalbazaar/ecdsa-rdfc-2019-cryptosuite';
@@ -16,7 +17,12 @@ import {
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {cryptosuite as eddsaRdfc2022CryptoSuite} from
   '@digitalbazaar/eddsa-rdfc-2022-cryptosuite';
-import {sdDoc} from './sdDoc.js';
+
+// FIXME remove this once node has non-experimental support
+// for importing json via import
+// @see https://nodejs.org/api/esm.html#json-modules
+const require = createRequire(import.meta.url);
+const sdDoc = require('./sdDoc.json');
 
 export const cryptosuites = new Map([
   ['ecdsa-sd-2023', {
