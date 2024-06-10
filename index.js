@@ -468,8 +468,6 @@ function runDataIntegrityProofVerifyTests({
       it('If the "proof.created" field is invalid, an error MUST be ' +
         'raised.', async function() {
         this.test.cell = {columnId, rowId: this.test.title};
-        // FIXME: Fix test to check if a cryptographic suite requires the
-        // “proof.created” value
         const credential = credentials.clone('invalidCreated');
         await verificationFail({credential, verifier});
       });
