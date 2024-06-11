@@ -4,8 +4,6 @@
  */
 import {createRequire} from 'node:module';
 
-//FIXME remove this once node has non-experimental support
-//for es6 import and json
 const require = createRequire(import.meta.url);
 
 export async function getMultiKey({serializedKeys, multikey, keyType}) {
