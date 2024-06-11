@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
+ * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
 import {createRequire} from 'node:module';
