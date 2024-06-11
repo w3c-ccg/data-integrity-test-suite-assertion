@@ -1,5 +1,5 @@
 /*!
- * Copyright 2023-24 Digital Bazaar, Inc. All Rights Reserved
+ * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as vc from '@digitalbazaar/vc';
 import {documentLoader} from './documentLoader.js';
