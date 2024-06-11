@@ -1,8 +1,13 @@
 /*!
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
-import {issuedVc} from '../issuedVc.js';
+import {createRequire} from 'node:module';
 import {klona} from 'klona';
+// FIXME remove this once node has non-experimental support
+// for importing json via import
+// @see https://nodejs.org/api/esm.html#json-modules
+const require = createRequire(import.meta.url);
+const issuedVc = require('./fixtures/issuedVc.json');
 
 class MockIssuer {
   constructor({tags, mockVc}) {

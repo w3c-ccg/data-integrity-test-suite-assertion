@@ -8,7 +8,7 @@ import {getDefaultKey} from './secret.js';
 import {getGenerators} from './generators.js';
 import {getSuites} from './cryptosuite.js';
 import {klona} from 'klona';
-import {validVc} from '../validVc.js';
+import {validVc} from '../index.js';
 
 const _initCache = () => new Map([
   ['validVc', klona(validVc)]
