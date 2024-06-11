@@ -11,8 +11,6 @@ import chai from 'chai';
 import {createRequire} from 'node:module';
 import {generateTestData} from './vc-generator/index.js';
 
-//FIXME remove this once node has non-experimental support
-//for es6 import and json
 const require = createRequire(import.meta.url);
 export const validVc = require('./validVc.json');
 
