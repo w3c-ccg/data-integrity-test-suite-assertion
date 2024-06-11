@@ -317,7 +317,7 @@ function runDataIntegrityProofFormatTests({
  * @param {object} [options.optionalTests] - Options for running
  *   optional tests from DataIntegrity such as created and authentication.
  *
- * @returns {describe} Returns the test suite being run.
+ * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofVerifyErrors({
   implemented, expectedProofType = 'DataIntegrityProof',
