@@ -24,7 +24,7 @@ export const generators = {
   mandatory: {
     issuedVc,
     invalidProofType,
-    noVm,
+    noVerificationMethod,
     invalidVm,
     noProofPurpose,
     invalidProofPurpose
@@ -51,84 +51,84 @@ export const getGenerators = ({created, authentication}) => {
   return new Map(entries);
 };
 
-async function invalidProofPurpose({suite, selectiveSuite, credential}) {
+function invalidProofPurpose({suite, selectiveSuite, credential}) {
   const mockPurpose = 'invalidPurpose';
   //sets the proofPurpose for the proof
   suite.createProof = invalidCreateProof({mockPurpose});
   const purpose = new CredentialIssuancePurpose();
   // ensures the proofPurpose matches the term when deriving
   purpose.term = mockPurpose;
-  return issueCloned({suite, selectiveSuite, credential, purpose});
+  return {suite, selectiveSuite, credential, purpose};
 }
 
-async function invalidDomain({suite, selectiveSuite, credential}) {
+function invalidDomain({suite, selectiveSuite, credential}) {
   const domain = 'invalid-vc-domain.example.com';
   const challenge = '1235abcd6789';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return issueCloned({suite, selectiveSuite, credential, purpose});
+  return {suite, selectiveSuite, credential, purpose};
 }
 
-async function invalidChallenge({suite, selectiveSuite, credential}) {
+function invalidChallenge({suite, selectiveSuite, credential}) {
   const domain = 'domain.example';
   const challenge = 'invalid-challenge';
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return issueCloned({suite, selectiveSuite, credential, purpose});
+  return {suite, selectiveSuite, credential, purpose};
 }
 
-async function noProofPurpose({suite, selectiveSuite, credential}) {
+function noProofPurpose({suite, selectiveSuite, credential}) {
   // do not add a proofPurpose to the proof
   suite.createProof = invalidCreateProof({addProofPurpose: false});
   const purpose = new CredentialIssuancePurpose();
   // ensure the derived proof can find the baseProof
   purpose.term = undefined;
-  return issueCloned({suite, selectiveSuite, purpose, credential});
+  return {suite, selectiveSuite, purpose, credential};
 }
 
 // both base and derived VCs will have an invalid verificationMethod
-async function invalidVm({suite, selectiveSuite, credential}) {
+function invalidVm({suite, selectiveSuite, credential}) {
   suite.verificationMethod = 'did:key:invalidVm';
-  return issueCloned({suite, selectiveSuite, credential});
+  return {suite, selectiveSuite, credential};
 }
 
 //both base and derived VCs will lack a verificationMethod
-async function noVm({suite, selectiveSuite, credential}) {
+function noVerificationMethod({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addVm: false});
-  return issueCloned({suite, selectiveSuite, credential});
+  return {suite, selectiveSuite, credential};
 }
 
-async function invalidCreated({suite, selectiveSuite, credential}) {
+function invalidCreated({suite, selectiveSuite, credential}) {
   // suite.date will be used as created when signing
   suite.date = 'invalidDate';
-  return issueCloned({suite, selectiveSuite, credential});
+  return {suite, selectiveSuite, credential};
 }
 
-async function vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
+function vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
   // intentionally set the created date to be a year ago
   const created = new Date();
   created.setDate(created.getDate() - 365);
   suite.date = created.toISOString().replace(/\.\d+Z$/, 'Z');
-  return issueCloned({suite, selectiveSuite, credential});
+  return {suite, selectiveSuite, credential};
 }
 
-async function noCreated({suite, selectiveSuite, credential}) {
+function noCreated({suite, selectiveSuite, credential}) {
   suite.createProof = invalidCreateProof({addCreated: false});
-  return issueCloned({suite, selectiveSuite, credential});
+  return {suite, selectiveSuite, credential};
 }
 
 // both base and derived will have an invalid proof.type
-async function invalidProofType({suite, selectiveSuite, credential}) {
+function invalidProofType({suite, selectiveSuite, credential}) {
   suite.type = 'UnknownProofType';
   if(selectiveSuite) {
     const proofId = 'urn:uuid:no-proof-type-test';
     suite.proof = {id: proofId};
     selectiveSuite._cryptosuite.options.proofId = proofId;
   }
-  return issueCloned({suite, selectiveSuite, credential});
+  return {suite, selectiveSuite, credential};
 }
 
 // issues both a base and derived vc
-async function issuedVc({suite, selectiveSuite, credential}) {
-  return issueCloned({suite, selectiveSuite, credential});
+function issuedVc({suite, selectiveSuite, credential}) {
+  return {suite, selectiveSuite, credential};
 }
 
 export async function issueCloned({
