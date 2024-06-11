@@ -512,6 +512,7 @@ function runDataIntegrityProofVerifyTests({
   });
 }
 
+export {generators} from './vc-generator/generators.js';
 export {
   createInitialVc, dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
