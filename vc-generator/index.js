@@ -1,11 +1,11 @@
 /*!
  * Copyright 2023 - 2024 Digital Bazaar, Inc. All Rights Reserved
  */
+import {getGenerators, issueCloned} from './generators.js';
 import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {getDefaultKey} from './secret.js';
-import {getGenerators} from './generators.js';
 import {getSuites} from './cryptosuite.js';
 import {klona} from 'klona';
 import {validVc} from '../index.js';
@@ -63,7 +63,8 @@ export async function generateTestData({
       selectivePointers,
       verify
     });
-    const testData = await generator({suite, selectiveSuite, credential});
+    const testData = await issueCloned(
+      generator({suite, selectiveSuite, credential}));
     vcCache.get(suiteName).set(id, testData);
   }
   return {
