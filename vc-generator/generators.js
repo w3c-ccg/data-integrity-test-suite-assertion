@@ -28,6 +28,10 @@ export const generators = {
     invalidVm,
     noProofPurpose,
     invalidProofPurpose
+  },
+  // creates a set of shared test vector generators
+  shared: {
+    invalidCryptosuite
   }
 };
 
@@ -122,6 +126,21 @@ function invalidProofType({suite, selectiveSuite, credential}) {
     const proofId = 'urn:uuid:no-proof-type-test';
     suite.proof = {id: proofId};
     selectiveSuite._cryptosuite.options.proofId = proofId;
+  }
+  return {suite, selectiveSuite, credential};
+}
+
+// chances the cryptosuite name to something else for
+// invalid cryptosuite tests
+function invalidCryptosuite({
+  suite,
+  selectiveSuite,
+  credential,
+  cryptosuiteName = 'UnknownCryptosuite'
+}) {
+  suite.cryptosuite = cryptosuiteName;
+  if(selectiveSuite) {
+    selectiveSuite.cryptosuite = cryptosuiteName;
   }
   return {suite, selectiveSuite, credential};
 }
