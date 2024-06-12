@@ -120,12 +120,18 @@ function noCreated({suite, selectiveSuite, credential}) {
 }
 
 // both base and derived will have an invalid proof.type
-function invalidProofType({suite, selectiveSuite, credential}) {
-  suite.type = 'UnknownProofType';
+function invalidProofType({
+  suite,
+  selectiveSuite,
+  credential,
+  proofType = 'UnknownProofType'
+}) {
+  suite.type = proofType;
   if(selectiveSuite) {
     const proofId = 'urn:uuid:no-proof-type-test';
     suite.proof = {id: proofId};
     selectiveSuite._cryptosuite.options.proofId = proofId;
+    selectiveSuite.type = proofType;
   }
   return {suite, selectiveSuite, credential};
 }
