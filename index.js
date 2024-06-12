@@ -143,7 +143,7 @@ export function checkDataIntegrityProofVerifyErrors({
   }); // end describe
 }
 
-export {generators} from './vc-generator/generators.js';
+export {generators, issueCloned} from './vc-generator/generators.js';
 export {
   createInitialVc, dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
