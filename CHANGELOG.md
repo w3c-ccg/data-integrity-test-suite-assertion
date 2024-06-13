@@ -1,6 +1,6 @@
 # data-integrity-test-suite-assertion Changelog
 
-## 1.1.0 - TBD
+## 1.1.0 - 2024-06-13
 
 ### Added
 - The ability to specify `testDataOptions` for verification tests for cryptosuites.
