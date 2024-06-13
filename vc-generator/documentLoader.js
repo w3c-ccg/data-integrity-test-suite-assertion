@@ -2,7 +2,8 @@
  * Copyright (c) 2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {contextMap} from './contexts.js';
-// disable JsonLdDocumentLoader support for now
+// FIXME disable JsonLdDocumentLoader until jsonld
+// major release 9 and vc-gen refactor
 /*
 import {JsonLdDocumentLoader} from 'jsonld-document-loader';
 const jdl = new JsonLdDocumentLoader();
