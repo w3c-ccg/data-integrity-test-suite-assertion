@@ -1,5 +1,10 @@
 # data-integrity-test-suite-assertion Changelog
 
+## 1.2.0 -
+
+### Added
+- A new section shared in generators with shared generators.
+
 ## 1.1.0 - 2024-06-13
 
 ### Added
