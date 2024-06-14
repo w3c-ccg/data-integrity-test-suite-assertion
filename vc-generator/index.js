@@ -1,12 +1,13 @@
 /*!
  * Copyright 2023 - 2024 Digital Bazaar, Inc. All Rights Reserved
  */
-import {getGenerators, issueCloned} from './generators.js';
 import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {getDefaultKey} from './secret.js';
+import {getGenerators} from './generators.js';
 import {getSuites} from './cryptosuite.js';
+import {issueCloned} from './issuer.js';
 import {klona} from 'klona';
 import {validVc} from '../index.js';
 
