@@ -144,7 +144,7 @@ export function checkDataIntegrityProofVerifyErrors({
 }
 
 export {generators} from './vc-generator/generators.js';
-export {issueCloned} from './vc-generator/issuer.js';
+export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
 export {
   createInitialVc, dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
