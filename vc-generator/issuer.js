@@ -35,6 +35,20 @@ export async function issueCloned({
   if(!selectiveSuite) {
     return verifiableCredential;
   }
+  return deriveCloned({
+    verifiableCredential,
+    documentLoader: loader,
+    purpose,
+    selectiveSuite
+  });
+}
+
+export async function deriveCloned({
+  verifiableCredential,
+  selectiveSuite,
+  loader = documentLoader,
+  purpose = new CredentialIssuancePurpose(),
+}) {
   return jsigs.derive(verifiableCredential, {
     documentLoader: loader,
     purpose,
