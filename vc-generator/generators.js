@@ -60,68 +60,107 @@ export const getGenerators = ({created, authentication}) => {
   return new Map(entries);
 };
 
-function invalidProofPurpose({suite, selectiveSuite, credential}) {
-  const mockPurpose = 'invalidPurpose';
+// NOTE: ...args is for passing args intended for other generators
+// we return ...args first in order to overwrite any potential conflicts
+// such as Proof Purpose or date
+function invalidProofPurpose({
+  suite,
+  selectiveSuite,
+  credential,
+  mockPurpose,
+  ...args
+}) {
   //sets the proofPurpose for the proof
   suite.createProof = invalidCreateProof({mockPurpose});
   const purpose = new CredentialIssuancePurpose();
   // ensures the proofPurpose matches the term when deriving
   purpose.term = mockPurpose;
-  return {suite, selectiveSuite, credential, purpose};
+  return {...args, suite, selectiveSuite, credential, purpose};
 }
 
-function invalidDomain({suite, selectiveSuite, credential}) {
-  const domain = 'invalid-vc-domain.example.com';
-  const challenge = '1235abcd6789';
+// adds an invalid domain
+function invalidDomain({
+  suite,
+  selectiveSuite,
+  credential,
+  domain = 'invalid-vc-domain.example.com',
+  challenge = '1235abcd6789',
+  ...args}) {
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return {suite, selectiveSuite, credential, purpose};
+  return {...args, suite, selectiveSuite, credential, purpose};
 }
 
-function invalidChallenge({suite, selectiveSuite, credential}) {
-  const domain = 'domain.example';
-  const challenge = 'invalid-challenge';
+function invalidChallenge({
+  suite,
+  selectiveSuite,
+  credential,
+  domain = 'domain.example',
+  challenge = 'invalid-challenge',
+  ...args
+}) {
   const purpose = new AuthenticationProofPurpose({challenge, domain});
-  return {suite, selectiveSuite, credential, purpose};
+  return {...args, suite, selectiveSuite, credential, purpose};
 }
 
-function noProofPurpose({suite, selectiveSuite, credential}) {
+function noProofPurpose({suite, selectiveSuite, credential, ...args}) {
   // do not add a proofPurpose to the proof
   suite.createProof = invalidCreateProof({addProofPurpose: false});
   const purpose = new CredentialIssuancePurpose();
   // ensure the derived proof can find the baseProof
   purpose.term = undefined;
-  return {suite, selectiveSuite, purpose, credential};
+  return {...args, suite, selectiveSuite, purpose, credential};
 }
 
 // both base and derived VCs will have an invalid verificationMethod
-function invalidVm({suite, selectiveSuite, credential}) {
-  suite.verificationMethod = 'did:key:invalidVm';
-  return {suite, selectiveSuite, credential};
+function invalidVm({
+  suite,
+  selectiveSuite,
+  credential,
+  mockVM = 'did:key:invalidVm',
+  ...args
+}) {
+  suite.verificationMethod = mockVM;
+  if(selectiveSuite) {
+    selectiveSuite.verificationMethod = mockVM;
+  }
+  return {...args, suite, selectiveSuite, credential};
 }
 
 //both base and derived VCs will lack a verificationMethod
-function noVerificationMethod({suite, selectiveSuite, credential}) {
+function noVerificationMethod({suite, selectiveSuite, credential, ...args}) {
   suite.createProof = invalidCreateProof({addVm: false});
-  return {suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite, credential};
 }
 
-function invalidCreated({suite, selectiveSuite, credential}) {
+function invalidCreated({suite, selectiveSuite, credential, ...args}) {
   // suite.date will be used as created when signing
   suite.date = 'invalidDate';
-  return {suite, selectiveSuite, credential};
+  if(selectiveSuite) {
+    selectiveSuite.data = 'invalidDate';
+  }
+  return {...args, suite, selectiveSuite, credential};
 }
 
-function vcCreatedOneYearAgo({suite, selectiveSuite, credential}) {
+function vcCreatedOneYearAgo({
+  suite,
+  selectiveSuite,
+  credential,
+  createdSkew = -365,
+  ...args}) {
   // intentionally set the created date to be a year ago
   const created = new Date();
-  created.setDate(created.getDate() - 365);
+  created.setDate(created.getDate() + createdSkew);
+  // lop off ms precision from ISO timestamp
   suite.date = created.toISOString().replace(/\.\d+Z$/, 'Z');
-  return {suite, selectiveSuite, credential};
+  if(selectiveSuite) {
+    selectiveSuite.date = suite.date;
+  }
+  return {...args, suite, selectiveSuite, credential};
 }
 
-function noCreated({suite, selectiveSuite, credential}) {
+function noCreated({suite, selectiveSuite, credential, ...args}) {
   suite.createProof = invalidCreateProof({addCreated: false});
-  return {suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite, credential};
 }
 
 // both base and derived will have an invalid proof.type
@@ -129,7 +168,8 @@ function invalidProofType({
   suite,
   selectiveSuite,
   credential,
-  proofType = 'UnknownProofType'
+  proofType = 'UnknownProofType',
+  ...args
 }) {
   suite.type = proofType;
   if(selectiveSuite) {
@@ -138,7 +178,7 @@ function invalidProofType({
     selectiveSuite._cryptosuite.options.proofId = proofId;
     selectiveSuite.type = proofType;
   }
-  return {suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite, credential};
 }
 
 // chances the cryptosuite name to something else for
@@ -147,18 +187,19 @@ function invalidCryptosuite({
   suite,
   selectiveSuite,
   credential,
-  cryptosuiteName = 'UnknownCryptosuite'
+  cryptosuiteName = 'UnknownCryptosuite',
+  ...args
 }) {
   suite.cryptosuite = cryptosuiteName;
   if(selectiveSuite) {
     selectiveSuite.cryptosuite = cryptosuiteName;
   }
-  return {suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite, credential};
 }
 
 // issues both a base and derived vc
-function issuedVc({suite, selectiveSuite, credential}) {
-  return {suite, selectiveSuite, credential};
+function issuedVc({suite, selectiveSuite, credential, ...args}) {
+  return {...args, suite, selectiveSuite, credential};
 }
 
 export async function issueCloned({
