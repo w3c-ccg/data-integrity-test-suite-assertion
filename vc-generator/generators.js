@@ -2,10 +2,8 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as vc from '@digitalbazaar/vc';
-import {documentLoader} from './documentLoader.js';
 import {invalidCreateProof} from './helpers.js';
 import jsigs from 'jsonld-signatures';
-import {klona} from 'klona';
 
 const {AuthenticationProofPurpose} = jsigs.purposes;
 const {CredentialIssuancePurpose} = vc;
@@ -200,24 +198,4 @@ function invalidCryptosuite({
 // issues both a base and derived vc
 function issuedVc({suite, selectiveSuite, credential, ...args}) {
   return {...args, suite, selectiveSuite, credential};
-}
-
-export async function issueCloned({
-  suite, selectiveSuite, credential, loader = documentLoader,
-  purpose = new CredentialIssuancePurpose(),
-}) {
-  const verifiableCredential = await vc.issue({
-    credential: klona(credential),
-    suite,
-    documentLoader: loader,
-    purpose
-  });
-  if(!selectiveSuite) {
-    return verifiableCredential;
-  }
-  return jsigs.derive(verifiableCredential, {
-    documentLoader: loader,
-    purpose,
-    suite: selectiveSuite
-  });
 }
