@@ -4,6 +4,8 @@
 
 ### Added
 - A new section shared in generators with shared generators.
+- Generators pass unused parameters to next generator.
+- Export both `issueCloned` and `deriveCloned`.
 
 ## 1.1.0 - 2024-06-13
 
