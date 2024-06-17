@@ -14,7 +14,7 @@ export const generators = {
   created: {
     noCreated,
     invalidCreated,
-    vcCreatedOneYearAgo
+    createdOneYearAgo
   },
   // creates test vectors for Authentication Purpose tests
   authentication: {
@@ -139,7 +139,7 @@ function invalidCreated({suite, selectiveSuite, credential, ...args}) {
   return {...args, suite, selectiveSuite, credential};
 }
 
-function vcCreatedOneYearAgo({
+function createdOneYearAgo({
   suite,
   selectiveSuite,
   credential,
