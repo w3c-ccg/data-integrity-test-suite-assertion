@@ -112,6 +112,15 @@ export function runDataIntegrityProofVerifyTests({
       credential.proof.proofValue = credential.proof.proofValue.slice(1);
       await verificationFail({credential, verifier});
     });
+    it('The value of the cryptosuite property MUST be a string that ' +
+    'identifies the cryptographic suite. If the processing environment ' +
+    'supports subtypes of string, the type of the cryptosuite value MUST ' +
+    'be the https://w3id.org/security#cryptosuiteString subtype of string.',
+    async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuiteString%20subtype%20of%20string.';
+      const credential = credentials.clone('invalidCryptosuite');
+      await verificationFail({credential, verifier});
+    });
     if(optionalTests.authentication) {
       it('If the "options.domain" is set and it does not match ' +
         '"proof.domain", an error MUST be raised.',
