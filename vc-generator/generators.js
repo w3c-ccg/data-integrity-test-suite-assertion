@@ -179,7 +179,7 @@ function invalidProofType({
   return {...args, suite, selectiveSuite, credential};
 }
 
-// chances the cryptosuite name to something else for
+// changes the cryptosuite name to another value for
 // invalid cryptosuite tests
 function invalidCryptosuite({
   suite,
@@ -195,7 +195,7 @@ function invalidCryptosuite({
   return {...args, suite, selectiveSuite, credential};
 }
 
-// issues both a base and derived vc
+// issues a normal or derived vc
 function issuedVc({suite, selectiveSuite, credential, ...args}) {
   return {...args, suite, selectiveSuite, credential};
 }
