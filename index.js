@@ -8,8 +8,8 @@ import {
   shouldBeBs58, verificationFail
 } from './helpers.js';
 import {createRequire} from 'node:module';
-import {runDataIntegrityProofFormatTests} from './suites/01-di-create.js';
-import {runDataIntegrityProofVerifyTests} from './suites/02-di-verify.js';
+import {runDataIntegrityProofFormatTests} from './suites/create.js';
+import {runDataIntegrityProofVerifyTests} from './suites/verify.js';
 
 const require = createRequire(import.meta.url);
 export const validVc = require('./validVc.json');
