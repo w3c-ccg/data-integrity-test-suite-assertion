@@ -12,27 +12,32 @@ const {CredentialIssuancePurpose} = vc;
 
 // generator categories
 export const generators = {
+  // creates test vectors for `proof.created`
   created: {
     noCreated,
     invalidCreated,
     vcCreatedOneYearAgo
   },
+  // creates test vectors for Authentication Purpose tests
   authentication: {
     invalidDomain,
     invalidChallenge
   },
+  // these generators are needed for DI specific tests
+  // and maybe be needed in suite specific tests
   mandatory: {
-    issuedVc,
-    invalidProofType,
     noVerificationMethod,
-    invalidVm,
     noProofPurpose,
-    invalidProofPurpose
+    issuedVc,
+    invalidCryptosuite,
+    invalidProofPurpose,
+    invalidProofType,
+    invalidVm,
   },
   // creates a set of shared test vector generators
-  shared: {
-    invalidCryptosuite
-  }
+  // not necessarily used in DI Assertion itself, but used
+  // in multiple suites
+  shared: {}
 };
 
 /**
