@@ -134,7 +134,7 @@ function invalidCreated({suite, selectiveSuite, credential, ...args}) {
   // suite.date will be used as created when signing
   suite.date = 'invalidDate';
   if(selectiveSuite) {
-    selectiveSuite.data = 'invalidDate';
+    selectiveSuite.date = 'invalidDate';
   }
   return {...args, suite, selectiveSuite, credential};
 }
