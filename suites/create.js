@@ -62,7 +62,7 @@ export function runDataIntegrityProofFormatTests({
       for(const proof of proofs) {
         proof.should.have.property('type');
         proof.type.should.be.a(
-          'Array', 'Expected "proof.type" to be a string.');
+          'string', 'Expected "proof.type" to be a string.');
       }
     });
     it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
