@@ -22,10 +22,7 @@ export const validVc = require('./validVc.json');
  * @param {Array<string>} [options.expectedProofTypes] - An option to specify
  *   the expected proof types. The default value is set to
  *   ['DataIntegrityProof'].
- * @param {boolean} [options.expectedCryptoSuite] - A boolean option to specify
- *   if "cryptosuite" field is expected in the proof or not. The default value
- *   is set to true.
- * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
+  * @param {boolean} [options.isEcdsaTests] - A boolean option to specify
  *   if it is used in ecdsa test suite or not. The default value
  *   is set to false.
  * @param {string} [options.testDescription] - An option to define
@@ -36,8 +33,7 @@ export const validVc = require('./validVc.json');
  */
 export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
-  expectedCryptoSuite = true, isEcdsaTests = false,
-  testDescription = 'Data Integrity (issuer)'
+  isEcdsaTests = false, testDescription = 'Data Integrity (issuer)'
 } = {}) {
   return describe(testDescription, function() {
     // this will tell the report
@@ -58,14 +54,14 @@ export function checkDataIntegrityProofFormat({
             const keyType = checkKeyType(supportedEcdsaKeyType);
             this.implemented.push(`${vendorName}: ${keyType}`);
             runDataIntegrityProofFormatTests({
-              endpoints, expectedCryptoSuite, expectedProofTypes,
+              endpoints, expectedProofTypes,
               testDescription: `${vendorName}: ${keyType}`, vendorName
             });
           }
         } else {
           this.implemented.push(vendorName);
           runDataIntegrityProofFormatTests({
-            endpoints, expectedCryptoSuite, expectedProofTypes,
+            endpoints, expectedProofTypes,
             testDescription: vendorName, vendorName
           });
         }

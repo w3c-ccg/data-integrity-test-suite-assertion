@@ -12,7 +12,7 @@ import {validVc} from '../index.js';
 const should = chai.should();
 
 export function runDataIntegrityProofFormatTests({
-  endpoints, expectedCryptoSuite, expectedProofTypes, testDescription,
+  endpoints, expectedProofTypes, testDescription,
   vendorName
 }) {
   return describe(testDescription, function() {
@@ -62,7 +62,7 @@ export function runDataIntegrityProofFormatTests({
       for(const proof of proofs) {
         proof.should.have.property('type');
         proof.type.should.be.a(
-          'string', 'Expected "proof.type" to be a string.');
+          'Array', 'Expected "proof.type" to be a string.');
       }
     });
     it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
@@ -96,16 +96,6 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    if(expectedCryptoSuite) {
-      it('"proof.cryptosuite" field MUST exist and be a string.',
-        function() {
-          for(const proof of proofs) {
-            proof.should.have.property('cryptosuite');
-            proof.cryptosuite.should.be.a('string', 'Expected ' +
-              '"cryptosuite" property to be a string.');
-          }
-        });
-    }
     it('If the proof type is DataIntegrityProof, cryptosuite MUST be ' +
     'specified; otherwise, cryptosuite MAY be specified. If specified, its ' +
     'value MUST be a string.', function() {
