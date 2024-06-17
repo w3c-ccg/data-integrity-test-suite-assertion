@@ -17,6 +17,12 @@ export function runDataIntegrityProofFormatTests({
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
+    beforeEach(function() {
+      this.currentTest.cell = {
+        columnId,
+        rowId: this.currentTest.title
+      };
+    });
     let proofs = [];
     let data;
     before(async function() {
@@ -29,7 +35,6 @@ export function runDataIntegrityProofFormatTests({
     });
     it('"proof" field MUST exist and MUST be either a single object or ' +
       'an unordered set of objects.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       should.exist(data, 'Expected data.');
       const proof = data.proof;
       should.exist(proof, 'Expected proof to exist.');
@@ -38,7 +43,6 @@ export function runDataIntegrityProofFormatTests({
         'either an object or an unordered set of objects.');
     });
     it('if "proof.id" field exists, it MUST be a valid URL.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.id) {
           let result;
@@ -55,7 +59,6 @@ export function runDataIntegrityProofFormatTests({
       }
     });
     it('"proof.type" field MUST exist and be a string.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         proof.should.have.property('type');
         proof.type.should.be.a(
@@ -65,7 +68,6 @@ export function runDataIntegrityProofFormatTests({
     it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
       `and the associated document MUST include expected contexts.`,
     function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         proof.should.have.property('type');
         proof.type.should.be.a(
@@ -97,7 +99,6 @@ export function runDataIntegrityProofFormatTests({
     if(expectedCryptoSuite) {
       it('"proof.cryptosuite" field MUST exist and be a string.',
         function() {
-          this.test.cell = {columnId, rowId: this.test.title};
           for(const proof of proofs) {
             proof.should.have.property('cryptosuite');
             proof.cryptosuite.should.be.a('string', 'Expected ' +
@@ -123,7 +124,6 @@ export function runDataIntegrityProofFormatTests({
     });
     it('if "proof.created" field exists, it MUST be a valid ' +
       'XMLSCHEMA-11 dateTimeStamp value.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.created) {
           // check if "created" is a valid XML Schema 1.1 dateTimeStamp
@@ -134,7 +134,6 @@ export function runDataIntegrityProofFormatTests({
     });
     it('if "proof.expires" field exists, it MUST be a valid ' +
       'XMLSCHEMA-11 dateTimeStamp value.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.expires) {
           // check if "created" is a valid XML Schema 1.1 dateTimeStamp
@@ -145,7 +144,6 @@ export function runDataIntegrityProofFormatTests({
     });
     it('"proof.verificationMethod" field MUST exist and be a valid URL.',
       function() {
-        this.test.cell = {columnId, rowId: this.test.title};
         for(const proof of proofs) {
           proof.should.have.property('verificationMethod');
           let result;
@@ -163,7 +161,6 @@ export function runDataIntegrityProofFormatTests({
       });
     it('"proof.proofPurpose" field MUST exist and be a string.',
       function() {
-        this.test.cell = {columnId, rowId: this.test.title};
         for(const proof of proofs) {
           proof.should.have.property('proofPurpose');
           proof.proofPurpose.should.be.a('string');
@@ -171,7 +168,6 @@ export function runDataIntegrityProofFormatTests({
       });
     it('"proof.proofValue" field MUST exist and be a string.',
       function() {
-        this.test.cell = {columnId, rowId: this.test.title};
         for(const proof of proofs) {
           proof.should.have.property('proofValue');
           proof.proofValue.should.be.a('string');
@@ -180,8 +176,6 @@ export function runDataIntegrityProofFormatTests({
     it('The contents of the value ("proof.proofValue") MUST be expressed ' +
     'with a header and encoding as described in Section 2.4 Multibase.',
     function() {
-      this.test.cell = {columnId, rowId: this.test.title};
-
       for(const proof of proofs) {
         const {
           prefix: expectedPrefix,
@@ -203,7 +197,6 @@ export function runDataIntegrityProofFormatTests({
     });
     it('if "proof.domain" field exists, it MUST be either a string, ' +
       'or an unordered set of strings.', function() {
-      this.test.cell = {columnId, rowId: this.test.title};
       for(const proof of proofs) {
         if(proof.domain) {
           const validType = isStringOrArrayOfStrings(proof.domain);
@@ -215,7 +208,6 @@ export function runDataIntegrityProofFormatTests({
     });
     it('if "proof.challenge" field exists, it MUST be a string.',
       function() {
-        this.test.cell = {columnId, rowId: this.test.title};
         for(const proof of proofs) {
           if(proof.challenge) {
             // domain must be specified
@@ -228,7 +220,6 @@ export function runDataIntegrityProofFormatTests({
       });
     it('if "proof.previousProof" field exists, it MUST be a string.',
       function() {
-        this.test.cell = {columnId, rowId: this.test.title};
         for(const proof of proofs) {
           if(proof.previousProof) {
             proof.previousProof.should.be.a('string', 'Expected ' +
@@ -238,7 +229,6 @@ export function runDataIntegrityProofFormatTests({
       });
     it('if "proof.nonce" field exists, it MUST be a string.',
       function() {
-        this.test.cell = {columnId, rowId: this.test.title};
         for(const proof of proofs) {
           if(proof.nonce) {
             proof.nonce.should.be.a('string', 'Expected "proof.nonce" ' +
