@@ -56,7 +56,7 @@ export function checkDataIntegrityProofFormat({
             const keyType = checkKeyType(supportedEcdsaKeyType);
             this.implemented.push(`${vendorName}: ${keyType}`);
             runDataIntegrityProofFormatTests({
-              endpoints, expectedProofTypes,
+              cryptosuiteName, endpoints, expectedProofTypes,
               testDescription: `${vendorName}: ${keyType}`, vendorName
             });
           }
