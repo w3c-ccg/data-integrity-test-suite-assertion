@@ -1,11 +1,12 @@
 # data-integrity-test-suite-assertion Changelog
 
-## 1.2.0 -
+## 1.2.0 - 2024-06-18
 
 ### Added
 - A new section shared in generators with shared generators.
 - Generators pass unused parameters to next generator.
 - Export both `issueCloned` and `deriveCloned`.
+- A new parameter `cryptosuiteName` for the issuer tests.
 
 ## 1.1.0 - 2024-06-13
 

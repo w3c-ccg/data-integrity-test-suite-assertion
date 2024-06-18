@@ -18,6 +18,7 @@ export const validVc = require('./validVc.json');
  * Validates the structure of the "proof" property on a digital document.
  *
  * @param {object} options - Options to use.
+ * @param {string} options.cryptosuiteName - A cryptosuite name.
  * @param {Map<string,object>} options.implemented - The vendors being tested.
  * @param {Array<string>} [options.expectedProofTypes] - An option to specify
  *   the expected proof types. The default value is set to
@@ -33,7 +34,8 @@ export const validVc = require('./validVc.json');
  */
 export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
-  isEcdsaTests = false, testDescription = 'Data Integrity (issuer)'
+  cryptosuiteName, isEcdsaTests = false,
+  testDescription = 'Data Integrity (issuer)'
 } = {}) {
   return describe(testDescription, function() {
     // this will tell the report
@@ -61,7 +63,7 @@ export function checkDataIntegrityProofFormat({
         } else {
           this.implemented.push(vendorName);
           runDataIntegrityProofFormatTests({
-            endpoints, expectedProofTypes,
+            cryptosuiteName, endpoints, expectedProofTypes,
             testDescription: vendorName, vendorName
           });
         }

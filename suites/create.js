@@ -7,13 +7,14 @@ import {
   isStringOrArrayOfStrings, isValidMultibaseEncoded
 } from '../helpers.js';
 import chai from 'chai';
+import jsonld from 'jsonld';
 import {validVc} from '../index.js';
 
 const should = chai.should();
 
 export function runDataIntegrityProofFormatTests({
   endpoints, expectedProofTypes, testDescription,
-  vendorName
+  vendorName, cryptosuiteName
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
@@ -226,6 +227,36 @@ export function runDataIntegrityProofFormatTests({
           }
         }
       });
+    if(cryptosuiteName) {
+      it('The value of the cryptosuite property MUST be a string that ' +
+        'identifies the cryptographic suite.', async function() {
+        const hasCryptosuiteName = proofs.some(
+          p => p?.cryptosuite === cryptosuiteName);
+        hasCryptosuiteName.should.equal(
+          true,
+          `Expected at least one proof with cryptosuite ${cryptosuiteName}`);
+      });
+      it('The value of the cryptosuite property MUST be a string that ' +
+        'identifies the cryptographic suite. If the processing environment ' +
+        'supports subtypes of string, the type of the cryptosuite value MUST ' +
+        'be the https://w3id.org/security#cryptosuiteString subtype of string.',
+      async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuiteString%20subtype%20of%20string.';
+        const [flattened] = await jsonld.flatten(data);
+        const [graph] = flattened['@graph'];
+        should.exist(graph, 'Expected flattened VC to have a graph.');
+        const cryptoProp = 'https://w3id.org/security#cryptosuite';
+        const cryptosuite = graph[cryptoProp];
+        const cryptoType = 'https://w3id.org/security#cryptosuiteString';
+        should.exist(
+          cryptosuite,
+          `Expected graph to have property ${cryptoProp}`);
+        const cryptoString = cryptosuite.some(c => c?.['@type'] === cryptoType);
+        cryptoString.should.equal(
+          true,
+          `Expected at least one cryptosuite with type ${cryptoType}`);
+      });
+    }
   });
 }
 
