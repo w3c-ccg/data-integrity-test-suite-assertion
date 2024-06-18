@@ -16,7 +16,8 @@ describe('Test checkDataIntegrityProofFormat()', function() {
   it('should pass if implemented returns a valid Vc.', function() {
     checkDataIntegrityProofFormat({
       implemented: validIssuerImplementations,
-      tag: 'Test-Issuer-Valid'
+      tag: 'Test-Issuer-Valid',
+      cryptosuiteName: 'eddsa-2022'
     });
   });
   // this results in the test suite reporting failure when it is
