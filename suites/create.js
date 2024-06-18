@@ -230,6 +230,7 @@ export function runDataIntegrityProofFormatTests({
     if(cryptosuiteName) {
       it('The value of the cryptosuite property MUST be a string that ' +
         'identifies the cryptographic suite.', async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuiteString%20subtype%20of%20string.';
         const hasCryptosuiteName = proofs.some(
           p => p?.cryptosuite === cryptosuiteName);
         hasCryptosuiteName.should.equal(
