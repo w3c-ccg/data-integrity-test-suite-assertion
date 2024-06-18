@@ -251,10 +251,12 @@ export function runDataIntegrityProofFormatTests({
         should.exist(
           cryptosuite,
           `Expected graph to have property ${cryptoProp}`);
-        const cryptoString = cryptosuite.some(c => c?.['@type'] === cryptoType);
+        const cryptoString = cryptosuite.some(c =>
+          c?.['@type'] === cryptoType && c?.['@value'] === cryptosuiteName);
         cryptoString.should.equal(
           true,
-          `Expected at least one cryptosuite with type ${cryptoType}`);
+          `Expected at least one cryptosuite with @type ${cryptoType} and ` +
+          `@value ${cryptosuiteName}`);
       });
     }
   });
