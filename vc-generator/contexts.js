@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2023 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2023-2024 Digital Bazaar, Inc.
  */
 import * as credentialsV2Context from '@digitalbazaar/credentials-v2-context';
 import credentialsCtx from 'credentials-context';
