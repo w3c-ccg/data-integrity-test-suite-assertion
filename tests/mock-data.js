@@ -2,7 +2,6 @@
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {createRequire} from 'node:module';
-import {klona} from 'klona';
 // FIXME remove this once node has non-experimental support
 // for importing json via import
 // @see https://nodejs.org/api/esm.html#json-modules
@@ -51,14 +50,14 @@ class MockVerifier {
 
 const validIssuer = new MockIssuer({
   tags: ['Test-Issuer', 'Test-Issuer-Valid'],
-  mockVc: klona(issuedVc)
+  mockVc: structuredClone(issuedVc)
 });
 
 const validVerifier = new MockVerifier({
   tags: ['Test-Verifier', 'Test-Verifier-Valid'],
 });
 
-const invalidVc = klona(issuedVc);
+const invalidVc = structuredClone(issuedVc);
 invalidVc.proof.type = {
   proofType: 'not-data-integrity'
 };

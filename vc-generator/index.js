@@ -8,11 +8,10 @@ import {getDefaultKey} from './secret.js';
 import {getGenerators} from './generators.js';
 import {getSuites} from './cryptosuite.js';
 import {issueCloned} from './issuer.js';
-import {klona} from 'klona';
 import {validVc} from '../index.js';
 
 const _initCache = () => new Map([
-  ['validVc', klona(validVc)]
+  ['validVc', structuredClone(validVc)]
 ]);
 
 // cache test data for a single run
@@ -52,7 +51,7 @@ export async function generateTestData({
   if(!vcCache.get(suiteName)) {
     vcCache.set(suiteName, _initCache());
   }
-  const credential = klona(testVector);
+  const credential = structuredClone(testVector);
   credential.issuer = key.controller;
   const signer = key.signer();
   const vcGenerators = getGenerators(optionalTests);
@@ -70,7 +69,7 @@ export async function generateTestData({
   }
   return {
     clone(key) {
-      return klona(vcCache.get(suiteName).get(key));
+      return structuredClone(vcCache.get(suiteName).get(key));
     }
   };
 }
