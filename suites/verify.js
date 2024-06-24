@@ -2,7 +2,7 @@
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
 import {generateTestData} from '../vc-generator/index.js';
-import {verificationFail} from '../helpers.js';
+import {verificationFail} from '../assertions.js';
 
 export function runDataIntegrityProofVerifyTests({
   endpoints,

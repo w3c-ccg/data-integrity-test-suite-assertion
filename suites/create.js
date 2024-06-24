@@ -2,11 +2,12 @@
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
 import {
-  createInitialVc, dateRegex, expectedMultibasePrefix,
+  dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
   isStringOrArrayOfStrings, isValidMultibaseEncoded
-} from '../helpers.js';
+} from '../assertions.js';
 import chai from 'chai';
+import {createInitialVc} from '../helpers.js';
 import jsonld from 'jsonld';
 import {validVc} from '../index.js';
 
