@@ -2,11 +2,13 @@
  * Copyright (c) 2022-2023 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  checkKeyType, createInitialVc, dateRegex, expectedMultibasePrefix,
+  checkKeyType, dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
   isStringOrArrayOfStrings, isValidMultibaseEncoded, shouldBeBase64NoPadUrl,
   shouldBeBs58, verificationFail
-} from './helpers.js';
+} from './assertions.js';
+import {createInitialVc} from './helpers.js';
+
 import {createRequire} from 'node:module';
 import {runDataIntegrityProofFormatTests} from './suites/create.js';
 import {runDataIntegrityProofVerifyTests} from './suites/verify.js';
