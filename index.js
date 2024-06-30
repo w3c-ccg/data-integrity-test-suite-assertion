@@ -139,8 +139,10 @@ export function checkDataIntegrityProofVerifyErrors({
 export * as assertions from './assertions.js';
 export {generators} from './vc-generator/generators.js';
 export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
-export {dateRegex, expectedMultibasePrefix, isObjectOrArrayOfObjects,
-  shouldBeUrl, isStringOrArrayOfStrings, isValidMultibaseEncoded,
-  shouldBeBs58, shouldBeBase64NoPadUrl, verificationFail
+export {
+  dateRegex, expectedMultibasePrefix, isObjectOrArrayOfObjects,
+  shouldBeErrorResponse, shouldBeUrl, isStringOrArrayOfStrings,
+  isValidMultibaseEncoded, shouldBeBs58, shouldBeBase64NoPadUrl,
+  verificationFail
 } from './assertions.js';
 export {createInitialVc} from './helpers.js';
