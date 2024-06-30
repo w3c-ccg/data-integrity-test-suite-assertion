@@ -99,8 +99,8 @@ export function checkKeyType(keyType) {
 }
 
 export const shouldBeUrl = ({url, prop}) => {
-  should.exist(url, `Expected ${prop} URL to exist.`);
-  url.should.be.a('string', `Expected ${prop} URL to be a string.`);
+  should.exist(url, `Expected "${prop}" URL to exist.`);
+  url.should.be.a('string', `Expected "${prop}" URL to be a string.`);
   let parsedUrl;
   let err;
   try {
@@ -108,9 +108,9 @@ export const shouldBeUrl = ({url, prop}) => {
   } catch(e) {
     err = e;
   }
-  should.not.exist(err, `Expected ${prop} URL to be parsed.`);
-  should.exist(parsedUrl, `Expected ${prop} parsed URL to exist.`);
+  should.not.exist(err, `Expected "${prop}" URL to be parsed.`);
+  should.exist(parsedUrl, `Expected "${prop}" parsed URL to exist.`);
   parsedUrl.should.be.an(
     'object',
-    `Expected ${prop} parsed URL to be an object.`);
+    `Expected "${prop}" parsed URL to be an object.`);
 };
