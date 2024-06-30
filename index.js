@@ -1,14 +1,7 @@
 /*!
  * Copyright (c) 2022-2023 Digital Bazaar, Inc.
  */
-import {
-  checkKeyType, dateRegex, expectedMultibasePrefix,
-  isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, isValidMultibaseEncoded, shouldBeBase64NoPadUrl,
-  shouldBeBs58, verificationFail
-} from './assertions.js';
-import {createInitialVc} from './helpers.js';
-
+import {checkKeyType} from './assertions.js';
 import {createRequire} from 'node:module';
 import {runDataIntegrityProofFormatTests} from './suites/create.js';
 import {runDataIntegrityProofVerifyTests} from './suites/verify.js';
@@ -145,9 +138,8 @@ export function checkDataIntegrityProofVerifyErrors({
 
 export {generators} from './vc-generator/generators.js';
 export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
-export {
-  createInitialVc, dateRegex, expectedMultibasePrefix,
-  isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, isValidMultibaseEncoded, shouldBeBs58,
-  shouldBeBase64NoPadUrl, verificationFail
-};
+export {dateRegex, expectedMultibasePrefix, isObjectOrArrayOfObjects,
+  shouldBeUrl, isStringOrArrayOfStrings, isValidMultibaseEncoded,
+  shouldBeBs58, shouldBeBase64NoPadUrl, verificationFail
+} from './assertions.js';
+export {createInitialVc} from './helpers.js';
