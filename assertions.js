@@ -149,3 +149,27 @@ export async function shouldMapToUrl({doc, term, prop}) {
     }
   }
 }
+
+/**
+ * Throws an error if a negative test does not return 400 or 422.
+ * A reason maybe provided such as "invalid proofValue" etc.
+ *
+ * @param {object} options - Options to use.
+ * @param {Response} options.response - A fetch response.
+ * @param {string} [options.reason = ''] - An optional reason.
+ * @param {Array<number>} [options.expectedStatuses = [400, 422]] -
+ *   An optional list of expected statuses.
+ */
+export const shouldBeErrorResponse = ({
+  response,
+  expectedStatuses = [400, 422],
+  reason = ''
+}) => {
+  should.exist(response, 'Expected an Error Response. ${reason}');
+  response.ok.should.equal(false, `Expected resource to error. ${reason}`);
+  const {status} = response;
+  should.exist(status, 'Expected "response.status" to exist.');
+  status.should.be.oneOf(
+    expectedStatuses,
+    `Expected "status" to be oneOf ${expectedStatuses}. ${reason}`);
+};
