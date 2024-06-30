@@ -110,7 +110,7 @@ export const shouldBeUrl = ({url, prop}) => {
   }
   should.not.exist(err, `Expected "${prop}" URL to be parsed.`);
   should.exist(parsedUrl, `Expected "${prop}" parsed URL to exist.`);
-  parsedUrl.should.be.an(
-    'object',
-    `Expected "${prop}" parsed URL to be an object.`);
+  parsedUrl.should.be.an.instanceOf(
+    URL,
+    `Expected "${prop}" parsed URL to be a URL.`);
 };
