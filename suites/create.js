@@ -4,7 +4,8 @@
 import {
   dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, isValidMultibaseEncoded
+  isStringOrArrayOfStrings, isValidMultibaseEncoded,
+  shouldBeUrl
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
@@ -47,16 +48,7 @@ export function runDataIntegrityProofFormatTests({
     it('if "proof.id" field exists, it MUST be a valid URL.', function() {
       for(const proof of proofs) {
         if(proof.id) {
-          let result;
-          let err;
-          try {
-            result = new URL(proof.id);
-          } catch(e) {
-            err = e;
-          }
-          should.not.exist(err, 'Expected URL check of the "proof.id" ' +
-            'to not error.');
-          should.exist(result, 'Expected "proof.id" to be a URL.');
+          shouldBeUrl({url: proof.id, prop: 'proof.id'});
         }
       }
     });
