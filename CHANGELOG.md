@@ -4,6 +4,7 @@
 
 ### Added
 - A new export `assertions` with all the assertions in it.
+- A new common assertion `shouldBeErrorResponse`.
 
 ## 1.2.0 - 2024-06-18
 
