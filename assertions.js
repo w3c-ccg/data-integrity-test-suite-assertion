@@ -23,7 +23,7 @@ export const shouldBeBs58 = s => bs58.test(s);
 export const shouldBeBase64NoPadUrl = s => BASE_64URL_NOPAD_REGEX.test(s);
 
 export const verificationFail = async ({
-  credential, verifier, options = {}
+  credential, verifier, reason, options = {}
 } = {}) => {
   const body = {
     verifiableCredential: credential,
@@ -35,11 +35,7 @@ export const verificationFail = async ({
   const {result, error} = await verifier.post({json: body});
   should.not.exist(result, 'Expected no result from verifier.');
   should.exist(error, 'Expected verifier to error.');
-  should.exist(error.status, 'Expected verifier to return an HTTP Status code');
-  error.status.should.equal(
-    400,
-    'Expected HTTP Status code 400 invalid input!'
-  );
+  shouldBeErrorResponse({response: error, reason});
 };
 
 export function expectedMultibasePrefix(cryptosuite) {
@@ -160,16 +156,15 @@ export async function shouldMapToUrl({doc, term, prop}) {
  * @param {Array<number>} [options.expectedStatuses = [400, 422]] -
  *   An optional list of expected statuses.
  */
-export const shouldBeErrorResponse = ({
+export function shouldBeErrorResponse({
   response,
   expectedStatuses = [400, 422],
   reason = ''
-}) => {
+}) {
   should.exist(response, 'Expected an Error Response. ${reason}');
-  response.ok.should.equal(false, `Expected resource to error. ${reason}`);
   const {status} = response;
   should.exist(status, 'Expected "response.status" to exist.');
   status.should.be.oneOf(
     expectedStatuses,
     `Expected "status" to be oneOf ${expectedStatuses}. ${reason}`);
-};
+}
