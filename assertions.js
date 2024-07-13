@@ -93,11 +93,15 @@ export function isObject(value) {
   return (typeof value === 'object' && value !== null);
 }
 
-export function isStringOrArrayOfStrings(data) {
-  if(Array.isArray(data)) {
-    return data.every(item => typeof item === 'string');
+export function isStringOrArrayOfStrings(value) {
+  if(Array.isArray(value)) {
+    return value.every(isString);
   }
-  return typeof data === 'string';
+  return isString(value);
+}
+
+export function isString(value) {
+  return (typeof value === 'string');
 }
 
 export function checkKeyType(keyType) {
