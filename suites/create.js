@@ -45,7 +45,9 @@ export function runDataIntegrityProofFormatTests({
       validType.should.equal(true, 'Expected proof to be' +
         'either an object or an unordered set of objects.');
     });
-    it('if "proof.id" field exists, it MUST be a valid URL.', function() {
+    it('("proof.id") An optional identifier for the proof, which MUST be a ' +
+    'URL.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=An%20optional%20identifier%20for%20the%20proof%2C%20which%20MUST%20be%20a%20URL';
       for(const proof of proofs) {
         if(proof.id) {
           shouldBeUrl({url: proof.id, prop: 'proof.id'});
