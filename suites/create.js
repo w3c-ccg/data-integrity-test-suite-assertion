@@ -243,21 +243,20 @@ export function runDataIntegrityProofFormatTests({
         'be the https://w3id.org/security#cryptosuiteString subtype of string.',
       async function() {
         this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuiteString%20subtype%20of%20string.';
-        const [flattened] = await jsonld.flatten(data);
-        const [graph] = flattened['@graph'];
-        should.exist(graph, 'Expected flattened VC to have a graph.');
         const cryptoProp = 'https://w3id.org/security#cryptosuite';
-        const cryptosuite = graph[cryptoProp];
         const cryptoType = 'https://w3id.org/security#cryptosuiteString';
-        should.exist(
-          cryptosuite,
-          `Expected graph to have property ${cryptoProp}`);
-        const cryptoString = cryptosuite.some(c =>
-          c?.['@type'] === cryptoType && c?.['@value'] === cryptosuiteName);
-        cryptoString.should.equal(
-          true,
-          `Expected at least one cryptosuite with @type ${cryptoType} and ` +
-          `@value ${cryptosuiteName}`);
+        for(const {cryptosuite, type} of proofs) {
+          const [expanded] = await jsonld.expand({
+            '@context': data['@context'],
+            cryptosuite,
+            type
+          });
+          const [cryptoProperties] = expanded[cryptoProp];
+          should.exist(cryptoProperties,
+            `Expected property ${cryptoProp} to exist.`);
+          cryptoProperties.should.have.property('@type', cryptoType);
+          cryptoProperties.should.have.property('@value', cryptosuiteName);
+        }
       });
     }
   });
