@@ -52,7 +52,8 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('"proof.type" field MUST exist and be a string.', function() {
+    it('The specific proof type used for the cryptographic proof MUST be ' +
+    'specified as a string that maps to a URL.', function() {
       for(const proof of proofs) {
         proof.should.have.property('type');
         proof.type.should.be.a(
