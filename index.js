@@ -135,7 +135,8 @@ export function checkDataIntegrityProofVerifyErrors({
     } // end for loop
   }); // end describe
 }
-
+// export all assertions
+export * as assertions from './assertions.js';
 export {generators} from './vc-generator/generators.js';
 export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
 export {dateRegex, expectedMultibasePrefix, isObjectOrArrayOfObjects,
