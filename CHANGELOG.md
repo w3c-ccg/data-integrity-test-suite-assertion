@@ -1,5 +1,10 @@
 # data-integrity-test-suite-assertion Changelog
 
+## 1.3.0 -
+
+### Added
+- A new export `assertions` with all the assertions in it.
+
 ## 1.2.0 - 2024-06-18
 
 ### Added
