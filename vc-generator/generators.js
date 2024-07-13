@@ -32,6 +32,9 @@ export const generators = {
     invalidProofType,
     invalidVm,
   },
+  optional: {
+    invalidProofId
+  },
   // creates a set of shared test vector generators
   // not necessarily used in DI Assertion itself, but used
   // in multiple suites
@@ -175,6 +178,21 @@ function invalidProofType({
     suite.proof = {id: proofId};
     selectiveSuite._cryptosuite.options.proofId = proofId;
     selectiveSuite.type = proofType;
+  }
+  return {...args, suite, selectiveSuite, credential};
+}
+
+// both base and derived will have an invalid proof.type
+function invalidProofId({
+  suite,
+  selectiveSuite,
+  credential,
+  ...args
+}) {
+  if(selectiveSuite) {
+    const proofId = true;
+    suite.proof = {id: proofId};
+    selectiveSuite._cryptosuite.options.proofId = proofId;
   }
   return {...args, suite, selectiveSuite, credential};
 }
