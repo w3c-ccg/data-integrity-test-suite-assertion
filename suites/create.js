@@ -5,7 +5,7 @@ import {
   dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
   isStringOrArrayOfStrings, isValidMultibaseEncoded,
-  shouldBeUrl
+  shouldBeUrl, shouldHaveProof
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
@@ -36,11 +36,14 @@ export function runDataIntegrityProofFormatTests({
       data = await createInitialVc({issuer, vc: validVc});
       proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
     });
+    it('When expressing a data integrity proof on an object, a proof ' +
+    'property MUST be used.', function() {
+      shouldHaveProof({vc: data});
+    });
     it('"proof" field MUST exist and MUST be either a single object or ' +
       'an unordered set of objects.', function() {
-      should.exist(data, 'Expected data.');
-      const proof = data.proof;
-      should.exist(proof, 'Expected proof to exist.');
+      shouldHaveProof({vc: data});
+      const {proof} = data;
       const validType = isObjectOrArrayOfObjects(proof);
       validType.should.equal(true, 'Expected proof to be' +
         'either an object or an unordered set of objects.');
