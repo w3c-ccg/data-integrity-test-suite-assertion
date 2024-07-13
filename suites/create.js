@@ -38,10 +38,12 @@ export function runDataIntegrityProofFormatTests({
     });
     it('When expressing a data integrity proof on an object, a proof ' +
     'property MUST be used.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=When%20expressing%20a%20data%20integrity%20proof%20on%20an%20object%2C%20a%20proof%20property%20MUST%20be%20used';
       shouldHaveProof({vc: data});
     });
-    it('"proof" field MUST exist and MUST be either a single object or ' +
-      'an unordered set of objects.', function() {
+    it('If present (proof), its value MUST be either a single object, or an ' +
+    'unordered set of objects', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=If%20present%2C%20its%20value%20MUST%20be%20either%20a%20single%20object%2C%20or%20an%20unordered%20set%20of%20objects';
       shouldHaveProof({vc: data});
       const {proof} = data;
       const validType = isObjectOrArrayOfObjects(proof);
