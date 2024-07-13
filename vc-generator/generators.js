@@ -45,18 +45,22 @@ export const generators = {
  * Takes in optionalTests and creates generators for those tests.
  *
  * @param {object} optionalTests - An optionalTests object.
- * @param {boolean} optionalTests.created - Add the created generators?
- * @param {boolean} optionalTests.authentication - Add the auth generators?
+ * @param {boolean} optionalTests.created - Add the created generators.
+ * @param {boolean} optionalTests.authentication - Add the auth generators.
+ * @param {boolean} optionalTests.misc - Add various optional tests.
  *
  * @returns {Map<string, Function>} A map of generators.
  */
-export const getGenerators = ({created, authentication}) => {
+export const getGenerators = ({created, authentication, misc}) => {
   let entries = Object.entries(generators.mandatory);
   if(created) {
     entries = entries.concat(Object.entries(generators.created));
   }
   if(authentication) {
     entries = entries.concat(Object.entries(generators.authentication));
+  }
+  if(misc) {
+    entries = entries.concat(Object.entries(generators.optional));
   }
   return new Map(entries);
 };
@@ -190,7 +194,7 @@ function invalidProofId({
   ...args
 }) {
   if(selectiveSuite) {
-    const proofId = true;
+    const proofId = 'invalidProofId';
     suite.proof = {id: proofId};
     selectiveSuite._cryptosuite.options.proofId = proofId;
   }

@@ -33,7 +33,8 @@ export const cryptosuites = new Map([
     testVector: sdDoc,
     optionalTests: {
       created: true,
-      authentication: true
+      authentication: true,
+      misc: true
     },
     cryptosuite: ecdsaSd2023Cryptosuite,
     multikey: EcdsaMultikey,
@@ -50,7 +51,8 @@ export const cryptosuites = new Map([
     optionalTests: {
       //bbs deletes created in order to prevent data leakages
       created: false,
-      authentication: true
+      authentication: true,
+      misc: true
     },
     cryptosuite: bbs2023Cryptosuite,
     multikey: Bls12381Multikey,
@@ -63,7 +65,8 @@ export const cryptosuites = new Map([
     keyType: 'P-256',
     optionalTests: {
       created: true,
-      authentication: true
+      authentication: true,
+      misc: false
     },
     cryptosuite: ecdsaRdfc2019Cryptosuite,
     multikey: EcdsaMultikey,
@@ -76,7 +79,8 @@ export const cryptosuites = new Map([
     suiteName: 'eddsa-2022',
     optionalTests: {
       created: true,
-      authentication: true
+      authentication: true,
+      misc: false
     },
     cryptosuite: eddsa2022CryptoSuite,
     multikey: Ed25519Multikey,
@@ -86,7 +90,8 @@ export const cryptosuites = new Map([
     suiteName: 'eddsa-rdfc-2022',
     optionalTests: {
       created: true,
-      authentication: true
+      authentication: true,
+      misc: false
     },
     cryptosuite: eddsaRdfc2022CryptoSuite,
     multikey: Ed25519Multikey,
