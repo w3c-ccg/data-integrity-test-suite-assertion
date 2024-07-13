@@ -75,12 +75,22 @@ export const dateRegex = new RegExp('-?([1-9][0-9]{3,}|0[0-9]{3})' +
   'T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))' +
   '(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))');
 
-export function isObjectOrArrayOfObjects(data) {
-  if(Array.isArray(data)) {
-    return data.every(
-      item => typeof item === 'object' && item !== null);
+export function isObjectOrArrayOfObjects(value) {
+  if(Array.isArray(value)) {
+    return value.every(isObject);
   }
-  return typeof data === 'object' && data !== null;
+  return isObject(value);
+}
+
+/**
+ * Returns true of a value is an object and is not null.
+ *
+ * @param {object} value - A value.
+ *
+ * @returns {boolean} Is the value a non-null object?
+ */
+export function isObject(value) {
+  return (typeof value === 'object' && value !== null);
 }
 
 export function isStringOrArrayOfStrings(data) {
@@ -98,7 +108,7 @@ export function checkKeyType(keyType) {
   throw new Error(`Unsupported ECDSA key type: ${keyType}.`);
 }
 
-export const shouldBeUrl = ({url, prop}) => {
+export function shouldBeUrl({url, prop}) {
   should.exist(url, `Expected "${prop}" URL to exist.`);
   url.should.be.a('string', `Expected "${prop}" URL to be a string.`);
   let parsedUrl;
@@ -113,4 +123,11 @@ export const shouldBeUrl = ({url, prop}) => {
   parsedUrl.should.be.an.instanceOf(
     URL,
     `Expected "${prop}" parsed URL to be a URL.`);
-};
+}
+
+export function shouldHaveProof({vc}) {
+  should.exist(vc, 'Expected a Verifiable Credential.');
+  vc.should.be.an('object', 'Expected Verifiable Credential to be an object.');
+  const {proof} = vc;
+  should.exist(proof, 'Expected proof to exist.');
+}
