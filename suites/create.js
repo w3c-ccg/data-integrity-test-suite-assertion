@@ -246,6 +246,12 @@ export function runDataIntegrityProofFormatTests({
         const cryptoProp = 'https://w3id.org/security#cryptosuite';
         const cryptoType = 'https://w3id.org/security#cryptosuiteString';
         for(const {cryptosuite, type} of proofs) {
+          should.exist(cryptosuite,
+            'Expected property "proof.cryptosuite" to exist.');
+          should.exist(type,
+            'Expected property "proof.type" to exist.');
+          should.exist(data['@context'],
+            'Expected VC to have property "@context".');
           const expanded = await jsonld.expand({
             '@context': data['@context'],
             cryptosuite,
@@ -259,7 +265,7 @@ export function runDataIntegrityProofFormatTests({
               suite['@type'] === cryptoType &&
               suite['@value'] == cryptosuiteName);
             hasTypeName.should.equal(true,
-              `Expected cryptosuite with ame ${cryptosuiteName} and ` +
+              `Expected cryptosuite with name ${cryptosuiteName} & ` +
               `subtype ${cryptoType}`);
           }
         }
