@@ -265,8 +265,8 @@ export function runDataIntegrityProofFormatTests({
               suite['@type'] === cryptoType &&
               suite['@value'] == cryptosuiteName);
             hasTypeName.should.equal(true,
-              `Expected cryptosuite with name ${cryptosuiteName} & ` +
-              `subtype ${cryptoType}`);
+              `Expected ${cryptoProp} with @value ${cryptosuiteName} & ` +
+              `@type ${cryptoType}`);
           }
         }
       });
