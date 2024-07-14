@@ -2,6 +2,7 @@
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
 import chai from 'chai';
+import jsonld from 'jsonld';
 
 const should = chai.should();
 // RegExp with bs58 characters in it
@@ -134,4 +135,17 @@ export function shouldHaveProof({vc}) {
   vc.should.be.an('object', 'Expected Verifiable Credential to be an object.');
   const {proof} = vc;
   should.exist(proof, 'Expected proof to exist.');
+}
+
+export async function shouldMapToUrl({doc, term, prop}) {
+  const expanded = await jsonld.expand({...doc});
+  for(const terms of expanded) {
+    const termProps = terms[term];
+    should.exist(termProps,
+      `Expected property "${term}" to exist.`);
+    for(const term of termProps) {
+      const url = term [prop];
+      shouldBeUrl({url, prop: `"${term}" "${prop}"`});
+    }
+  }
 }
