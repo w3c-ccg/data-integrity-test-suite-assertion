@@ -14,6 +14,7 @@ export const generators = {
   created: {
     noCreated,
     noOffsetCreated,
+    noOffsetExpires,
     invalidCreated,
     createdOneYearAgo
   },
@@ -206,6 +207,16 @@ function noOffsetCreated({suite, selectiveSuite, ...args}) {
   suite.date = created.toISOString().replace(/\.\d+Z$/, '');
   if(selectiveSuite) {
     selectiveSuite.date = suite.date;
+  }
+  return {...args, suite, selectiveSuite};
+}
+
+function noOffsetExpires({suite, selectiveSuite, ...args}) {
+  const expires = new Date().toISOString().replace(/\.\d+Z$/, '');
+  // lop off ms precision from ISO timestamp
+  suite.proof = {expires};
+  if(selectiveSuite) {
+    selectiveSuite.proof = {...suite.proof, ...selectiveSuite.proof};
   }
   return {...args, suite, selectiveSuite};
 }

@@ -116,6 +116,14 @@ export function runDataIntegrityProofVerifyTests({
         const credential = credentials.clone('noOffsetCreated');
         await verificationFail({credential, verifier});
       });
+      it('(expires) Time values that are incorrectly serialized without an ' +
+      'offset MUST be interpreted as UTC.', async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=relative%20to%20UTC.-,Time%20values%20that%20are%20incorrectly%20serialized%20without%20an%20offset%20MUST%20be%20interpreted%20as%20UTC.,-domain';
+        await verificationFail({
+          credential: credentials.clone('noOffsetExpires'),
+          verifier
+        });
+      });
     }
     it('If the "proof.proofValue" field is not multibase-encoded, an error ' +
       'MUST be raised.', async function() {
