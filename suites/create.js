@@ -147,8 +147,12 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('if "proof.expires" field exists, it MUST be a valid ' +
-      'XMLSCHEMA-11 dateTimeStamp value.', function() {
+    it('The expires property is OPTIONAL and, if present, specifies when ' +
+    'the proof expires. If present, it MUST be an [XMLSCHEMA11-2] ' +
+    'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
+    'denoted by a Z at the end of the value, or with a time zone offset ' +
+    'relative to UTC.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time';
       for(const proof of proofs) {
         if(proof.expires) {
           // check if "created" is a valid XML Schema 1.1 dateTimeStamp
