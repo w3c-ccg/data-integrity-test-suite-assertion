@@ -145,23 +145,21 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('"proof.verificationMethod" field MUST exist and be a valid URL.',
-      function() {
-        for(const proof of proofs) {
-          proof.should.have.property('verificationMethod');
-          let result;
-          let err;
-          try {
-            result = new URL(proof.verificationMethod);
-          } catch(e) {
-            err = e;
-          }
-          should.not.exist(err, 'Expected URL check of the ' +
-            '"verificationMethod" to not error.');
-          should.exist(result, 'Expected "verificationMethod" ' +
-            'to be a URL');
-        }
-      });
+    it('A verification method is the means and information needed to verify ' +
+        'the proof. If included, the value MUST be a string that maps ' +
+        'to a [URL]', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=A%20verification%20method%20is%20the%20means%20and%20information%20needed%20to%20verify%20the%20proof.%20If%20included%2C%20the%20value%20MUST%20be%20a%20string%20that%20maps%20to%20a%20%5BURL%5D.';
+      for(const proof of proofs) {
+        shouldMapToUrl({
+          doc: {
+            '@context': data['@context'],
+            ...proof
+          },
+          term: 'https://w3id.org/security#verificationMethod',
+          prop: '@value'
+        });
+      }
+    });
     it('The reason the proof was created ("proof.proofPurpose") MUST be ' +
         'specified as a string that maps to a URL', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
