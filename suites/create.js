@@ -150,13 +150,13 @@ export function runDataIntegrityProofFormatTests({
         'to a [URL]', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=A%20verification%20method%20is%20the%20means%20and%20information%20needed%20to%20verify%20the%20proof.%20If%20included%2C%20the%20value%20MUST%20be%20a%20string%20that%20maps%20to%20a%20%5BURL%5D.';
       for(const proof of proofs) {
-        shouldMapToUrl({
+        await shouldMapToUrl({
           doc: {
             '@context': data['@context'],
             ...proof
           },
           term: 'https://w3id.org/security#verificationMethod',
-          prop: '@value'
+          prop: '@id'
         });
       }
     });
