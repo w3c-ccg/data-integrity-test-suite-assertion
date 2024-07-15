@@ -74,7 +74,7 @@ export function runDataIntegrityProofFormatTests({
         for(const term of expanded) {
           const types = term[prop];
           should.exist(types, 'Expected @type to exist.');
-          term[prop].every(url => shouldBeUrl({url, prop}));
+          types.every(url => shouldBeUrl({url, prop}));
         }
       }
     });
@@ -162,13 +162,22 @@ export function runDataIntegrityProofFormatTests({
             'to be a URL');
         }
       });
-    it('"proof.proofPurpose" field MUST exist and be a string.',
-      function() {
-        for(const proof of proofs) {
-          proof.should.have.property('proofPurpose');
-          proof.proofPurpose.should.be.a('string');
-        }
-      });
+    it('The reason the proof was created ("proof.proofPurpose") MUST be ' +
+        'specified as a string that maps to a URL', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+      for(const proof of proofs) {
+        proof.should.have.property('proofPurpose');
+        proof.proofPurpose.should.be.a('string');
+        await shouldMapToUrl({
+          doc: {
+            '@context': data['@context'],
+            ...proof
+          },
+          term: 'https://w3id.org/security#proofPurpose',
+          prop: '@id'
+        });
+      }
+    });
     it('"proof.proofValue" field MUST exist and be a string.',
       function() {
         for(const proof of proofs) {
