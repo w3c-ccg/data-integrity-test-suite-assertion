@@ -125,8 +125,11 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('if "proof.created" field exists, it MUST be a valid ' +
-      'XMLSCHEMA-11 dateTimeStamp value.', function() {
+    it('The date and time the proof was created is OPTIONAL and, if ' +
+    'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
+    'string, either in Universal Coordinated Time (UTC), denoted by a Z at ' +
+    'the end of the value, or with a time zone offset relative to UTC.',
+    function() {
       for(const proof of proofs) {
         if(proof.created) {
           // check if "created" is a valid XML Schema 1.1 dateTimeStamp
