@@ -13,6 +13,7 @@ export const generators = {
   // creates test vectors for `proof.created`
   created: {
     noCreated,
+    noOffsetCreated,
     invalidCreated,
     createdOneYearAgo
   },
@@ -142,7 +143,6 @@ function invalidCreated({suite, selectiveSuite, credential, ...args}) {
 function createdOneYearAgo({
   suite,
   selectiveSuite,
-  credential,
   createdSkew = -365,
   ...args}) {
   // intentionally set the created date to be a year ago
@@ -153,7 +153,7 @@ function createdOneYearAgo({
   if(selectiveSuite) {
     selectiveSuite.date = suite.date;
   }
-  return {...args, suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite};
 }
 
 function noCreated({suite, selectiveSuite, credential, ...args}) {
@@ -198,4 +198,14 @@ function invalidCryptosuite({
 // issues a normal or derived vc
 function issuedVc({suite, selectiveSuite, credential, ...args}) {
   return {...args, suite, selectiveSuite, credential};
+}
+
+function noOffsetCreated({suite, selectiveSuite, ...args}) {
+  const created = new Date();
+  // lop off ms precision from ISO timestamp
+  suite.date = created.toISOString().replace(/\.\d+Z$/, '');
+  if(selectiveSuite) {
+    selectiveSuite.date = suite.date;
+  }
+  return {...args, suite, selectiveSuite};
 }
