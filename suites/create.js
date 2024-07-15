@@ -5,7 +5,7 @@ import {
   dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects,
   isStringOrArrayOfStrings, isValidMultibaseEncoded,
-  shouldBeUrl, shouldHaveProof
+  shouldBeUrl, shouldHaveProof, shouldMapToUrl
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
@@ -59,11 +59,23 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('"proof.type" field MUST exist and be a string.', function() {
+    it('The specific proof type used for the cryptographic proof MUST be ' +
+        'specified as a string that maps to a URL.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20specific%20proof%20type%20used%20for%20the%20cryptographic%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+      const prop = '@type';
       for(const proof of proofs) {
         proof.should.have.property('type');
         proof.type.should.be.a(
           'string', 'Expected "proof.type" to be a string.');
+        const expanded = await jsonld.expand({
+          '@context': data['@context'],
+          type: proof.type
+        });
+        for(const term of expanded) {
+          const types = term[prop];
+          should.exist(types, 'Expected @type to exist.');
+          term[prop].every(url => shouldBeUrl({url, prop}));
+        }
       }
     });
     it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
