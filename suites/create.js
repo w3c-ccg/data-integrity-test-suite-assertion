@@ -78,37 +78,46 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
-      `and the associated document MUST include expected contexts.`,
-    function() {
-      for(const proof of proofs) {
-        proof.should.have.property('type');
-        proof.type.should.be.a(
-          'string',
-          'Expected "proof.type" to be a string.'
-        );
-        const hasExpectedType = expectedProofTypes.includes(proof.type);
-        hasExpectedType.should.equal(true);
+    if(expectedProofTypes.includes('DataIntegrityProof')) {
+      it('The type property MUST contain the string DataIntegrityProof.',
+        async function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#contexts-and-vocabularies:~:text=The%20type%20property%20MUST%20contain%20the%20string%20DataIntegrityProof.';
+          for(const proof of proofs) {
+            proof.should.have.property('type');
+            proof.type.should.be.a(
+              'string',
+              'Expected "proof.type" to be a string.'
+            );
+            const hasExpectedType = expectedProofTypes.includes(proof.type);
+            hasExpectedType.should.equal(
+              true,
+              `Expected "proof.type" to be one of ` +
+              `${expectedProofTypes} Received: ${proof.type}`);
+          }
+        });
+    } else {
+      it(`"proof.type" field MUST be "${expectedProofTypes.join(',')}" ` +
+        `and the associated document MUST include expected contexts.`,
+      function() {
+        for(const proof of proofs) {
+          proof.should.have.property('type');
+          proof.type.should.be.a(
+            'string',
+            'Expected "proof.type" to be a string.'
+          );
+          const hasExpectedType = expectedProofTypes.includes(proof.type);
+          hasExpectedType.should.equal(true);
 
-        if(proof.type === 'DataIntegrityProof') {
-          const expectedContexts = [
-            'https://www.w3.org/ns/credentials/v2',
-            'https://w3id.org/security/data-integrity/v2'
-          ];
-          const hasExpectedContexts = expectedContexts.some(
-            value => data['@context'].includes(value));
-          hasExpectedContexts.should.equal(true);
+          if(proof.type === 'Ed25519Signature2020') {
+            const expectedContext =
+              'https://w3id.org/security/suites/ed25519-2020/v1';
+            const hasExpectedContext =
+              data['@context'].includes(expectedContext);
+            hasExpectedContext.should.equal(true);
+          }
         }
-
-        if(proof.type === 'Ed25519Signature2020') {
-          const expectedContext =
-            'https://w3id.org/security/suites/ed25519-2020/v1';
-          const hasExpectedContext =
-            data['@context'].includes(expectedContext);
-          hasExpectedContext.should.equal(true);
-        }
-      }
-    });
+      });
+    }
     it('If the proof type is DataIntegrityProof, cryptosuite MUST be ' +
     'specified; otherwise, cryptosuite MAY be specified. If specified, its ' +
     'value MUST be a string.', function() {
