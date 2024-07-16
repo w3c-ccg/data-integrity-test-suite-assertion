@@ -224,8 +224,12 @@ export function runDataIntegrityProofFormatTests({
           );
       }
     });
-    it('if "proof.domain" field exists, it MUST be either a string, ' +
-      'or an unordered set of strings.', function() {
+    it('The domain property is OPTIONAL. It conveys one or more security ' +
+      'domains in which the proof is meant to be used. If specified, the ' +
+      'associated value MUST be either a string, or an unordered set of ' +
+      'strings. A verifier SHOULD use the value to ensure that the proof ' +
+      'was intended to be used in the security domain in which the verifier ' +
+      'is operating.', function() {
       for(const proof of proofs) {
         if(proof.domain) {
           const validType = isStringOrArrayOfStrings(proof.domain);
