@@ -142,11 +142,10 @@ export function runDataIntegrityProofVerifyTests({
       await verificationFail({credential, verifier});
     });
     if(optionalTests.authentication) {
-      it('If domain was given, and it does not contain the same strings as ' +
-         'proof.domain (treating a single string as a set containing just ' +
-         'that string), an error MUST be raised and SHOULD convey an error ' +
-          'type of INVALID_DOMAIN_ERROR.',
-      async function() {
+      it('If options has a non-null domain item, it MUST be equal to ' +
+         'proof.domain or an error MUST be raised and SHOULD convey an ' +
+          'error type of PROOF_GENERATION_ERROR.', async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=If%20options%20has%20a%20non%2Dnull%20domain%20item%2C%20it%20MUST%20be%20equal%20to%20proof.domain%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
         const credential = credentials.clone('invalidDomain');
         await verificationFail({
           credential, verifier, options: {
@@ -154,8 +153,10 @@ export function runDataIntegrityProofVerifyTests({
           }
         });
       });
-      it('If the "options.challenge" is set and it does not match ' +
-        '"proof.challenge", an error MUST be raised.', async function() {
+      it('If options has a non-null challenge item, it MUST be equal to ' +
+         'proof.challenge or an error MUST be raised and SHOULD convey an ' +
+         'error type of PROOF_GENERATION_ERROR.', async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#add-proof:~:text=If%20options%20has%20a%20non%2Dnull%20challenge%20item%2C%20it%20MUST%20be%20equal%20to%20proof.challenge%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
         const credential = credentials.clone('invalidChallenge');
         await verificationFail({
           credential, verifier, options: {
