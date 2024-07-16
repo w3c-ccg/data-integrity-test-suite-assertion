@@ -230,6 +230,7 @@ export function runDataIntegrityProofFormatTests({
       'strings. A verifier SHOULD use the value to ensure that the proof ' +
       'was intended to be used in the security domain in which the verifier ' +
       'is operating.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=The%20domain%20property%20is%20OPTIONAL.%20It%20conveys%20one%20or%20more%20security%20domains%20in%20which%20the%20proof%20is%20meant%20to%20be%20used.%20If%20specified%2C%20the%20associated%20value%20MUST';
       for(const proof of proofs) {
         if(proof.domain) {
           const validType = isStringOrArrayOfStrings(proof.domain);
@@ -239,18 +240,19 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('if "proof.challenge" field exists, it MUST be a string.',
-      function() {
-        for(const proof of proofs) {
-          if(proof.challenge) {
-            // domain must be specified
-            should.exist(proof.domain, 'Expected "proof.domain" ' +
-              'to be specified.');
-            proof.challenge.should.be.a('string', 'Expected ' +
-              '"proof.challenge" to be a string.');
-          }
+    it('(challenge) A string value that SHOULD be included in a proof if a ' +
+       'domain is specified.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=A%20string%20value%20that%20SHOULD%20be%20included%20in%20a%20proof%20if%20a%20domain%20is%20specified.';
+      for(const proof of proofs) {
+        if(proof.challenge) {
+          // domain must be specified
+          should.exist(proof.domain, 'Expected "proof.domain" ' +
+            'to be specified.');
+          proof.challenge.should.be.a('string', 'Expected ' +
+            '"proof.challenge" to be a string.');
         }
-      });
+      }
+    });
     it('if "proof.previousProof" field exists, it MUST be a string.',
       function() {
         for(const proof of proofs) {
