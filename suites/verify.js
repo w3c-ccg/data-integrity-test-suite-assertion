@@ -122,8 +122,10 @@ export function runDataIntegrityProofVerifyTests({
       await verificationFail({credential, verifier});
     });
     if(optionalTests.authentication) {
-      it('If the "options.domain" is set and it does not match ' +
-        '"proof.domain", an error MUST be raised.',
+      it('If domain was given, and it does not contain the same strings as ' +
+         'proof.domain (treating a single string as a set containing just ' +
+         'that string), an error MUST be raised and SHOULD convey an error ' +
+          'type of INVALID_DOMAIN_ERROR.',
       async function() {
         const credential = credentials.clone('invalidDomain');
         await verificationFail({
