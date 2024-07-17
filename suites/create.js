@@ -365,12 +365,8 @@ export function runDataIntegrityProofFormatTests({
             'raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20' +
             'PROOF_GENERATION_ERROR.';
             for(const proof of proofs) {
-              proof.should.have.property('type',
-                'Expected proof to have type value.');
-              proof.should.have.property('proofPurpose',
-                'Expected proof to have proofPurpose value.');
-              proof.should.have.property('verificationMethod',
-                'Expected proof to have verificationMethod value.');
+              chai.expect(proof).to.contain.keys(
+                'type', 'proofPurpose', 'verificationMethod')
             }
           });
           it.skip('If options has a non-null domain item, it MUST be ' +
