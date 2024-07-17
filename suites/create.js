@@ -360,7 +360,7 @@ export function runDataIntegrityProofFormatTests({
             'PROOF_GENERATION_ERROR.';
             for(const proof of proofs) {
               chai.expect(proof).to.contain.keys(
-                'type', 'proofPurpose', 'verificationMethod')
+                'type', 'proofPurpose', 'verificationMethod');
             }
           });
           it.skip('If options has a non-null domain item, it MUST be ' +
