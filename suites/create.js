@@ -314,6 +314,58 @@ export function runDataIntegrityProofFormatTests({
           }
         }
       });
+    describe('Algorithms', function() {
+      describe('Add Proof', function() {
+        it.skip('If the algorithm produces an error, the error MUST be propagated and SHOULD ' +
+          'convey the error type.',
+          function() {});
+        it('If one or more of the proof.type, proof.verificationMethod, and proof.proofPurpose ' +
+          'values is not set, an error MUST be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
+          function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20one%20or%20more%20of%20the%20proof.type%2C%20proof.verificationMethod%2C%20and%20proof.proofPurpose%20values%20is%20not%20set%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
+            for(const proof of proofs) {
+              proof.should.have.property('type',
+                'Expected proof to have type value.');
+              proof.should.have.property('proofPurpose',
+                'Expected proof to have proofPurpose value.');
+              proof.should.have.property('verificationMethod',
+                'Expected proof to have verificationMethod value.');
+            }
+          });
+        it.skip('If options has a non-null domain item, it MUST be equal to proof.domain or an ' +
+          'error MUST be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
+          function() {});
+        it.skip('If options has a non-null challenge item, it MUST be equal to proof.challenge or ' +
+          'an error MUST be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
+          function() {});
+      });
+      describe('Add Proof Set/Chain', function() {
+        it('If a proof with id equal to previousProof does not exist in allProofs, an error MUST ' +
+          'be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
+          function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20a%20proof%20with%20id%20equal%20to%20previousProofdoes%20not%20exist%20in%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
+            for(const proof of proofs) {
+              if (proof.hasOwnProperty('previousProof')) {
+                proofs.some(otherProof => otherProof.id == proof.previousProof).should.be(True,
+                  'Expected previousProof value to be the id of another included proof.'
+                )
+              };
+            }
+          });
+        it.skip('If any element of previousProof array has an id attribute that does not match the ' +
+          'id attribute of any element of allProofs, an error MUST be raised and SHOULD convey an ' +
+          'error type of PROOF_GENERATION_ERROR.',
+          function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20any%20element%20of%20previousProof%20array%20has%20an%20id%20attribute%20that%20does%20not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
+            previousProofs = proofs.find(proof => proof.key === "previousProof");
+            for(const previousProof of previousProofs) {
+              proofs.some(otherProof => otherProof.id == previousProof).should.be(True,
+                'Expected previousProof value to be the id of another included proof.'
+              );
+            }
+          });
+      });
+    });
     }
     it('If an @context property is not provided in a document that is ' +
     'being secured or verified, or the Data Integrity terms used in ' +
