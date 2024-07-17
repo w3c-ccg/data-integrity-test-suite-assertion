@@ -64,8 +64,7 @@ export const getGenerators = ({created, authentication}) => {
 function invalidProofPurpose({
   suite,
   selectiveSuite,
-  credential,
-  mockPurpose,
+  mockPurpose = 'invalidPurpose',
   ...args
 }) {
   //sets the proofPurpose for the proof
@@ -73,7 +72,7 @@ function invalidProofPurpose({
   const purpose = new CredentialIssuancePurpose();
   // ensures the proofPurpose matches the term when deriving
   purpose.term = mockPurpose;
-  return {...args, suite, selectiveSuite, credential, purpose};
+  return {...args, suite, selectiveSuite, purpose};
 }
 
 // adds an invalid domain
