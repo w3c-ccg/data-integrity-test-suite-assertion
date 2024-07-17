@@ -176,10 +176,13 @@ export function runDataIntegrityProofFormatTests({
         });
       }
     });
-    it('"proof.proofValue" field MUST exist and be a string.',
+    it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
       function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used';
         for(const proof of proofs) {
           proof.should.have.property('proofValue');
+          // the rest of the proofValue is determined by the suite so just
+          // assert that it is a string here.
           proof.proofValue.should.be.a('string');
         }
       });
