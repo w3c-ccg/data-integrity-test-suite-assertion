@@ -38,12 +38,16 @@ export function runDataIntegrityProofFormatTests({
     });
     it('When expressing a data integrity proof on an object, a proof ' +
     'property MUST be used.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=When%20expressing%20a%20data%20integrity%20proof%20on%20an%20object%2C%20a%20proof%20property%20MUST%20be%20used';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:' +
+      '~:text=When%20expressing%20a%20data%20integrity%20proof%20on%20an%20object' +
+      '%2C%20a%20proof%20property%20MUST%20be%20used';
       shouldHaveProof({vc: data});
     });
     it('If present (proof), its value MUST be either a single object, or an ' +
     'unordered set of objects', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=If%20present%2C%20its%20value%20MUST%20be%20either%20a%20single%20object%2C%20or%20an%20unordered%20set%20of%20objects';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:' +
+      '~:text=If%20present%2C%20its%20value%20MUST%20be%20either%20a%20single' +
+      '%20object%2C%20or%20an%20unordered%20set%20of%20objects';
       shouldHaveProof({vc: data});
       const {proof} = data;
       const validType = isObjectOrArrayOfObjects(proof);
@@ -52,7 +56,8 @@ export function runDataIntegrityProofFormatTests({
     });
     it('("proof.id") An optional identifier for the proof, which MUST be a ' +
     'URL.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=An%20optional%20identifier%20for%20the%20proof%2C%20which%20MUST%20be%20a%20URL';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:' +
+      '~:text=An%20optional%20identifier%20for%20the%20proof%2C%20which%20MUST%20be%20a%20URL';
       for(const proof of proofs) {
         if(proof.id) {
           shouldBeUrl({url: proof.id, prop: 'proof.id'});
@@ -61,7 +66,9 @@ export function runDataIntegrityProofFormatTests({
     });
     it('The specific proof type used for the cryptographic proof MUST be ' +
         'specified as a string that maps to a URL.', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20specific%20proof%20type%20used%20for%20the%20cryptographic%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:' +
+      '~:text=The%20specific%20proof%20type%20used%20for%20the%20cryptographic' +
+      '%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
       const prop = '@type';
       for(const proof of proofs) {
         proof.should.have.property('type');
@@ -81,7 +88,9 @@ export function runDataIntegrityProofFormatTests({
     if(expectedProofTypes.includes('DataIntegrityProof')) {
       it('The type property MUST contain the string DataIntegrityProof.',
         async function() {
-          this.test.link = 'https://w3c.github.io/vc-data-integrity/#contexts-and-vocabularies:~:text=The%20type%20property%20MUST%20contain%20the%20string%20DataIntegrityProof.';
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/' +
+          '#contexts-and-vocabularies:~:text=The%20type%20property%20MUST%20' +
+          'contain%20the%20string%20DataIntegrityProof.';
           for(const proof of proofs) {
             proof.should.have.property('type');
             proof.type.should.be.a(
@@ -121,7 +130,10 @@ export function runDataIntegrityProofFormatTests({
     it('If the proof type is DataIntegrityProof, cryptosuite MUST be ' +
     'specified; otherwise, cryptosuite MAY be specified. If specified, its ' +
     'value MUST be a string.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=If%20the%20proof%20type%20is%20DataIntegrityProof%2C%20cryptosuite%20MUST%20be%20specified%3B%20otherwise%2C%20cryptosuite%20MAY%20be%20specified.%20If%20specified%2C%20its%20value%20MUST%20be%20a%20string.';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction' +
+      ':~:text=If%20the%20proof%20type%20is%20DataIntegrityProof%2C%20cryptosuite' +
+      '%20MUST%20be%20specified%3B%20otherwise%2C%20cryptosuite%20MAY%20be%20' +
+      'specified.%20If%20specified%2C%20its%20value%20MUST%20be%20a%20string.';
       for(const proof of proofs) {
         if(proof.type && proof.type === 'DataIntegrityProof') {
           should.exist(
@@ -152,7 +164,9 @@ export function runDataIntegrityProofFormatTests({
     'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
     'denoted by a Z at the end of the value, or with a time zone offset ' +
     'relative to UTC.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:' +
+      'text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%' +
+      '2C%20either%20in%20Universal%20Coordinated%20Time';
       for(const proof of proofs) {
         if(proof.expires) {
           // check if "created" is a valid XML Schema 1.1 dateTimeStamp
@@ -164,7 +178,10 @@ export function runDataIntegrityProofFormatTests({
     it('A verification method is the means and information needed to verify ' +
         'the proof. If included, the value MUST be a string that maps ' +
         'to a [URL]', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=A%20verification%20method%20is%20the%20means%20and%20information%20needed%20to%20verify%20the%20proof.%20If%20included%2C%20the%20value%20MUST%20be%20a%20string%20that%20maps%20to%20a%20%5BURL%5D.';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:' +
+      'text=A%20verification%20method%20is%20the%20means%20and%20information%' +
+      '20needed%20to%20verify%20the%20proof.%20If%20included%2C%20the%20value%20' +
+      'MUST%20be%20a%20string%20that%20maps%20to%20a%20%5BURL%5D.';
       for(const proof of proofs) {
         await shouldMapToUrl({
           doc: {
@@ -178,7 +195,9 @@ export function runDataIntegrityProofFormatTests({
     });
     it('The reason the proof was created ("proof.proofPurpose") MUST be ' +
         'specified as a string that maps to a URL', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:' +
+      'text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%' +
+      '20as%20a%20string%20that%20maps%20to%20a%20URL';
       for(const proof of proofs) {
         proof.should.have.property('proofPurpose');
         proof.proofPurpose.should.be.a('string');
@@ -194,7 +213,8 @@ export function runDataIntegrityProofFormatTests({
     });
     it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
       function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used';
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:' +
+        'text=The%20proofValue%20property%20MUST%20be%20used';
         for(const proof of proofs) {
           proof.should.have.property('proofValue');
           // the rest of the proofValue is determined by the suite so just
@@ -268,7 +288,12 @@ export function runDataIntegrityProofFormatTests({
     if(cryptosuiteName) {
       it('The value of the cryptosuite property MUST be a string that ' +
         'identifies the cryptographic suite.', async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuiteString%20subtype%20of%20string.';
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:' +
+        'text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%' +
+        '20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20' +
+        'environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20' +
+        'cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuite' +
+        'String%20subtype%20of%20string.';
         const hasCryptosuiteName = proofs.some(
           p => p?.cryptosuite === cryptosuiteName);
         hasCryptosuiteName.should.equal(
@@ -280,7 +305,12 @@ export function runDataIntegrityProofFormatTests({
         'supports subtypes of string, the type of the cryptosuite value MUST ' +
         'be the https://w3id.org/security#cryptosuiteString subtype of string.',
       async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23cryptosuiteString%20subtype%20of%20string.';
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:' +
+        'text=The%20value%20of%20the%20cryptosuite%20property%20MUST%20be%20a%20string%' +
+        '20that%20identifies%20the%20cryptographic%20suite.%20If%20the%20processing%20' +
+        'environment%20supports%20subtypes%20of%20string%2C%20the%20type%20of%20the%20' +
+        'cryptosuite%20value%20MUST%20be%20the%20https%3A//w3id.org/security%23' +
+        'cryptosuiteString%20subtype%20of%20string.';
         const cryptoProp = 'https://w3id.org/security#cryptosuite';
         const cryptoType = 'https://w3id.org/security#cryptosuiteString';
         for(const {cryptosuite, type} of proofs) {
@@ -314,9 +344,13 @@ export function runDataIntegrityProofFormatTests({
           'convey the error type.',
           function() {});
         it('If one or more of the proof.type, proof.verificationMethod, and proof.proofPurpose ' +
-          'values is not set, an error MUST be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
+          'values is not set, an error MUST be raised and SHOULD convey an error type of ' +
+          'PROOF_GENERATION_ERROR.',
           function() {
-            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20one%20or%20more%20of%20the%20proof.type%2C%20proof.verificationMethod%2C%20and%20proof.proofPurpose%20values%20is%20not%20set%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20one%20or%20' +
+            'more%20of%20the%20proof.type%2C%20proof.verificationMethod%2C%20and%20' +
+            'proof.proofPurpose%20values%20is%20not%20set%2C%20an%20error%20MUST%20be%20' +
+            'raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
             for(const proof of proofs) {
               proof.should.have.property('type',
                 'Expected proof to have type value.');
@@ -337,10 +371,13 @@ export function runDataIntegrityProofFormatTests({
         it('If a proof with id equal to previousProof does not exist in allProofs, an error MUST ' +
           'be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
           function() {
-            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20a%20proof%20with%20id%20equal%20to%20previousProofdoes%20not%20exist%20in%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20a%20proof%20' +
+            'with%20id%20equal%20to%20previousProofdoes%20not%20exist%20in%20allProofs%2C%20an%20' +
+            'error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20' +
+            'PROOF_GENERATION_ERROR.'
             for(const proof of proofs) {
-              if (proof.hasOwnProperty('previousProof')) {
-                proofs.some(otherProof => otherProof.id == proof.previousProof).should.be(True,
+              if ('previousProof' in proof) {
+                proofs.some(otherProof => otherProof.id == proof.previousProof).should.be('True',
                   'Expected previousProof value to be the id of another included proof.'
                 )
               };
@@ -350,11 +387,15 @@ export function runDataIntegrityProofFormatTests({
           'id attribute of any element of allProofs, an error MUST be raised and SHOULD convey an ' +
           'error type of PROOF_GENERATION_ERROR.',
           function() {
-            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20any%20element%20of%20previousProof%20array%20has%20an%20id%20attribute%20that%20does%20not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.'
-            previousProofs = proofs.find(proof => proof.key === "previousProof");
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20any%20' +
+            'element%20of%20previousProof%20array%20has%20an%20id%20attribute%20that%20does%20' +
+            'not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20' +
+            'error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20' +
+            'PROOF_GENERATION_ERROR.'
+            var previousProofs = proofs.find(proof => proof.key === "previousProof");
             for(const previousProof of previousProofs) {
-              proofs.some(otherProof => otherProof.id == previousProof).should.be(True,
-                'Expected previousProof value to be the id of another included proof.'
+              proofs.some(otherProof => otherProof.id == previousProof).should.be('True',
+                'Expected all previousProof values to be the id of another included proof.'
               );
             }
           });
