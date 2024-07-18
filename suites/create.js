@@ -349,7 +349,7 @@ export function runDataIntegrityProofFormatTests({
               }
             }
           });
-          it.skip('If any element of previousProof array has an id attribute ' +
+          it('If any element of previousProof array has an id attribute ' +
           'that does not match the id attribute of any element of allProofs, ' +
           'an error MUST be raised and SHOULD convey an error type of ' +
           'PROOF_GENERATION_ERROR.',
