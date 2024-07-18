@@ -36,47 +36,204 @@ export function runDataIntegrityProofFormatTests({
       data = await createInitialVc({issuer, vc: validVc});
       proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
     });
-    it('When expressing a data integrity proof on an object, a proof ' +
-    'property MUST be used.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=When%20expressing%20a%20data%20integrity%20proof%20on%20an%20object%2C%20a%20proof%20property%20MUST%20be%20used';
-      shouldHaveProof({vc: data});
-    });
-    it('If present (proof), its value MUST be either a single object, or an ' +
-    'unordered set of objects', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=If%20present%2C%20its%20value%20MUST%20be%20either%20a%20single%20object%2C%20or%20an%20unordered%20set%20of%20objects';
-      shouldHaveProof({vc: data});
-      const {proof} = data;
-      const validType = isObjectOrArrayOfObjects(proof);
-      validType.should.equal(true, 'Expected proof to be' +
-        'either an object or an unordered set of objects.');
-    });
-    it('("proof.id") An optional identifier for the proof, which MUST be a ' +
-    'URL.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=An%20optional%20identifier%20for%20the%20proof%2C%20which%20MUST%20be%20a%20URL';
-      for(const proof of proofs) {
-        if(proof.id) {
-          shouldBeUrl({url: proof.id, prop: 'proof.id'});
-        }
-      }
-    });
-    it('The specific proof type used for the cryptographic proof MUST be ' +
-        'specified as a string that maps to a URL.', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20specific%20proof%20type%20used%20for%20the%20cryptographic%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
-      const prop = '@type';
-      for(const proof of proofs) {
-        proof.should.have.property('type');
-        proof.type.should.be.a(
-          'string', 'Expected "proof.type" to be a string.');
-        const expanded = await jsonld.expand({
-          '@context': data['@context'],
-          type: proof.type
+
+    // Data Model
+    describe('Data Model', function() {
+      describe('Proofs', function() {
+
+        it('When expressing a data integrity proof on an object, a proof ' +
+        'property MUST be used.', function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=When%20expressing%20a%20data%20integrity%20proof%20on%20an%20object%2C%20a%20proof%20property%20MUST%20be%20used';
+          shouldHaveProof({vc: data});
         });
-        for(const term of expanded) {
-          const types = term[prop];
-          should.exist(types, 'Expected @type to exist.');
-          types.every(url => shouldBeUrl({url, prop}));
-        }
-      }
+
+        it('If present (proof), its value MUST be either a single object, ' +
+        'or an unordered set of objects', function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=If%20present%2C%20its%20value%20MUST%20be%20either%20a%20single%20object%2C%20or%20an%20unordered%20set%20of%20objects';
+          shouldHaveProof({vc: data});
+          const {proof} = data;
+          const validType = isObjectOrArrayOfObjects(proof);
+          validType.should.equal(true, 'Expected proof to be' +
+            'either an object or an unordered set of objects.');
+        });
+
+        it('("proof.id") An optional identifier for the proof, ' +
+        'which MUST be a URL.', function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=An%20optional%20identifier%20for%20the%20proof%2C%20which%20MUST%20be%20a%20URL';
+          for(const proof of proofs) {
+            if(proof.id) {
+              shouldBeUrl({url: proof.id, prop: 'proof.id'});
+            }
+          }
+        });
+
+        it('The specific proof type used for the cryptographic proof MUST be ' +
+            'specified as a string that maps to a URL.', async function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20specific%20proof%20type%20used%20for%20the%20cryptographic%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+          const prop = '@type';
+          for(const proof of proofs) {
+            proof.should.have.property('type');
+            proof.type.should.be.a(
+              'string', 'Expected "proof.type" to be a string.');
+            const expanded = await jsonld.expand({
+              '@context': data['@context'],
+              type: proof.type
+            });
+            for(const term of expanded) {
+              const types = term[prop];
+              should.exist(types, 'Expected @type to exist.');
+              types.every(url => shouldBeUrl({url, prop}));
+            }
+          }
+        });
+
+        it('The reason the proof was created ("proof.proofPurpose") MUST be ' +
+            'specified as a string that maps to a URL', async function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+          for(const proof of proofs) {
+            proof.should.have.property('proofPurpose');
+            proof.proofPurpose.should.be.a('string');
+            await shouldMapToUrl({
+              doc: {
+                '@context': data['@context'],
+                ...proof
+              },
+              term: 'https://w3id.org/security#proofPurpose',
+              prop: '@id'
+            });
+          }
+        });
+
+        it('A verification method is the means and information needed to ' +
+            'verify the proof. If included, the value MUST be a string ' +
+            'that maps to a [URL]', async function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=A%20verification%20method%20is%20the%20means%20and%20information%20needed%20to%20verify%20the%20proof.%20If%20included%2C%20the%20value%20MUST%20be%20a%20string%20that%20maps%20to%20a%20%5BURL%5D.';
+          for(const proof of proofs) {
+            await shouldMapToUrl({
+              doc: {
+                '@context': data['@context'],
+                ...proof
+              },
+              term: 'https://w3id.org/security#verificationMethod',
+              prop: '@id'
+            });
+          }
+        });
+
+        it('If the proof type is DataIntegrityProof, cryptosuite MUST ' +
+        'be specified; otherwise, cryptosuite MAY be specified. ' +
+        'If specified, its value MUST be a string.', function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=If%20the%20proof%20type%20is%20DataIntegrityProof%2C%20cryptosuite%20MUST%20be%20specified%3B%20otherwise%2C%20cryptosuite%20MAY%20be%20specified.%20If%20specified%2C%20its%20value%20MUST%20be%20a%20string.';
+          for(const proof of proofs) {
+            if(proof.type && proof.type === 'DataIntegrityProof') {
+              should.exist(
+                proof.cryptosuite,
+                'If the proof type is DataIntegrityProof, cryptosuite MUST ' +
+                'be specified');
+              proof.cryptosuite.should.be.a(
+                'string',
+                'cryptosuite value MUST be a string.');
+            }
+          }
+        });
+
+        it('The date and time the proof was created is OPTIONAL and, if ' +
+        'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
+        'string, either in Universal Coordinated Time (UTC), denoted by ' +
+        'a Z at the end of the value, or with a time zone offset relative ' +
+        'to UTC.',
+        function() {
+          for(const proof of proofs) {
+            if(proof.created) {
+              // check if "created" is a valid XML Schema 1.1 dateTimeStamp
+              // value
+              proof.created.should.match(dateRegex);
+            }
+          }
+        });
+
+        it('The expires property is OPTIONAL and, if present, specifies when ' +
+        'the proof expires. If present, it MUST be an [XMLSCHEMA11-2] ' +
+        'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
+        'denoted by a Z at the end of the value, or with a time zone offset ' +
+        'relative to UTC.', function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time';
+          for(const proof of proofs) {
+            if(proof.expires) {
+              // check if "created" is a valid XML Schema 1.1 dateTimeStamp
+              // value
+              proof.expires.should.match(dateRegex);
+            }
+          }
+        });
+
+        it('The contents of the value ("proof.proofValue") MUST be expressed ' +
+        'with a header and encoding as described in Section 2.4 Multibase.',
+        function() {
+          for(const proof of proofs) {
+            const {
+              prefix: expectedPrefix,
+              name: encodingName
+            } = expectedMultibasePrefix(proof.cryptosuite);
+
+            proof.proofValue.slice(0, 1)
+              .should.equal(
+                expectedPrefix,
+                `Expected "proof.proofValue" to be a ${encodingName} value`
+              );
+
+            isValidMultibaseEncoded(proof.proofValue, expectedPrefix).should
+              .equal(
+                true,
+                `Expected "proof.proofValue" to be a valid ` +
+                `${encodingName} value`
+              );
+          }
+        });
+        describe('Proof Sets', function() {});
+        describe('Proof Chains', function() {});
+        describe('Proof Graphs', function() {});
+      });
+      describe('Proof Purposes', function() {});
+      describe('Ressource Integrity', function() {
+        it.skip('If present, the digestMultibase value MUST be a single ' +
+          'string value, or an array of string values, each of which ' +
+          'is a Multibase-encoded Multihash value.',
+        function() {});
+      });
+      describe('Relationship to Linked Data', function() {});
+      describe('Relationship to Verifiable Credentials', function() {});
+      describe('Contexts and Vocabularies', function() {
+        it.skip('Implementations that perform JSON-LD processing MUST treat ' +
+          'the following JSON-LD context URLs as already resolved.',
+        function() {});
+        it.skip('Implementations that perform RDF processing MUST treat ' +
+          'the JSON-LD serialization of the vocabulary URL as already ' +
+          'dereferenced, where the dereferenced document matches the ' +
+          'corresponding hash value below.',
+        function() {});
+        describe('Context Injection', function() {
+          it.skip('If an @context property is not provided in a document ' +
+            'that is being secured or verified, or the Data Integrity ' +
+            'terms used in the document are not mapped by existing values ' +
+            'in the @context property, implementations MUST inject or add ' +
+            'an @context property with a value of ' +
+            'https://w3id.org/security/data-integrity/v2.',
+          function() {});
+        });
+        describe('Securing Data Losslessly', function() {
+          it.skip('Implementations that use JSON-LD processing, such ' +
+            'as RDF Dataset Canonicalization [RDF-CANON], MUST throw ' +
+            'an error, which SHOULD be DATA_LOSS_DETECTION_ERROR, when ' +
+            'data is dropped by a JSON-LD processor, such as when an ' +
+            'undefined term is detected in an input document.',
+          function() {});
+          it.skip('When deserializing to RDF, implementations MUST ' +
+            'ensure that the base URL is set to null.',
+          function() {});
+        });
+        describe('Datatypes', function() {});
+      });
     });
     if(expectedProofTypes.includes('DataIntegrityProof')) {
       it('The type property MUST contain the string DataIntegrityProof.',
@@ -118,80 +275,7 @@ export function runDataIntegrityProofFormatTests({
         }
       });
     }
-    it('If the proof type is DataIntegrityProof, cryptosuite MUST be ' +
-    'specified; otherwise, cryptosuite MAY be specified. If specified, its ' +
-    'value MUST be a string.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=If%20the%20proof%20type%20is%20DataIntegrityProof%2C%20cryptosuite%20MUST%20be%20specified%3B%20otherwise%2C%20cryptosuite%20MAY%20be%20specified.%20If%20specified%2C%20its%20value%20MUST%20be%20a%20string.';
-      for(const proof of proofs) {
-        if(proof.type && proof.type === 'DataIntegrityProof') {
-          should.exist(
-            proof.cryptosuite,
-            'If the proof type is DataIntegrityProof, cryptosuite MUST ' +
-            'be specified');
-          proof.cryptosuite.should.be.a(
-            'string',
-            'cryptosuite value MUST be a string.');
-        }
-      }
-    });
-    it('The date and time the proof was created is OPTIONAL and, if ' +
-    'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
-    'string, either in Universal Coordinated Time (UTC), denoted by a Z at ' +
-    'the end of the value, or with a time zone offset relative to UTC.',
-    function() {
-      for(const proof of proofs) {
-        if(proof.created) {
-          // check if "created" is a valid XML Schema 1.1 dateTimeStamp
-          // value
-          proof.created.should.match(dateRegex);
-        }
-      }
-    });
-    it('The expires property is OPTIONAL and, if present, specifies when ' +
-    'the proof expires. If present, it MUST be an [XMLSCHEMA11-2] ' +
-    'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
-    'denoted by a Z at the end of the value, or with a time zone offset ' +
-    'relative to UTC.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time';
-      for(const proof of proofs) {
-        if(proof.expires) {
-          // check if "created" is a valid XML Schema 1.1 dateTimeStamp
-          // value
-          proof.expires.should.match(dateRegex);
-        }
-      }
-    });
-    it('A verification method is the means and information needed to verify ' +
-        'the proof. If included, the value MUST be a string that maps ' +
-        'to a [URL]', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=A%20verification%20method%20is%20the%20means%20and%20information%20needed%20to%20verify%20the%20proof.%20If%20included%2C%20the%20value%20MUST%20be%20a%20string%20that%20maps%20to%20a%20%5BURL%5D.';
-      for(const proof of proofs) {
-        await shouldMapToUrl({
-          doc: {
-            '@context': data['@context'],
-            ...proof
-          },
-          term: 'https://w3id.org/security#verificationMethod',
-          prop: '@id'
-        });
-      }
-    });
-    it('The reason the proof was created ("proof.proofPurpose") MUST be ' +
-        'specified as a string that maps to a URL', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
-      for(const proof of proofs) {
-        proof.should.have.property('proofPurpose');
-        proof.proofPurpose.should.be.a('string');
-        await shouldMapToUrl({
-          doc: {
-            '@context': data['@context'],
-            ...proof
-          },
-          term: 'https://w3id.org/security#proofPurpose',
-          prop: '@id'
-        });
-      }
-    });
+
     it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
       function() {
         this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used';
@@ -202,28 +286,6 @@ export function runDataIntegrityProofFormatTests({
           proof.proofValue.should.be.a('string');
         }
       });
-    it('The contents of the value ("proof.proofValue") MUST be expressed ' +
-    'with a header and encoding as described in Section 2.4 Multibase.',
-    function() {
-      for(const proof of proofs) {
-        const {
-          prefix: expectedPrefix,
-          name: encodingName
-        } = expectedMultibasePrefix(proof.cryptosuite);
-
-        proof.proofValue.slice(0, 1)
-          .should.equal(
-            expectedPrefix,
-            `Expected "proof.proofValue" to be a ${encodingName} value`
-          );
-
-        isValidMultibaseEncoded(proof.proofValue, expectedPrefix).should
-          .equal(
-            true,
-            `Expected "proof.proofValue" to be a valid ${encodingName} value`
-          );
-      }
-    });
     it('if "proof.domain" field exists, it MUST be either a string, ' +
       'or an unordered set of strings.', function() {
       for(const proof of proofs) {
