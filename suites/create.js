@@ -316,6 +316,13 @@ export function runDataIntegrityProofFormatTests({
       });
       describe('Algorithms', function() {
         describe('Add Proof', function() {
+          it('Whenever this algorithm encodes strings, ' +
+            'it MUST use UTF-8 encoding.',
+          function() {
+            for(const proof of proofs) {
+              chai.expect(proof.proofValue.isWellFormed()).to.be.true;
+            }
+          });
           it.skip('If the algorithm produces an error, the error MUST be ' +
           'propagated and SHOULD convey the error type.',
           function() {});
@@ -339,6 +346,13 @@ export function runDataIntegrityProofFormatTests({
           function() {});
         });
         describe('Add Proof Set/Chain', function() {
+          it.skip('Whenever this algorithm encodes strings, ' +
+            'it MUST use UTF-8 encoding.',
+          function() {
+            for(const proof of proofs) {
+              chai.expect(proof.proofValue.isWellFormed()).to.be.true;
+            }
+          });
           it('If a proof with id equal to previousProof does not ' +
           'exist in allProofs, an error MUST be raised and SHOULD ' +
           'convey an error type of PROOF_GENERATION_ERROR.',
@@ -346,12 +360,17 @@ export function runDataIntegrityProofFormatTests({
             this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20a%20proof%20with%20id%20equal%20to%20previousProofdoes%20not%20exist%20in%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
             for(const proof of proofs) {
               if('previousProof' in proof) {
-                proofs.some(
-                  otherProof => otherProof.id == proof.previousProof).
-                  should.be('True',
-                    'Expected previousProof value to be the id of another ' +
-                  'included proof.'
-                  );
+                if(typeof proof.previousProof === 'string') {
+                  proof.previousProof = [proof.previousProof];
+                }
+                for(const previousProof in proof.previousProof) {
+                  proofs.some(
+                    otherProof => otherProof.id == previousProof).
+                    should.be('True',
+                      'Expected previousProof value to be the id of another ' +
+                    'included proof.'
+                    );
+                }
               }
             }
           });
@@ -364,16 +383,19 @@ export function runDataIntegrityProofFormatTests({
             const previousProofs = [];
             for(const proof of proofs) {
               if('previousProof' in proof) {
-                previousProofs.push(proof.previousProof);
+                if(typeof proof.previousProof === 'string') {
+                  proof.previousProof = [proof.previousProof];
+                }
+                previousProofs.concat(proof.previousProof);
               }
             }
             for(const previousProof of previousProofs) {
               proofs.some(
-                otherProof => otherProof.id == previousProof).
-                should.be('True',
-                  'Expected all previousProof values to be the id of ' +
+                otherProof => otherProof.id == previousProof).should.be(
+                'True',
+                'Expected all previousProof values to be the id of ' +
                 'another included proof.'
-                );
+              );
             }
           });
         });
