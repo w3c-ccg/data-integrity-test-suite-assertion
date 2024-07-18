@@ -361,8 +361,12 @@ export function runDataIntegrityProofFormatTests({
           'PROOF_GENERATION_ERROR.',
           function() {
             this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20any%20element%20of%20previousProof%20array%20has%20an%20id%20attribute%20that%20does%20not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
-            const previousProofs = proofs.find(
-              proof => proof.key === 'previousProof');
+            const previousProofs = [];
+            for(const proof of proofs) {
+              if('previousProof' in proof) {
+                previousProofs.push(proof.previousProof);
+              }
+            }
             for(const previousProof of previousProofs) {
               proofs.some(
                 otherProof => otherProof.id == previousProof).
