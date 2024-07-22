@@ -204,26 +204,28 @@ export function runDataIntegrityProofFormatTests({
           proof.proofValue.should.be.a('string');
         }
       });
-    it('The contents of the value ("proof.proofValue") MUST be expressed ' +
-    'with a header and encoding as described in Section 2.4 Multibase.',
-    function() {
+    it('("proof.proofValue") A string value that contains the base-encoded ' +
+    'binary data necessary to verify the digital proof using the ' +
+    'verificationMethod specified. The contents of the value MUST be ' +
+    'expressed with a header and encoding as described in Section 2.4 ' +
+    'Multibase of the Controller Documents 1.0 specification.', function() {
       for(const proof of proofs) {
+        should.exist(proof.proofValue, 'Expected proofValue to exist.');
+        proof.proofValue.should.be.a(
+          'string', 'Expected proofValue to be a string.');
         const {
           prefix: expectedPrefix,
           name: encodingName
         } = expectedMultibasePrefix(proof.cryptosuite);
 
-        proof.proofValue.slice(0, 1)
-          .should.equal(
-            expectedPrefix,
-            `Expected "proof.proofValue" to be a ${encodingName} value`
-          );
+        proof.proofValue.slice(0, 1).should.equal(
+          expectedPrefix,
+          `Expected "proof.proofValue" to be a ${encodingName} value`);
 
-        isValidMultibaseEncoded(proof.proofValue, expectedPrefix).should
-          .equal(
-            true,
-            `Expected "proof.proofValue" to be a valid ${encodingName} value`
-          );
+        isValidMultibaseEncoded(
+          proof.proofValue, expectedPrefix).should.equal(
+          true,
+          `Expected "proof.proofValue" to be a valid ${encodingName} value`);
       }
     });
     it('The domain property is OPTIONAL. It conveys one or more security ' +
