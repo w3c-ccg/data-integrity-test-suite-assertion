@@ -363,17 +363,19 @@ export function runDataIntegrityProofFormatTests({
                 if(typeof proof.previousProof === 'string') {
                   proofs.some(
                     otherProof => otherProof.id == proof.previousProof).
-                    should.be('True',
-                      'Expected previousProof value to be the id of ' +
-                    'another included proof.'
+                    should.equal(true,
+                      'Expected previousProof ' +
+                      `${proof.previousProof} ` +
+                      'to be the id of another included proof.'
                     );
                 } if(Array.isArray(proof.previousProof)) {
                   for(const previousProof in proof.previousProof) {
                     proofs.some(
                       otherProof => otherProof.id == previousProof).
-                      should.be('True',
-                        'Expected previousProof value to be the id of ' +
-                      'another included proof.'
+                      should.equal(true,
+                        'Expected previousProof ' +
+                        `${proof.previousProof} ` +
+                        'to be the id of another included proof.'
                       );
                   }
                 }
@@ -398,8 +400,8 @@ export function runDataIntegrityProofFormatTests({
             }
             for(const previousProof of previousProofs) {
               proofs.some(
-                otherProof => otherProof.id == previousProof).should.be(
-                'True',
+                otherProof => otherProof.id == previousProof).should.equal(
+                true,
                 'Expected all previousProof values to be the id of ' +
                 'another included proof.'
               );
