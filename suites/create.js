@@ -194,6 +194,20 @@ export function runDataIntegrityProofFormatTests({
         });
       }
     });
+    it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
+      function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used%2C%20as%20specified%20in%202.1%20Proofs.';
+        for(const proof of proofs) {
+          should.exist(proof, 'Expected proof to exist.');
+          should.exist(proof.cryptosuite,
+            'Expected proof to have property "cryptosuite".');
+          const {
+            prefix: expectedPrefix,
+            name: encodingName
+          } = expectedMultibasePrefix(proof.cryptosuite);
+          shouldHaveProofValue({proof, expectedPrefix, encodingName});
+        }
+      });
     it('("proof.proofValue") A string value that contains the base-encoded ' +
     'binary data necessary to verify the digital proof using the ' +
     'verificationMethod specified. The contents of the value MUST be ' +
