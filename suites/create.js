@@ -4,8 +4,8 @@
 import {
   dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects, isStringOrArrayOfStrings,
-  shouldBeProof, shouldBeProofValue,
-  shouldBeUrl, shouldHaveProof, shouldMapToUrl
+  shouldBeProof, shouldBeUrl,
+  shouldHaveProof, shouldHaveProofValue, shouldMapToUrl
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
@@ -207,7 +207,7 @@ export function runDataIntegrityProofFormatTests({
           prefix: expectedPrefix,
           name: encodingName
         } = expectedMultibasePrefix(proof.cryptosuite);
-        shouldBeProofValue({proof, expectedPrefix, encodingName});
+        shouldHaveProofValue({proof, expectedPrefix, encodingName});
       }
     });
     it('The domain property is OPTIONAL. It conveys one or more security ' +

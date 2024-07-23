@@ -199,7 +199,7 @@ export function shouldBeErrorResponse({
  *
  * @returns {undefined} Throws if invalid.
  */
-export function shouldBeProofValue({proof, expectedPrefix, encodingName}) {
+export function shouldHaveProofValue({proof, expectedPrefix, encodingName}) {
   should.exist(proof.proofValue, 'Expected proofValue to exist.');
   proof.proofValue.should.be.a('string', 'Expected proofValue to be a string.');
   proof.proofValue.slice(0, 1).should.equal(expectedPrefix,
