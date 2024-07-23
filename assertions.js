@@ -188,3 +188,23 @@ export function shouldBeErrorResponse({
     expectedStatuses,
     `Expected "status" to be oneOf ${expectedStatuses}. ${reason}`);
 }
+
+/**
+ * Takes in a proof and verifies the proofValue.
+ *
+ * @param {object} options - Options to use.
+ * @param {object} options.proof - A proof.
+ * @param {string} options.expectedPrefix - The expected multibase prefix.
+ * @param {string} options.encodingName - The expected encoding name.
+ *
+ * @returns {undefined} Throws if invalid.
+ */
+export function shouldBeProofValue({proof, expectedPrefix, encodingName}) {
+  should.exist(proof.proofValue, 'Expected proofValue to exist.');
+  proof.proofValue.should.be.a('string', 'Expected proofValue to be a string.');
+  proof.proofValue.slice(0, 1).should.equal(expectedPrefix,
+    `Expected "proof.proofValue" to be a ${encodingName} value`);
+  isValidMultibaseEncoded(proof.proofValue, expectedPrefix).should.equal(
+    true,
+    `Expected "proof.proofValue" to be a valid ${encodingName} value`);
+}

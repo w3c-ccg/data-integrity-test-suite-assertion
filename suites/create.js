@@ -4,8 +4,8 @@
 import {
   dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects, isStringOrArrayOfStrings,
-  isValidMultibaseEncoded, shouldBeProof, shouldBeUrl,
-  shouldHaveProof, shouldMapToUrl
+  shouldBeProof, shouldBeProofValue,
+  shouldBeUrl, shouldHaveProof, shouldMapToUrl
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
@@ -194,38 +194,20 @@ export function runDataIntegrityProofFormatTests({
         });
       }
     });
-    it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
-      function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used';
-        for(const proof of proofs) {
-          proof.should.have.property('proofValue');
-          // the rest of the proofValue is determined by the suite so just
-          // assert that it is a string here.
-          proof.proofValue.should.be.a('string');
-        }
-      });
     it('("proof.proofValue") A string value that contains the base-encoded ' +
     'binary data necessary to verify the digital proof using the ' +
     'verificationMethod specified. The contents of the value MUST be ' +
     'expressed with a header and encoding as described in Section 2.4 ' +
     'Multibase of the Controller Documents 1.0 specification.', function() {
       for(const proof of proofs) {
-        should.exist(proof.proofValue, 'Expected proofValue to exist.');
-        proof.proofValue.should.be.a(
-          'string', 'Expected proofValue to be a string.');
+        should.exist(proof, 'Expected proof to exist.');
+        should.exist(proof.cryptosuite,
+          'Expected proof to have property "cryptosuite".');
         const {
           prefix: expectedPrefix,
           name: encodingName
         } = expectedMultibasePrefix(proof.cryptosuite);
-
-        proof.proofValue.slice(0, 1).should.equal(
-          expectedPrefix,
-          `Expected "proof.proofValue" to be a ${encodingName} value`);
-
-        isValidMultibaseEncoded(
-          proof.proofValue, expectedPrefix).should.equal(
-          true,
-          `Expected "proof.proofValue" to be a valid ${encodingName} value`);
+        shouldBeProofValue({proof, expectedPrefix, encodingName});
       }
     });
     it('The domain property is OPTIONAL. It conveys one or more security ' +
