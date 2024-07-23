@@ -199,6 +199,7 @@ export function runDataIntegrityProofFormatTests({
     'verificationMethod specified. The contents of the value MUST be ' +
     'expressed with a header and encoding as described in Section 2.4 ' +
     'Multibase of the Controller Documents 1.0 specification.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=string%20value%20that%20contains%20the%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof';
       for(const proof of proofs) {
         should.exist(proof, 'Expected proof to exist.');
         should.exist(proof.cryptosuite,
