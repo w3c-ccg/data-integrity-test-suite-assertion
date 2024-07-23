@@ -95,6 +95,20 @@ export function runDataIntegrityProofVerifyTests({
         }
       });
     });
+    it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
+      function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used%2C%20as%20specified%20in%202.1%20Proofs.';
+
+      });
+    it('("proof.proofValue") A string value that contains the base-encoded ' +
+    'binary data necessary to verify the digital proof using the ' +
+    'verificationMethod specified. The contents of the value MUST be ' +
+    'expressed with a header and encoding as described in Section 2.4 ' +
+    'Multibase of the Controller Documents 1.0 specification.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=string%20value%20that%20contains%20the%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof';
+
+    });
+
     it('If the "proof.proofValue" field is missing, an error MUST ' +
       'be raised.', async function() {
       // proofValue is added after signing so we can
