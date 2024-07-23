@@ -104,21 +104,24 @@ export function runDataIntegrityProofVerifyTests({
       'string, either in Universal Coordinated Time (UTC), denoted by a Z ' +
       'at the end of the value, or with a time zone offset relative ' +
       'to UTC.', async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20specified%20as%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC';
-        const credential = credentials.clone('invalidCreated');
-        await verificationFail({credential, verifier});
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20date%20and%20time%20the%20proof%20was%20created%20is%20OPTIONAL%20and%2C%20if%20included%2C%20MUST%20be%20specified%20as%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC.';
+        await verificationFail({
+          credential: credentials.clone('invalidCreated'),
+          verifier
+        });
+        await verificationFail({
+          credential: credentials.clone('noOffsetCreated'),
+          verifier
+        });
       });
-      // we can't tell if its interpreted correctly but we can ensure their
-      // verifier at least takes timestamps without Z or an offset.
-      it('(created) Time values that are incorrectly serialized without an ' +
-      'offset MUST be interpreted as UTC.', async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=relative%20to%20UTC.-,Time%20values%20that%20are%20incorrectly%20serialized%20without%20an%20offset%20MUST%20be%20interpreted%20as%20UTC.,-expires';
-        const credential = credentials.clone('noOffsetCreated');
-        await verificationFail({credential, verifier});
-      });
-      it('(expires) Time values that are incorrectly serialized without an ' +
-      'offset MUST be interpreted as UTC.', async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=relative%20to%20UTC.-,Time%20values%20that%20are%20incorrectly%20serialized%20without%20an%20offset%20MUST%20be%20interpreted%20as%20UTC.,-domain';
+    }
+    if(optionalTests?.expires) {
+      it('The expires property is OPTIONAL and, if present, specifies ' +
+        'when the proof expires. If present, it MUST be an [XMLSCHEMA11-2] ' +
+        'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
+        'denoted by a Z at the end of the value, or with a time zone offset ' +
+        'relative to UTC.', async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20expires%20property%20is%20OPTIONAL%20and%2C%20if%20present%2C%20specifies%20when%20the%20proof%20expires.%20If%20present%2C%20it%20MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC.';
         await verificationFail({
           credential: credentials.clone('noOffsetExpires'),
           verifier
