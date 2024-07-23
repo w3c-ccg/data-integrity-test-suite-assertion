@@ -25,16 +25,18 @@ export const shouldBeBase64NoPadUrl = s => BASE_64URL_NOPAD_REGEX.test(s);
 export async function verificationFail({
   credential, verifier, reason, options = {}
 } = {}) {
+  const {settings: {options: verifierOptions}} = verifier;
   const body = {
     verifiableCredential: credential,
     options: {
-      checks: ['proof'],
-      ...options
+      ...options,
+      ...verifierOptions
     }
   };
   const {result, error} = await verifier.post({json: body});
-  should.not.exist(result, 'Expected no result from verifier.');
-  should.exist(error, 'Expected verifier to error.');
+  const withReason = reason || '';
+  should.not.exist(result, 'Expected no result from verifier.' + withReason);
+  should.exist(error, 'Expected verifier to error.' + withReason);
   shouldBeErrorResponse({response: error, reason});
   return {result, error};
 }

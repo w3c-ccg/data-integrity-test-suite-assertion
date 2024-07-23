@@ -34,7 +34,7 @@ export function runDataIntegrityProofFormatTests({
       if(!issuer) {
         throw new Error(`Expected ${vendorName} to have an issuer.`);
       }
-      data = await createInitialVc({issuer, vc: validVc});
+      data = await createInitialVc({issuer, credential: validVc});
       proofs = Array.isArray(data.proof) ? data.proof : [data.proof];
     });
     it('When expressing a data integrity proof on an object, a proof ' +
