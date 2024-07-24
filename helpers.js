@@ -9,13 +9,14 @@ import {v4 as uuidv4} from 'uuid';
  * @param {object} options - Options to use.
  * @param {object} options.issuer - An issuer endpoint.
  * @param {object} options.credential - A credential to be issued.
+ * @param {object} [options.options] - Request specific options.
  *
  * @throws {Error} Throws if the issuer fails.
  *
  * @returns {Promise<object>} The resulting data from the issuer.
  */
-export async function createInitialVc({issuer, credential} = {}) {
-  const {settings: {id: issuerId, options}} = issuer;
+export async function createInitialVc({issuer, credential, options} = {}) {
+  const {settings: {id: issuerId, options: issuerOptions}} = issuer;
   const _credential = structuredClone(credential);
   // set a fresh id on the credential
   _credential.id = `urn:uuid:${uuidv4()}`;
@@ -23,7 +24,11 @@ export async function createInitialVc({issuer, credential} = {}) {
   _credential.issuer = issuerId;
   const {data, error} = await issuer.post({json: {
     credential: _credential,
-    options: {...options}
+    options: {
+      ...issuerOptions,
+      //request specific options overwrite issuer options
+      ...options
+    }
   }});
   if(error) {
     throw error;
