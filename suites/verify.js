@@ -1,6 +1,7 @@
 /*!
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
+import {expect} from 'chai';
 import {generateTestData} from '../vc-generator/index.js';
 import {verificationFail} from '../assertions.js';
 
@@ -14,6 +15,9 @@ export function runDataIntegrityProofVerifyTests({
 }) {
   return describe(testDescription, function() {
     const [verifier] = endpoints;
+    // store the promise to avoid redudant API calls
+    // for the proofValue tests
+    let proofValueTests;
     if(!verifier) {
       throw new Error(`Expected ${vendorName} to have a verifier.`);
     }
@@ -26,6 +30,7 @@ export function runDataIntegrityProofVerifyTests({
     let credentials;
     before(async function() {
       credentials = await generateTestData({...testDataOptions, optionalTests});
+      proofValueTests = shouldBeProofValue({credentials, verifier});
     });
     it('Conforming processors MUST produce errors when non-conforming ' +
         'documents are consumed.', async function() {
@@ -96,34 +101,20 @@ export function runDataIntegrityProofVerifyTests({
       });
     });
     it('The proofValue property MUST be used, as specified in 2.1 Proofs.',
-      function() {
+      async function() {
         this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20proofValue%20property%20MUST%20be%20used%2C%20as%20specified%20in%202.1%20Proofs.';
-
+        await proofValueTests;
       });
     it('("proof.proofValue") A string value that contains the base-encoded ' +
     'binary data necessary to verify the digital proof using the ' +
     'verificationMethod specified. The contents of the value MUST be ' +
     'expressed with a header and encoding as described in Section 2.4 ' +
-    'Multibase of the Controller Documents 1.0 specification.', function() {
+    'Multibase of the Controller Documents 1.0 specification.',
+    async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=string%20value%20that%20contains%20the%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof';
-
+      await proofValueTests;
     });
 
-    it('If the "proof.proofValue" field is missing, an error MUST ' +
-      'be raised.', async function() {
-      // proofValue is added after signing so we can
-      // safely delete it for this test
-      const credential = credentials.clone('issuedVc');
-      delete credential.proof.proofValue;
-      await verificationFail({credential, verifier});
-    });
-    it('If the "proof.proofValue" field is invalid, an error MUST be ' +
-      'raised.', async function() {
-      // null should be an invalid proofValue for almost any proof
-      const credential = credentials.clone('issuedVc');
-      credential.proof.proofValue = null;
-      await verificationFail({credential, verifier});
-    });
     if(optionalTests?.created) {
       it('The date and time the proof was created is OPTIONAL and, if ' +
       'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
@@ -151,13 +142,6 @@ export function runDataIntegrityProofVerifyTests({
         });
       });
     }
-    it('If the "proof.proofValue" field is not multibase-encoded, an error ' +
-      'MUST be raised.', async function() {
-      const credential = credentials.clone('issuedVc');
-      // Remove the multibase header to cause validation error
-      credential.proof.proofValue = credential.proof.proofValue.slice(1);
-      await verificationFail({credential, verifier});
-    });
     it('The value of the cryptosuite property MUST be a string that ' +
     'identifies the cryptographic suite. If the processing environment ' +
     'supports subtypes of string, the type of the cryptosuite value MUST ' +
@@ -192,5 +176,37 @@ export function runDataIntegrityProofVerifyTests({
         });
       });
     }
+  });
+}
+
+async function shouldBeProofValue({credentials, verifier}) {
+  expect(credentials, 'Expected test data to be generated.').to.exist;
+  expect(credentials.clone('issuedVc'), 'Expected a valid Vc to be issued.').
+    to.exist;
+  // proofValue is added after signing so we can
+  // safely delete it for this test
+  const noProofValue = credentials.clone('issuedVc');
+  delete noProofValue.proof.proofValue;
+  await verificationFail({
+    credential: noProofValue,
+    verifier,
+    reason: 'MUST not verify VC with no "proofValue".'
+  });
+  // null should be an invalid proofValue for almost any proof
+  const nullProofValue = credentials.clone('issuedVc');
+  nullProofValue.proof.proofValue = null;
+  await verificationFail({
+    credential: nullProofValue,
+    verifier,
+    reason: 'MUST not verify VC with "proofValue" null.'
+  });
+  const noProofValueHeader = credentials.clone('issuedVc');
+  // Remove the multibase header to cause validation error
+  noProofValueHeader.proof.proofValue = noProofValueHeader.proof.proofValue.
+    slice(1);
+  await verificationFail({
+    credential: noProofValueHeader,
+    verifier,
+    reason: 'MUST not verify VC with invalid multibase header on "proofValue"'
   });
 }
