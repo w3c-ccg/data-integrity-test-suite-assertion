@@ -22,6 +22,17 @@ export const shouldBeBs58 = s => bs58.test(s);
 
 export const shouldBeBase64NoPadUrl = s => BASE_64URL_NOPAD_REGEX.test(s);
 
+/**
+ * Posts a VC to a verifier and asserts on the response.
+ *
+ * @param {object} options - Options to use.
+ * @param {object} options.credential - The credential to post.
+ * @param {object} options.verifier - The verifier to post to.
+ * @param {string} [options.reason] - The expected reason for the failure.
+ * @param {object} [options.options] - Request specific options.
+ *
+ * @returns {Promise<object>} The result of the verification.
+ */
 export async function verificationFail({
   credential, verifier, reason, options = {}
 } = {}) {
@@ -29,8 +40,9 @@ export async function verificationFail({
   const body = {
     verifiableCredential: credential,
     options: {
-      ...options,
-      ...verifierOptions
+      ...verifierOptions,
+      // request specific options should over endpoint options
+      ...options
     }
   };
   const {result, error} = await verifier.post({json: body});
