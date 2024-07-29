@@ -41,7 +41,7 @@ export async function verificationFail({
     verifiableCredential: credential,
     options: {
       ...verifierOptions,
-      // request specific options should over endpoint options
+      // request specific options should overwrite endpoint options
       ...options
     }
   };
