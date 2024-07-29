@@ -146,15 +146,24 @@ export async function shouldMapToUrl({doc, term, prop}) {
   }
 }
 
+/**
+ * Checks that the proof has all mandatory values.
+ *
+ * @param {object} options - Options to use.
+ * @param {object} options.proof - A DI Proof.
+ */
 export function shouldBeProof({proof}) {
   should.exist(proof, 'Expected VC to exist.');
   proof.should.be.an('object', 'Expected proof to be an object.');
   should.exist(proof.type, 'Expected proof to have a type.');
   isStringOrArrayOfStrings(proof.type).should.equal(
     true, 'Expected "proof.type" to be a string or an array of strings');
-  if(proof.id) {
-    shouldBeUrl({url: proof.id, prop: '"proof.id"'});
-  }
+  should.exist(proof.proofPurpose, 'Expected "proof.proofPurpose" to exist.');
+  proof.proofPurpose.should.be.a(
+    'string', 'Expected "proof.proofPurpose" to be a string.');
+  should.exist(proof.proofValue, 'Expected "proof.proofValue" to exist.');
+  proof.proofValue.should.be.a(
+    'string', 'Expected "proof.proofValue" to be a string.');
 }
 
 /**
