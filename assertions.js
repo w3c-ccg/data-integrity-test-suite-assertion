@@ -146,6 +146,14 @@ export async function shouldMapToUrl({doc, term, prop}) {
   }
 }
 
+export function shouldBeVc({vc}) {
+  should.exist(vc, 'Expected VC to exist.');
+  vc.should.be.an('object', 'Expected VC to be an object.');
+  should.exist(vc.type, 'Expected VC to have a type.');
+  isStringOrArrayOfStrings(vc.type).should.equal(
+    true, 'Expected type to be a string or an array of strings');
+}
+
 /**
  * Throws an error if a negative test does not return 400 or 422.
  * A reason maybe provided such as "invalid proofValue" etc.

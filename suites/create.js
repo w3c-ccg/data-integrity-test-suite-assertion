@@ -3,9 +3,9 @@
  */
 import {
   dateRegex, expectedMultibasePrefix,
-  isObjectOrArrayOfObjects,
-  isStringOrArrayOfStrings, isValidMultibaseEncoded,
-  shouldBeUrl, shouldHaveProof, shouldMapToUrl
+  isObjectOrArrayOfObjects, isStringOrArrayOfStrings,
+  isValidMultibaseEncoded, shouldBeUrl,
+  shouldHaveProof, shouldMapToUrl, shouldBeVc
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
@@ -271,6 +271,12 @@ export function runDataIntegrityProofFormatTests({
           }
         }
       });
+    it('Cryptographic suite designers MUST use mandatory proof value ' +
+    'properties defined in Section 2.1 Proofs, and MAY define other ' +
+    'properties specific to their cryptographic suite.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#add-proof:~:text=MUST%20use%20mandatory%20proof%20value%20properties%20defined';
+      shouldBeVc({vc: data});
+    });
     if(cryptosuiteName) {
       it('The value of the cryptosuite property MUST be a string that ' +
         'identifies the cryptographic suite.', async function() {
