@@ -146,12 +146,15 @@ export async function shouldMapToUrl({doc, term, prop}) {
   }
 }
 
-export function shouldBeVc({vc}) {
-  should.exist(vc, 'Expected VC to exist.');
-  vc.should.be.an('object', 'Expected VC to be an object.');
-  should.exist(vc.type, 'Expected VC to have a type.');
-  isStringOrArrayOfStrings(vc.type).should.equal(
-    true, 'Expected type to be a string or an array of strings');
+export function shouldBeProof({proof}) {
+  should.exist(proof, 'Expected VC to exist.');
+  proof.should.be.an('object', 'Expected proof to be an object.');
+  should.exist(proof.type, 'Expected proof to have a type.');
+  isStringOrArrayOfStrings(proof.type).should.equal(
+    true, 'Expected "proof.type" to be a string or an array of strings');
+  if(proof.id) {
+    shouldBeUrl({url: proof.id, prop: '"proof.id"'});
+  }
 }
 
 /**
