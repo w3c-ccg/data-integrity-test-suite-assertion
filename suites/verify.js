@@ -120,7 +120,7 @@ export function runDataIntegrityProofVerifyTests({
       'processor, such as when an undefined term is detected in an ' +
       'input document.', async function() {
       await verificationFail({
-        credential: credentials.clone('undefinedterm'),
+        credential: credentials.clone('undefinedTerm'),
         verifier,
         reason: 'Should fail to verify VC when data is dropped by JSON-LD'
       });

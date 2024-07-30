@@ -33,6 +33,7 @@ export const generators = {
     invalidProofPurpose,
     invalidProofType,
     invalidVm,
+    undefinedTerm
   },
   // creates a set of shared test vector generators
   // not necessarily used in DI Assertion itself, but used
@@ -76,6 +77,12 @@ function invalidProofPurpose({
   // ensures the proofPurpose matches the term when deriving
   purpose.term = mockPurpose;
   return {...args, suite, selectiveSuite, credential, purpose};
+}
+
+function undefinedTerm({credential, ...args}) {
+  const _credential = structuredClone(credential);
+  _credential.credentialSubject.undefinedTerm = 'undefinedTerm';
+  return {...args, credential: _credential};
 }
 
 // adds an invalid domain
@@ -185,7 +192,6 @@ function invalidProofType({
 function invalidCryptosuite({
   suite,
   selectiveSuite,
-  credential,
   cryptosuiteName = 'UnknownCryptosuite',
   ...args
 }) {
@@ -193,7 +199,7 @@ function invalidCryptosuite({
   if(selectiveSuite) {
     selectiveSuite.cryptosuite = cryptosuiteName;
   }
-  return {...args, suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite};
 }
 
 // issues a normal or derived vc
