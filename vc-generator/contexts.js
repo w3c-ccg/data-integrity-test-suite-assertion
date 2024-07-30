@@ -30,10 +30,16 @@ const diCtx = _dataIntegrityCtx['@context'];
 // add UnknownProofType to local context for test data
 diCtx.UnknownProofType = structuredClone(diCtx.DataIntegrityProof);
 // add invalidPurpose to context for test data
+// //FIXME this should be in a separate documentLoader
 diCtx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose = {
   '@id': 'https://w3id.org/security#invalidPurpose',
   '@type': '@id',
   '@container': '@set'
+};
+//FIXME this should be in a separate documentLoader
+diCtx.undefinedTerm = {
+  '@id': 'https://w3id.org/security#undefinedTerm',
+  '@type': 'https://w3id.org/security#termString'
 };
 
 // add contexts for the documentLoader
