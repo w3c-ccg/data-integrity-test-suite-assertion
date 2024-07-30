@@ -3,6 +3,7 @@
  */
 import {checkKeyType} from './assertions.js';
 import {createRequire} from 'node:module';
+import {generateTestData} from './vc-generator/index.js';
 import {runDataIntegrityProofFormatTests} from './suites/create.js';
 import {runDataIntegrityProofVerifyTests} from './suites/verify.js';
 
@@ -105,6 +106,14 @@ export function checkDataIntegrityProofVerifyErrors({
     this.rowLabel = 'Test Name';
     this.columnLabel = 'Verifier';
     this.implemented = [];
+    const credentials = {};
+    before(async function() {
+      const data = await generateTestData({...testDataOptions, optionalTests});
+      // this might seem weird, but mocha won't wait for credentials to be set
+      // before passing the credentials var to the tests
+      // so we just update the credentials passed to the actual test suite
+      Object.assign(credentials, data);
+    });
     for(const [vendorName, {endpoints}] of implemented) {
       if(!endpoints) {
         throw new Error(`Expected ${vendorName} to have endpoints.`);
@@ -128,6 +137,7 @@ export function checkDataIntegrityProofVerifyErrors({
           expectedProofType,
           testDescription: name,
           vendorName,
+          credentials,
           testDataOptions,
           optionalTests
         });
