@@ -2,7 +2,6 @@
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
 import {expect} from 'chai';
-import {generateTestData} from '../vc-generator/index.js';
 import {verificationFail} from '../assertions.js';
 
 export function runDataIntegrityProofVerifyTests({
@@ -10,7 +9,7 @@ export function runDataIntegrityProofVerifyTests({
   expectedProofType,
   testDescription,
   vendorName,
-  testDataOptions,
+  credentials,
   optionalTests
 }) {
   return describe(testDescription, function() {
@@ -27,9 +26,7 @@ export function runDataIntegrityProofVerifyTests({
         rowId: this.currentTest.title
       };
     });
-    let credentials;
     before(async function() {
-      credentials = await generateTestData({...testDataOptions, optionalTests});
       proofValueTests = shouldBeProofValue({credentials, verifier});
     });
     it('Conforming processors MUST produce errors when non-conforming ' +
