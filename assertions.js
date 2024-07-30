@@ -22,9 +22,9 @@ export const shouldBeBs58 = s => bs58.test(s);
 
 export const shouldBeBase64NoPadUrl = s => BASE_64URL_NOPAD_REGEX.test(s);
 
-export const verificationFail = async ({
+export async function verificationFail({
   credential, verifier, reason, options = {}
-} = {}) => {
+} = {}) {
   const body = {
     verifiableCredential: credential,
     options: {
@@ -36,7 +36,8 @@ export const verificationFail = async ({
   should.not.exist(result, 'Expected no result from verifier.');
   should.exist(error, 'Expected verifier to error.');
   shouldBeErrorResponse({response: error, reason});
-};
+  return {result, error};
+}
 
 export function expectedMultibasePrefix(cryptosuite) {
   const b64urlNoPadSuites = ['ecdsa-sd-2023', 'bbs-2023'];
