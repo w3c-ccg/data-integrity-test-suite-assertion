@@ -114,7 +114,17 @@ export function runDataIntegrityProofVerifyTests({
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=string%20value%20that%20contains%20the%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof';
       await proofValueTests;
     });
-
+    it('Implementations that use JSON-LD processing, such as RDF Dataset ' +
+      'Canonicalization [RDF-CANON], MUST throw an error, which SHOULD be ' +
+      'DATA_LOSS_DETECTION_ERROR, when data is dropped by a JSON-LD ' +
+      'processor, such as when an undefined term is detected in an ' +
+      'input document.', async function() {
+      await verificationFail({
+        credential: credentials.clone('undefinedterm'),
+        verifier,
+        reason: 'Should fail to verify VC when data is dropped by JSON-LD'
+      });
+    });
     if(optionalTests?.created) {
       it('The date and time the proof was created is OPTIONAL and, if ' +
       'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
