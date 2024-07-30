@@ -119,6 +119,7 @@ export function runDataIntegrityProofVerifyTests({
       'DATA_LOSS_DETECTION_ERROR, when data is dropped by a JSON-LD ' +
       'processor, such as when an undefined term is detected in an ' +
       'input document.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#securing-data-losslessly:~:text=Implementations%20that%20use%20JSON%2DLD%20processing%2C%20such%20as%20RDF%20Dataset%20Canonicalization%20%5BRDF%2DCANON%5D%2C%20MUST%20throw%20an%20error%2C%20which%20SHOULD%20be%20DATA_LOSS_DETECTION_ERROR%2C%20when%20data%20is%20dropped%20by%20a%20JSON%2DLD%20processor%2C%20such%20as%20when%20an%20undefined%20term%20is%20detected%20in%20an%20input%20document.';
       await verificationFail({
         credential: credentials.clone('undefinedTerm'),
         verifier,
