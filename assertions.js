@@ -39,6 +39,23 @@ export async function verificationFail({
   return {result, error};
 }
 
+export async function issuanceFail({credential, issuer, reason, options = {}}) {
+  const {settings: {id: issuerId, options: issuerOptions}} = issuer;
+  credential.issuer = issuerId;
+  const body = {
+    credential,
+    options: {
+      ...issuerOptions,
+      ...options
+    }
+  };
+  const {result, error} = await issuer.post({json: body});
+  should.not.exist(result, reason || 'Expected no result from issuer.');
+  should.exist(error, reason || 'Expected issuer to error.');
+  shouldBeErrorResponse({response: error, reason});
+  return {result, error};
+}
+
 export function expectedMultibasePrefix(cryptosuite) {
   const b64urlNoPadSuites = ['ecdsa-sd-2023', 'bbs-2023'];
 

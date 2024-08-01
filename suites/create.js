@@ -4,7 +4,7 @@
 import {
   dateRegex, expectedMultibasePrefix,
   isObjectOrArrayOfObjects, isStringOrArrayOfStrings,
-  shouldBeErrorResponse,
+  issuanceFail,
   shouldBeProof, shouldBeUrl,
   shouldHaveProof, shouldHaveProofValue, shouldMapToUrl
 } from '../assertions.js';
@@ -288,21 +288,19 @@ export function runDataIntegrityProofFormatTests({
       'processor, such as when an undefined term is detected in an ' +
       'input document.', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#securing-data-losslessly:~:text=Implementations%20that%20use%20JSON%2DLD%20processing%2C%20such%20as%20RDF%20Dataset%20Canonicalization%20%5BRDF%2DCANON%5D%2C%20MUST%20throw%20an%20error%2C%20which%20SHOULD%20be%20DATA_LOSS_DETECTION_ERROR%2C%20when%20data%20is%20dropped%20by%20a%20JSON%2DLD%20processor%2C%20such%20as%20when%20an%20undefined%20term%20is%20detected%20in%20an%20input%20document.';
-      let result;
-      let error;
-      const vc = structuredClone(validVc);
-      vc.type.push('InvalidType');
-      try {
-        result = await createInitialVc({issuer, vc});
-      } catch(e) {
-        error = e;
-      }
-      should.not.exist(
-        result,
-        'Expected no result from issuer when VC has an undefined type.');
-      shouldBeErrorResponse({
-        response: error,
+      const undefinedType = structuredClone(validVc);
+      undefinedType.type.push('InvalidType');
+      await issuanceFail({
+        credential: undefinedType,
+        issuer,
         reason: 'Expected issuer to error when VC has an undefined type.'
+      });
+      const undefinedTerm = structuredClone(validVc);
+      undefinedTerm.credentialSubject.invalidTerm = 'invalidTerm';
+      await issuanceFail({
+        credential: undefinedTerm,
+        issuer,
+        reason: 'Expected issuer to error when VC has an undefined term.'
       });
     });
     if(cryptosuiteName) {
