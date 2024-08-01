@@ -9,7 +9,7 @@ import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const issuedVc = require('./fixtures/issuedVc.json');
 
-class MockIssuer {
+export class MockIssuer {
   constructor({tags, suite, documentLoader}) {
     this._tags = tags;
     this.settings = {
@@ -61,11 +61,6 @@ class MockVerifier {
   }
 }
 
-const validIssuer = new MockIssuer({
-  tags: ['Test-Issuer', 'Test-Issuer-Valid'],
-  mockVc: structuredClone(issuedVc)
-});
-
 const validVerifier = new MockVerifier({
   tags: ['Test-Verifier', 'Test-Verifier-Valid'],
 });
@@ -81,19 +76,6 @@ invalidVc.proof.proofPurpose = {
 };
 invalidVc.proof.proofValue = 12390;
 
-const invalidIssuer = new MockIssuer({
-  tags: ['Test-Issuer', 'Test-Issuer-Invalid'],
-  mockVc: invalidVc
-});
-
-export const validIssuerImplementations = new Map([
-  ['validIssuerImplementation', {endpoints: [validIssuer]}],
-]);
-
 export const validVerifierImplementations = new Map([
   ['validVerifierImplementation', {endpoints: [validVerifier]}],
-]);
-
-export const invalidIssuerImplementations = new Map([
-  ['invalidIssuerImplementation', {endpoints: [invalidIssuer]}]
 ]);
