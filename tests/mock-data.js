@@ -25,6 +25,7 @@ export class MockIssuer {
   async post({json}) {
     let data;
     let error;
+    let statusCode = 201;
     try {
       const {credential} = json;
       data = await vc.issue({
@@ -35,7 +36,13 @@ export class MockIssuer {
     } catch(e) {
       error = e;
     } finally {
-      return {data, error};
+      if(error) {
+        error.status = 400;
+        statusCode = 400;
+        return {data, error, statusCode};
+      }
+      const result = {data, status: statusCode};
+      return {data, result, statusCode};
     }
   }
 }
