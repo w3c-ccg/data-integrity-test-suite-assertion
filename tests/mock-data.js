@@ -1,6 +1,7 @@
 /*!
- * Copyright (c) 2022-2023 Digital Bazaar, Inc.
+ * Copyright (c) 2022-2024 Digital Bazaar, Inc.
  */
+import * as vc from '@digitalbazaar/vc';
 import {createRequire} from 'node:module';
 // FIXME remove this once node has non-experimental support
 // for importing json via import
@@ -9,21 +10,33 @@ const require = createRequire(import.meta.url);
 const issuedVc = require('./fixtures/issuedVc.json');
 
 class MockIssuer {
-  constructor({tags, mockVc}) {
+  constructor({tags, suite, documentLoader}) {
     this._tags = tags;
-    this._mockVc = mockVc;
     this.settings = {
-      id: 'did:issuer:foo',
-      options: {
-
-      }
+      id: 'did:example:issuer',
+      options: {}
     };
+    this.suite = suite;
+    this.documentLoader = documentLoader;
   }
   get tags() {
     return new Set(this._tags);
   }
-  async post() {
-    return {data: this._mockVc};
+  async post({json}) {
+    let data;
+    let error;
+    try {
+      const {credential} = json;
+      data = await vc.issue({
+        credential,
+        documentLoader: this.documentLoader,
+        suite: this.suite,
+      });
+    } catch(e) {
+      error = e;
+    } finally {
+      return {data, error};
+    }
   }
 }
 
