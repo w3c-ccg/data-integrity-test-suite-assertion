@@ -125,12 +125,20 @@ export function runDataIntegrityProofVerifyTests({
         verifier,
         reason: 'Should fail to verify VC when data is dropped by JSON-LD'
       });
-      const credential = credentials.clone('issuedVc');
-      credential.credentialSubject.undefinedTerm = 'IfDroppedWillVerify';
+      const undefinedTerm = credentials.clone('issuedVc');
+      undefinedTerm.credentialSubject.undefinedTerm = 'IfDroppedWillVerify';
       await verificationFail({
-        credential,
+        credential: undefinedTerm,
         verifier,
         reason: 'Should fail to verify VC if an undefined term is added ' +
+          'after issuance.'
+      });
+      const undefinedType = credentials.clone('issuedVc');
+      undefinedType.type.push('UndefinedType');
+      await verificationFail({
+        credential: undefinedType,
+        verifier,
+        reason: 'Should fail to verify VC if an undefined type is added ' +
           'after issuance.'
       });
     });
