@@ -12,6 +12,7 @@ import {createInitialVc} from '../helpers.js';
 import jsonld from 'jsonld';
 import {validVc} from '../index.js';
 
+const expect = chai.expect();
 const should = chai.should();
 
 export function runDataIntegrityProofFormatTests({
@@ -139,6 +140,7 @@ export function runDataIntegrityProofFormatTests({
     'string, either in Universal Coordinated Time (UTC), denoted by a Z at ' +
     'the end of the value, or with a time zone offset relative to UTC.',
     function() {
+      this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=The%20date%20and%20time%20the%20proof%20was%20created%20is%20OPTIONAL%20and%2C%20if%20included%2C%20MUST%20be%20specified%20as%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC.';
       for(const proof of proofs) {
         if(proof.created) {
           // check if "created" is a valid XML Schema 1.1 dateTimeStamp
@@ -313,38 +315,52 @@ export function runDataIntegrityProofFormatTests({
           it('Whenever this algorithm encodes strings, ' +
             'it MUST use UTF-8 encoding.',
           function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=or%20an%20error.-,Whenever%20this%20algorithm%20encodes%20strings%2C%20it%20MUST%20use%20UTF%2D8%20encoding.,-Let%20proof%20be';
             for(const proof of proofs) {
-              chai.expect(proof.proofValue.isWellFormed()).to.be.true;
+              expect(proof.proofValue.isWellFormed()).to.be.true;
             }
           });
-          it.skip('If the algorithm produces an error, the error MUST be ' +
+          it('If the algorithm produces an error, the error MUST be ' +
           'propagated and SHOULD convey the error type.',
-          function() {});
+          function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20the%20algorithm%20produces%20an%20error%2C%20the%20error%20MUST%20be%20propagated%20and%20SHOULD%20convey%20the%20error%20type.';
+            this.test.cell.skipMessage = 'Pending test.';
+            this.skip();
+          });
           it('If one or more of the proof.type, proof.verificationMethod, ' +
           'and proof.proofPurpose values is not set, an error MUST be raised ' +
           'and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
           function() {
             this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20one%20or%20more%20of%20the%20proof.type%2C%20proof.verificationMethod%2C%20and%20proof.proofPurpose%20values%20is%20not%20set%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
             for(const proof of proofs) {
-              chai.expect(proof).to.contain.keys(
+              expect(proof).to.contain.keys(
                 'type', 'proofPurpose', 'verificationMethod');
             }
           });
-          it.skip('If options has a non-null domain item, it MUST be ' +
+          it('If options has a non-null domain item, it MUST be ' +
           'equal to proof.domain or an error MUST be raised and SHOULD ' +
           'convey an error type of PROOF_GENERATION_ERROR.',
-          function() {});
-          it.skip('If options has a non-null challenge item, it MUST ' +
+          function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20options%20has%20a%20non%2Dnull%20domain%20item%2C%20it%20MUST%20be%20equal%20to%20proof.domain%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+            this.test.cell.skipMessage = 'Pending test.';
+            this.skip();
+          });
+          it('If options has a non-null challenge item, it MUST ' +
           'be equal to proof.challenge or an error MUST be raised ' +
           'and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
-          function() {});
+          function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20options%20has%20a%20non%2Dnull%20challenge%20item%2C%20it%20MUST%20be%20equal%20to%20proof.challenge%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+            this.test.cell.skipMessage = 'Pending test.';
+            this.skip();
+          });
         });
         describe('Add Proof Set/Chain', function() {
-          it.skip('Whenever this algorithm encodes strings, ' +
+          it('Whenever this algorithm encodes strings, ' +
             'it MUST use UTF-8 encoding.',
           function() {
+            this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=(map).-,Whenever%20this%20algorithm%20encodes%20strings%2C%20it%20MUST%20use%20UTF%2D8%20encoding.,-Let%20proof%20be';
             for(const proof of proofs) {
-              chai.expect(proof.proofValue.isWellFormed()).to.be.true;
+              expect(proof.proofValue.isWellFormed()).to.be.true;
             }
           });
           it('If a proof with id equal to previousProof does not ' +
