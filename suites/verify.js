@@ -125,6 +125,14 @@ export function runDataIntegrityProofVerifyTests({
         verifier,
         reason: 'Should fail to verify VC when data is dropped by JSON-LD'
       });
+      const credential = credentials.clone('issuedVc');
+      credential.credentialSubject.undefinedTerm = 'IfDroppedWillVerify';
+      await verificationFail({
+        credential,
+        verifier,
+        reason: 'Should fail to verify VC if an undefined term is added ' +
+          'after issuance.'
+      });
     });
     if(optionalTests?.created) {
       it('The date and time the proof was created is OPTIONAL and, if ' +
