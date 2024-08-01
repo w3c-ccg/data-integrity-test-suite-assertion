@@ -1,10 +1,15 @@
 /*!
  * Copyright (c) 2022 Digital Bazaar, Inc.
  */
-import {
-  invalidIssuerImplementations, validIssuerImplementations
-} from './mock-data.js';
 import {checkDataIntegrityProofFormat} from '../index.js';
+import {cryptosuites} from './fixtures/constants.js';
+import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
+import {documentLoader} from '../vc-generator/documentLoader.js';
+import {getMultiKey} from './fixtures/keys/index.js';
+import {MockIssuer} from './mock-data.js';
+
+const tag = 'Test-Issuer-Valid';
+const tags = [tag];
 
 describe('Test checkDataIntegrityProofFormat()', function() {
   it('should accept empty implemented.', function() {
@@ -13,20 +18,27 @@ describe('Test checkDataIntegrityProofFormat()', function() {
       tag: 'Test-Issuer'
     });
   });
-  it('should pass if implemented returns a valid Vc.', function() {
-    checkDataIntegrityProofFormat({
-      implemented: validIssuerImplementations,
-      tag: 'Test-Issuer-Valid',
-      cryptosuiteName: 'eddsa-2022'
+  for(const [suiteName, testDataOptions] of cryptosuites) {
+    describe('should run issuer tests with suite ' +
+      suiteName, async function() {
+      const implemented = new Map();
+      before(async function() {
+        const key = await getMultiKey({
+          ...testDataOptions
+        });
+        const signer = key.signer();
+        const suite = new DataIntegrityProof({
+          signer,
+          cryptosuite: testDataOptions.cryptosuite
+        });
+        const issuer = new MockIssuer({tags, suite, documentLoader});
+        implemented.set(suiteName, issuer);
+      });
+      checkDataIntegrityProofFormat({
+        implemented,
+        tag,
+        cryptosuiteName: suiteName
+      });
     });
-  });
-  // this results in the test suite reporting failure when it is
-  // a successful negative test. FIXME: use sinon's mocks/stubs to assert
-  // on some very specific permutation of chai's should interface to test this.
-  it.skip('should fail if implemented returns an invalid Vc.', function() {
-    checkDataIntegrityProofFormat({
-      implemented: invalidIssuerImplementations,
-      tag: 'Test-Issuer-Invalid'
-    });
-  });
+  }
 });
