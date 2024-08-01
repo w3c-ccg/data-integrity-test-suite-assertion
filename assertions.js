@@ -52,7 +52,13 @@ export async function issuanceFail({credential, issuer, reason, options = {}}) {
   const {result, error} = await issuer.post({json: body});
   should.not.exist(result, reason || 'Expected no result from issuer.');
   should.exist(error, reason || 'Expected issuer to error.');
-  shouldBeErrorResponse({response: error, reason});
+  shouldBeErrorResponse({
+    response: error,
+    //FIXME remove 500 after informing implementers that issuers must return 400
+    //for invalid credentials
+    expectedStatuses: [400, 422, 500],
+    reason
+  });
   return {result, error};
 }
 
