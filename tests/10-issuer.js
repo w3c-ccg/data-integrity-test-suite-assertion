@@ -19,8 +19,7 @@ describe('Test checkDataIntegrityProofFormat()', function() {
     });
   });
   for(const [suiteName, testDataOptions] of cryptosuites) {
-    describe('should run issuer tests with suite ' +
-      suiteName, async function() {
+    describe('should run issuer tests with suite ', async function() {
       const implemented = new Map();
       before(async function() {
         const key = await getMultiKey({
@@ -32,12 +31,14 @@ describe('Test checkDataIntegrityProofFormat()', function() {
           cryptosuite: testDataOptions.cryptosuite
         });
         const issuer = new MockIssuer({tags, suite, documentLoader});
-        implemented.set(suiteName, issuer);
+        implemented.set(suiteName, {endpoints: [issuer]});
       });
-      checkDataIntegrityProofFormat({
-        implemented,
-        tag,
-        cryptosuiteName: suiteName
+      it(suiteName, function() {
+        checkDataIntegrityProofFormat({
+          implemented,
+          tag,
+          cryptosuiteName: suiteName
+        });
       });
     });
   }
