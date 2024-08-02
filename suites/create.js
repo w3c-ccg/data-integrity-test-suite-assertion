@@ -12,7 +12,7 @@ import {createInitialVc} from '../helpers.js';
 import jsonld from 'jsonld';
 import {validVc} from '../index.js';
 
-const expect = chai.expect();
+const expect = chai.expect;
 const should = chai.should();
 
 export function runDataIntegrityProofFormatTests({
