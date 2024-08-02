@@ -21,6 +21,7 @@ export function runDataIntegrityProofFormatTests({
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
+    const [issuer] = endpoints;
     beforeEach(function() {
       this.currentTest.cell = {
         columnId,
@@ -30,7 +31,6 @@ export function runDataIntegrityProofFormatTests({
     let proofs = [];
     let data;
     before(async function() {
-      const [issuer] = endpoints;
       if(!issuer) {
         throw new Error(`Expected ${vendorName} to have an issuer.`);
       }
@@ -426,6 +426,40 @@ export function runDataIntegrityProofFormatTests({
         });
       });
     }
+    it('If an @context property is not provided in a document that is ' +
+    'being secured or verified, or the Data Integrity terms used in ' +
+    'the document are not mapped by existing values in the @context ' +
+    'property, implementations MUST inject or add an @context property ' +
+    'with a value of https://w3id.org/security/data-integrity/v2.',
+    async function() {
+      if(!issuer) {
+        throw new Error(`Expected ${vendorName} to have an issuer.`);
+      }
+      const vc = structuredClone(validVc);
+      const expectedContext = 'https://w3id.org/security/data-integrity/v2';
+      // remove the vc's context and expect context injection to occur
+      delete vc['@context'];
+      let err;
+      let data;
+      try {
+        data = await createInitialVc({issuer, vc});
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(
+        err,
+        `Expected issuer ${vendorName} to perform context injection on a ` +
+        `VC with an "@context" property`);
+      should.exist(data, `Expected issuer ${vendorName} to return data.`);
+      data.should.be.an('object', 'Expected response data to be an object.');
+      should.exist(
+        data['@context'],
+        'Expected data to have an injected "@context" property.');
+      if(Array.isArray(data['@context'])) {
+        return data['@context'].should.include(expectedContext);
+      }
+      data['@context'].should.equal(expectedContext);
+    });
   });
 }
 

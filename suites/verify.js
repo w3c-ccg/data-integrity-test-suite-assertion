@@ -27,6 +27,18 @@ export function runDataIntegrityProofVerifyTests({
     before(async function() {
       credentials = await generateTestData({...testDataOptions, optionalTests});
     });
+    it('Conforming processors MUST produce errors when non-conforming ' +
+        'documents are consumed.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=Conforming%20processors%20MUST%20produce%20errors%20when%20non%2Dconforming%20documents%20are%20consumed.';
+      // this could be read as testing all non-confirming docs or just one
+      // for this test only one doc is tested as it should throw for any
+      // non-conforming doc
+      await verificationFail({
+        credential: credentials.clone('invalidProofType'),
+        verifier,
+        reason: 'Should not verify VC with invalid "proof.type"'
+      });
+    });
     it('If the "proof" field is missing, an error MUST be raised.',
       async function() {
         const credential = credentials.clone('issuedVc');
