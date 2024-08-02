@@ -10,7 +10,10 @@ import didCtx from '@digitalcredentials/did-context';
 import multikeyCtx from '@digitalbazaar/multikey-context';
 
 const contextMap = new Map(credentialsContexts);
-
+//FIXME this really should be done in separate documentLoaders
+//so that other tests do not get the modified context
+//FIXME this also should be a structuredClone of the v2 context
+//which replaces the original jsonld context in the contextMap
 const {context: v2Context} = namedCredentialsContexts.get('v2');
 copyTerm({
   context: v2Context,
