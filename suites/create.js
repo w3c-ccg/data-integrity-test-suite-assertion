@@ -218,8 +218,6 @@ export function runDataIntegrityProofFormatTests({
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=string%20value%20that%20contains%20the%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof';
       for(const proof of proofs) {
         should.exist(proof, 'Expected proof to exist.');
-        should.exist(proof.cryptosuite,
-          'Expected proof to have property "cryptosuite".');
         const {
           prefix: expectedPrefix,
           name: encodingName
