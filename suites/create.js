@@ -457,7 +457,7 @@ export function runDataIntegrityProofFormatTests({
       should.not.exist(
         err,
         `Expected issuer ${vendorName} to perform context injection on a ` +
-        `VC with an "@context" property`);
+        `VC with out an "@context" property`);
       should.exist(data, `Expected issuer ${vendorName} to return data.`);
       data.should.be.an('object', 'Expected response data to be an object.');
       should.exist(
