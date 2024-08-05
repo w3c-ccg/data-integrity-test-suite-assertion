@@ -17,7 +17,8 @@ const should = chai.should();
 
 export function runDataIntegrityProofFormatTests({
   endpoints, expectedProofTypes, testDescription,
-  vendorName, cryptosuiteName, credential
+  vendorName, cryptosuiteName, credential,
+  optionalTests = false
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
@@ -156,34 +157,6 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('The date and time the proof was created is OPTIONAL and, if ' +
-    'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
-    'string, either in Universal Coordinated Time (UTC), denoted by a Z at ' +
-    'the end of the value, or with a time zone offset relative to UTC.',
-    function() {
-      this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=The%20date%20and%20time%20the%20proof%20was%20created%20is%20OPTIONAL%20and%2C%20if%20included%2C%20MUST%20be%20specified%20as%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC.';
-      for(const proof of proofs) {
-        if(proof.created) {
-          // check if "created" is a valid XML Schema 1.1 dateTimeStamp
-          // value
-          proof.created.should.match(dateRegex);
-        }
-      }
-    });
-    it('The expires property is OPTIONAL and, if present, specifies when ' +
-    'the proof expires. If present, it MUST be an [XMLSCHEMA11-2] ' +
-    'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
-    'denoted by a Z at the end of the value, or with a time zone offset ' +
-    'relative to UTC.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time';
-      for(const proof of proofs) {
-        if(proof.expires) {
-          // check if "created" is a valid XML Schema 1.1 dateTimeStamp
-          // value
-          proof.expires.should.match(dateRegex);
-        }
-      }
-    });
     it('A verification method is the means and information needed to verify ' +
         'the proof. If included, the value MUST be a string that maps ' +
         'to a [URL]', async function() {
@@ -230,35 +203,6 @@ export function runDataIntegrityProofFormatTests({
           name: encodingName
         } = expectedMultibasePrefix(proof.cryptosuite);
         shouldHaveProofValue({proof, expectedPrefix, encodingName});
-      }
-    });
-    it('The domain property is OPTIONAL. It conveys one or more security ' +
-      'domains in which the proof is meant to be used. If specified, the ' +
-      'associated value MUST be either a string, or an unordered set of ' +
-      'strings. A verifier SHOULD use the value to ensure that the proof ' +
-      'was intended to be used in the security domain in which the verifier ' +
-      'is operating.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=The%20domain%20property%20is%20OPTIONAL.%20It%20conveys%20one%20or%20more%20security%20domains%20in%20which%20the%20proof%20is%20meant%20to%20be%20used.%20If%20specified%2C%20the%20associated%20value%20MUST';
-      for(const proof of proofs) {
-        if(proof.domain) {
-          const validType = isStringOrArrayOfStrings(proof.domain);
-          validType.should.equal(true, 'Expected ' +
-            '"proof.domain" to be either a string or an unordered ' +
-            'set of strings.');
-        }
-      }
-    });
-    it('(challenge) A string value that SHOULD be included in a proof if a ' +
-       'domain is specified.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=A%20string%20value%20that%20SHOULD%20be%20included%20in%20a%20proof%20if%20a%20domain%20is%20specified.';
-      for(const proof of proofs) {
-        if(proof.challenge) {
-          // domain must be specified
-          should.exist(proof.domain, 'Expected "proof.domain" ' +
-            'to be specified.');
-          proof.challenge.should.be.a('string', 'Expected ' +
-            '"proof.challenge" to be a string.');
-        }
       }
     });
     it('if "proof.previousProof" field exists, it MUST be a string.',
@@ -461,43 +405,103 @@ export function runDataIntegrityProofFormatTests({
         });
       });
     }
-    it('If an @context property is not provided in a document that is ' +
-    'being secured or verified, or the Data Integrity terms used in ' +
-    'the document are not mapped by existing values in the @context ' +
-    'property, implementations MUST inject or add an @context property ' +
-    'with a value of https://w3id.org/security/data-integrity/v2.',
-    async function() {
-      if(!issuer) {
-        throw new Error(`Expected ${vendorName} to have an issuer.`);
-      }
-      const vc = structuredClone(credential);
-      const expectedContext = 'https://w3id.org/security/data-integrity/v2';
-      // remove the vc's context and expect context injection to occur
-      delete vc['@context'];
-      let err;
-      let data;
-      try {
-        data = await createInitialVc({
-          issuer,
-          credential: vc
-        });
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(
-        err,
-        `Expected issuer ${vendorName} to perform context injection on a ` +
-        `VC with out an "@context" property`);
-      should.exist(data, `Expected issuer ${vendorName} to return data.`);
-      data.should.be.an('object', 'Expected response data to be an object.');
-      should.exist(
-        data['@context'],
-        'Expected data to have an injected "@context" property.');
-      if(Array.isArray(data['@context'])) {
-        return data['@context'].should.include(expectedContext);
-      }
-      data['@context'].should.equal(expectedContext);
-    });
+    if(optionalTests) {
+      it('When an application is securing a document, if an @context ' +
+      'property is not provided in the document or the Data Integrity ' +
+      'terms used in the document are not mapped by existing values in ' +
+      'the @context property, implementations SHOULD inject or append ' +
+      'an @context property with a value of ' +
+      'https://w3id.org/security/data-integrity/v2 or one or more contexts ' +
+      'with at least the same declarations, such as the Verifiable ' +
+      'Credential Data Model v2.0 context (https://www.w3.org/ns/credentials/v2).',
+      async function() {
+        if(!issuer) {
+          throw new Error(`Expected ${vendorName} to have an issuer.`);
+        }
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#context-injection:~:text=SHOULD%20inject%20or%20append%20an%20%40context%20property%20with%20a%20value%20of%20https%3A//w3id.org/security/data%2Dintegrity/v2';
+        const vc = structuredClone(credential);
+        const expectedContext = 'https://w3id.org/security/data-integrity/v2';
+        // remove the vc's context and expect context injection to occur
+        delete vc['@context'];
+        let err;
+        let data;
+        try {
+          data = await createInitialVc({issuer, vc});
+        } catch(e) {
+          err = e;
+        }
+        should.not.exist(
+          err,
+          `Expected issuer ${vendorName} to perform context injection on a ` +
+          `VC with out an "@context" property`);
+        should.exist(data, `Expected issuer ${vendorName} to return data.`);
+        data.should.be.an('object', 'Expected response data to be an object.');
+        should.exist(
+          data['@context'],
+          'Expected data to have an injected "@context" property.');
+        if(Array.isArray(data['@context'])) {
+          return data['@context'].should.include(expectedContext);
+        }
+        data['@context'].should.equal(expectedContext);
+      });
+      it('The date and time the proof was created is OPTIONAL and, if ' +
+      'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
+      'string, either in Universal Coordinated Time (UTC), denoted by a Z at ' +
+      'the end of the value, or with a time zone offset relative to UTC.',
+      function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=The%20date%20and%20time%20the%20proof%20was%20created%20is%20OPTIONAL%20and%2C%20if%20included%2C%20MUST%20be%20specified%20as%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC.';
+        for(const proof of proofs) {
+          if(proof.created) {
+            // check if "created" is a valid XML Schema 1.1 dateTimeStamp
+            // value
+            proof.created.should.match(dateRegex);
+          }
+        }
+      });
+      it('The expires property is OPTIONAL and, if present, specifies when ' +
+      'the proof expires. If present, it MUST be an [XMLSCHEMA11-2] ' +
+      'dateTimeStamp string, either in Universal Coordinated Time (UTC), ' +
+      'denoted by a Z at the end of the value, or with a time zone offset ' +
+      'relative to UTC.', function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time';
+        for(const proof of proofs) {
+          if(proof.expires) {
+            // check if "created" is a valid XML Schema 1.1 dateTimeStamp
+            // value
+            proof.expires.should.match(dateRegex);
+          }
+        }
+      });
+      it('The domain property is OPTIONAL. It conveys one or more security ' +
+        'domains in which the proof is meant to be used. If specified, the ' +
+        'associated value MUST be either a string, or an unordered set of ' +
+        'strings. A verifier SHOULD use the value to ensure that the proof ' +
+        'was intended to be used in the security domain in which the ' +
+        'verifier is operating.', function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=The%20domain%20property%20is%20OPTIONAL.%20It%20conveys%20one%20or%20more%20security%20domains%20in%20which%20the%20proof%20is%20meant%20to%20be%20used.%20If%20specified%2C%20the%20associated%20value%20MUST';
+        for(const proof of proofs) {
+          if(proof.domain) {
+            const validType = isStringOrArrayOfStrings(proof.domain);
+            validType.should.equal(true, 'Expected ' +
+              '"proof.domain" to be either a string or an unordered ' +
+              'set of strings.');
+          }
+        }
+      });
+      it('(challenge) A string value that SHOULD be included in a proof if a ' +
+         'domain is specified.', function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#verify-proof:~:text=A%20string%20value%20that%20SHOULD%20be%20included%20in%20a%20proof%20if%20a%20domain%20is%20specified.';
+        for(const proof of proofs) {
+          if(proof.challenge) {
+            // domain must be specified
+            should.exist(proof.domain, 'Expected "proof.domain" ' +
+              'to be specified.');
+            proof.challenge.should.be.a('string', 'Expected ' +
+              '"proof.challenge" to be a string.');
+          }
+        }
+      });
+    }
   });
 }
 
