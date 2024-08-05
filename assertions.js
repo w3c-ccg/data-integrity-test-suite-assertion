@@ -39,7 +39,12 @@ export async function verificationFail({
   return {result, error};
 }
 
-export async function issuanceFail({credential, issuer, reason, options = {}}) {
+export async function shouldFailIssuance({
+  credential,
+  issuer,
+  reason,
+  options = {}
+}) {
   const {settings: {id: issuerId, options: issuerOptions}} = issuer;
   credential.issuer = issuerId;
   const body = {
