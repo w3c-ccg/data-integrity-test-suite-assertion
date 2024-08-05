@@ -183,6 +183,22 @@ export function runDataIntegrityProofVerifyTests({
           }
         });
       });
+      // we can't tell if its interpreted correctly but we can ensure their
+      // verifier at least takes timestamps without Z or an offset.
+      it('A conforming processor MAY chose to consume time values that ' +
+        'were incorrectly serialized without an offset.', async function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#proofs:~:text=be%20a%20string.-,created,-The%20date%20and';
+        const credential = credentials.clone('noOffsetCreated');
+        await verificationFail({credential, verifier});
+      });
+      it('A conforming processor MAY chose to consume time values that ' +
+        'were incorrectly serialized without an offset.', async function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#proofs:~:text=interpreted%20as%20UTC.-,expires,-The%20expires%20property';
+        await verificationFail({
+          credential: credentials.clone('noOffsetExpires'),
+          verifier
+        });
+      });
     }
   });
 }
