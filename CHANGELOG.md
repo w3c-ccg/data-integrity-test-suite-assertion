@@ -1,5 +1,10 @@
 # data-integrity-test-suite-assertion Changelog
 
+## 1.4.0 -
+
+### Added
+- A new parameter `optionalTests` to `checkDataIntegrityProofFormat`.
+
 ## 1.3.0 - 2024-08-02
 
 ### Added
