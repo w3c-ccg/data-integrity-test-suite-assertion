@@ -42,7 +42,7 @@
     "@digitalbazaar/ed25519-multikey": "^1.0.1",
     "@digitalbazaar/eddsa-2022-cryptosuite": "^1.0.0",
     "@digitalbazaar/multikey-context": "^2.0.1",
-    "@digitalbazaar/vc": "github:digitalbazaar/vc#update-vc-2.0",
+    "@digitalbazaar/vc": "^7.0.0",
     "@digitalcredentials/did-context": "^1.0.0",
     "jsonld": "^8.3.2",
     "jsonld-document-loader": "^2.0.0",
