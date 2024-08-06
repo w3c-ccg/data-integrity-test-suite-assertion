@@ -125,22 +125,6 @@ export function runDataIntegrityProofVerifyTests({
         const credential = credentials.clone('invalidCreated');
         await verificationFail({credential, verifier});
       });
-      // we can't tell if its interpreted correctly but we can ensure their
-      // verifier at least takes timestamps without Z or an offset.
-      it('(created) Time values that are incorrectly serialized without an ' +
-      'offset MUST be interpreted as UTC.', async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=relative%20to%20UTC.-,Time%20values%20that%20are%20incorrectly%20serialized%20without%20an%20offset%20MUST%20be%20interpreted%20as%20UTC.,-expires';
-        const credential = credentials.clone('noOffsetCreated');
-        await verificationFail({credential, verifier});
-      });
-      it('(expires) Time values that are incorrectly serialized without an ' +
-      'offset MUST be interpreted as UTC.', async function() {
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=relative%20to%20UTC.-,Time%20values%20that%20are%20incorrectly%20serialized%20without%20an%20offset%20MUST%20be%20interpreted%20as%20UTC.,-domain';
-        await verificationFail({
-          credential: credentials.clone('noOffsetExpires'),
-          verifier
-        });
-      });
     }
     it('The value of the cryptosuite property MUST be a string that ' +
     'identifies the cryptographic suite. If the processing environment ' +
@@ -173,6 +157,22 @@ export function runDataIntegrityProofVerifyTests({
             domain: 'domain.example',
             challenge: '1235abcd6789'
           }
+        });
+      });
+      // we can't tell if its interpreted correctly but we can ensure their
+      // verifier at least takes timestamps without Z or an offset.
+      it('A conforming processor MAY chose to consume time values that ' +
+        'were incorrectly serialized without an offset.', async function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#proofs:~:text=be%20a%20string.-,created,-The%20date%20and';
+        const credential = credentials.clone('noOffsetCreated');
+        await verificationFail({credential, verifier});
+      });
+      it('A conforming processor MAY chose to consume time values that ' +
+        'were incorrectly serialized without an offset.', async function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#proofs:~:text=interpreted%20as%20UTC.-,expires,-The%20expires%20property';
+        await verificationFail({
+          credential: credentials.clone('noOffsetExpires'),
+          verifier
         });
       });
     }
