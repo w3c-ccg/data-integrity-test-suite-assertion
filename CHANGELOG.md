@@ -1,5 +1,11 @@
 # data-integrity-test-suite-assertion Changelog
 
+## 1.3.1 -
+
+### Fixed
+- Adds a documentLoader to all issuer suite tests.
+- Fixes minor issues with verify suite.
+
 ## 1.3.0 - 2024-08-02
 
 ### Added
