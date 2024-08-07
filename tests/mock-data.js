@@ -10,7 +10,12 @@ const require = createRequire(import.meta.url);
 const issuedVc = require('./fixtures/issuedVc.json');
 
 export class MockIssuer {
-  constructor({tags, suite, documentLoader}) {
+  constructor({
+    tags,
+    suite,
+    documentLoader,
+    contexts = ['https://www.w3.org/2018/credentials/v1']
+  }) {
     this._tags = tags;
     this.settings = {
       id: 'did:example:issuer',
@@ -18,6 +23,7 @@ export class MockIssuer {
     };
     this.suite = suite;
     this.documentLoader = documentLoader;
+    this.contexts = contexts;
   }
   get tags() {
     return new Set(this._tags);
@@ -28,6 +34,9 @@ export class MockIssuer {
     let statusCode = 201;
     try {
       const {credential} = json;
+      if(!('@context' in credential)) {
+        credential['@context'] = [...this.contexts];
+      }
       data = await vc.issue({
         credential,
         documentLoader: this.documentLoader,
