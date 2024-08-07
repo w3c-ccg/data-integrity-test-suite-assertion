@@ -9,6 +9,7 @@ import {
 } from '../assertions.js';
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
+import {documentLoader} from '../vc-generator/documentLoader.js';
 import jsonld from 'jsonld';
 import {validVc} from '../index.js';
 
@@ -71,7 +72,7 @@ export function runDataIntegrityProofFormatTests({
         const expanded = await jsonld.expand({
           '@context': data['@context'],
           type: proof.type
-        });
+        }, {documentLoader});
         for(const term of expanded) {
           const types = term[prop];
           should.exist(types, 'Expected @type to exist.');
@@ -191,7 +192,8 @@ export function runDataIntegrityProofFormatTests({
             ...proof
           },
           term: 'https://w3id.org/security#verificationMethod',
-          prop: '@id'
+          prop: '@id',
+          documentLoader
         });
       }
     });
@@ -207,7 +209,8 @@ export function runDataIntegrityProofFormatTests({
             ...proof
           },
           term: 'https://w3id.org/security#proofPurpose',
-          prop: '@id'
+          prop: '@id',
+          documentLoader
         });
       }
     });
@@ -331,7 +334,7 @@ export function runDataIntegrityProofFormatTests({
             '@context': data['@context'],
             cryptosuite,
             type
-          });
+          }, {documentLoader});
           for(const terms of expanded) {
             const cryptoProperties = terms[cryptoProp];
             should.exist(cryptoProperties,
