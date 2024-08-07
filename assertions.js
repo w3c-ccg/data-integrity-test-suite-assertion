@@ -176,8 +176,8 @@ export function shouldHaveProof({vc}) {
   should.exist(proof, 'Expected proof to exist.');
 }
 
-export async function shouldMapToUrl({doc, term, prop}) {
-  const expanded = await jsonld.expand({...doc});
+export async function shouldMapToUrl({doc, term, prop, documentLoader}) {
+  const expanded = await jsonld.expand({...doc}, {documentLoader});
   for(const terms of expanded) {
     const termProps = terms[term];
     should.exist(termProps,
