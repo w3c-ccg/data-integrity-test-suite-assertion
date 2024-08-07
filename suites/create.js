@@ -471,7 +471,10 @@ export function runDataIntegrityProofFormatTests({
       let err;
       let data;
       try {
-        data = await createInitialVc({issuer, vc});
+        data = await createInitialVc({
+          issuer,
+          credential: vc
+        });
       } catch(e) {
         err = e;
       }
