@@ -27,8 +27,6 @@ copyTerm({
   newTerm: 'UnknownProofType'
 });
 const diCtx = _dataIntegrityCtx['@context'];
-// add UnknownProofType to local context for test data
-diCtx.UnknownProofType = structuredClone(diCtx.DataIntegrityProof);
 // add invalidPurpose to context for test data
 // //FIXME this should be in a separate documentLoader
 diCtx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose = {
@@ -37,7 +35,7 @@ diCtx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose = {
   '@container': '@set'
 };
 //FIXME this should be in a separate documentLoader
-diCtx.undefinedTerm = {
+v2Context['@context'].undefinedTerm = diCtx.undefinedTerm = {
   '@id': 'https://w3id.org/security#undefinedTerm',
   '@type': 'https://w3id.org/security#termString'
 };
