@@ -19,25 +19,35 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
       implemented: validVerifierImplementations,
     });
   });
-  for(const [suiteName, _testDataOptions] of cryptosuites) {
-    for(const [version, credential] of versionedCredentials) {
-      describe(`VC ${version}`, function() {
-        describe('should run verifier tests with suite ' +
-          suiteName, async function() {
-          const testDataOptions = structuredClone(_testDataOptions);
-          before(async function() {
-            testDataOptions.key = await getMultiKey({
-              ...testDataOptions
-            });
-            testDataOptions.testVector = structuredClone(credential);
-          });
-          await checkDataIntegrityProofVerifyErrors({
-            implemented: validVerifierImplementations,
-            testDataOptions,
-            optionalTests: testDataOptions.optionalTests
-          });
-        });
+});
+
+describe('should verify all suites', function() {
+  for(const [suiteName, testDataOptions] of cryptosuites) {
+    for(const [vcVersion, credential] of versionedCredentials) {
+      _runSuite({
+        suiteName,
+        vcVersion,
+        testDataOptions,
+        credential
       });
     }
   }
 });
+
+function _runSuite({
+  suiteName, vcVersion, testDataOptions, credential
+}) {
+  return describe(`VC ${vcVersion} Suite ${suiteName}`, async function() {
+    before(async function() {
+      testDataOptions.key = await getMultiKey({
+        ...testDataOptions
+      });
+      testDataOptions.testVector = structuredClone(credential);
+    });
+    checkDataIntegrityProofVerifyErrors({
+      implemented: validVerifierImplementations,
+      testDataOptions,
+      optionalTests: testDataOptions.optionalTests
+    });
+  });
+}
