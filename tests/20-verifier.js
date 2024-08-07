@@ -19,16 +19,17 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
       implemented: validVerifierImplementations,
     });
   });
-  for(const [suiteName, testDataOptions] of cryptosuites) {
+  for(const [suiteName, _testDataOptions] of cryptosuites) {
     for(const [version, credential] of versionedCredentials) {
       describe(`VC ${version}`, function() {
-        testDataOptions.testVector = credential;
         describe('should run verifier tests with suite ' +
           suiteName, async function() {
+          const testDataOptions = structuredClone(_testDataOptions);
           before(async function() {
             testDataOptions.key = await getMultiKey({
               ...testDataOptions
             });
+            testDataOptions.testVector = structuredClone(credential);
           });
           await checkDataIntegrityProofVerifyErrors({
             implemented: validVerifierImplementations,
@@ -36,7 +37,6 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
             optionalTests: testDataOptions.optionalTests
           });
         });
-
       });
     }
   }
