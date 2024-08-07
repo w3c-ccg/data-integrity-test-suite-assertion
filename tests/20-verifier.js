@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2023 Digital Bazaar, Inc.
+ * Copyright (c) 2023-2024 Digital Bazaar, Inc.
  */
 import {checkDataIntegrityProofVerifyErrors} from '../index.js';
 import {cryptosuites} from './fixtures/constants.js';

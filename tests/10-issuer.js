@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2022 Digital Bazaar, Inc.
+ * Copyright (c) 2022-2024 Digital Bazaar, Inc.
  */
 import {checkDataIntegrityProofFormat} from '../index.js';
 import {createSuite} from './helpers.js';
