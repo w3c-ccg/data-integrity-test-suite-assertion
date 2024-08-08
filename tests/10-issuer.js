@@ -3,9 +3,7 @@
  */
 import {checkDataIntegrityProofFormat} from '../index.js';
 import {createSuite} from './helpers.js';
-import {cryptosuites} from './fixtures/constants.js';
 import {documentLoader} from '../vc-generator/documentLoader.js';
-import {getMultiKey} from './fixtures/keys/index.js';
 import {MockIssuer} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
 
@@ -22,7 +20,7 @@ describe('Test checkDataIntegrityProofFormat()', function() {
 });
 
 describe('should issue all suites', function() {
-  for(const [suiteName, testDataOptions] of cryptosuites) {
+  for(const [suiteName, testDataOptions] of this.cryptosuites) {
     for(const [vcVersion, credential] of versionedCredentials) {
       _runSuite({
         suiteName,
@@ -39,10 +37,7 @@ function _runSuite({suiteName, vcVersion, testDataOptions, credential}) {
     const implemented = new Map();
     before(async function() {
       try {
-        const key = await getMultiKey({
-          ...testDataOptions
-        });
-        const {mandatoryPointers, cryptosuite} = testDataOptions;
+        const {mandatoryPointers, cryptosuite, key} = testDataOptions;
         const signer = key.signer();
         const suite = createSuite({signer, cryptosuite, mandatoryPointers});
         // pass the VC's context to the issuer

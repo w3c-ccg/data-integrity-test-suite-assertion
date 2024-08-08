@@ -17,7 +17,7 @@ import {
 import {cryptosuite as eddsaRdfc2022CryptoSuite} from
   '@digitalbazaar/eddsa-rdfc-2022-cryptosuite';
 
-export const cryptosuites = new Map([
+export const cryptosuites = [
   ['ecdsa-sd-2023', {
     suiteName: 'ecdsa-sd-2023',
     keyType: 'P-256',
@@ -83,4 +83,4 @@ export const cryptosuites = new Map([
     multikey: Ed25519Multikey,
     serializedKeys: 'eddsa/p25519KeyPair.json'
   }]
-]);
+];
