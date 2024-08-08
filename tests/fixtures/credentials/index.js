@@ -9,6 +9,6 @@ import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 
 export const versionedCredentials = new Map([
-  ['1.1', require('./v1.json')],
-  ['2.0', require('./v2.json')]
+  ['1.1', require('./dl-v1.json')],
+  ['2.0', require('./dl-v2.json')]
 ]);
