@@ -30,7 +30,7 @@ export const validVc = require('./validVc.json');
  */
 export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
-  cryptosuiteName, isEcdsaTests = false,
+  cryptosuiteName, isEcdsaTests = false, credential = validVc,
   testDescription = 'Data Integrity (issuer)'
 } = {}) {
   return describe(testDescription, function() {
@@ -52,15 +52,15 @@ export function checkDataIntegrityProofFormat({
             const keyType = checkKeyType(supportedEcdsaKeyType);
             this.implemented.push(`${vendorName}: ${keyType}`);
             runDataIntegrityProofFormatTests({
-              cryptosuiteName, endpoints, expectedProofTypes,
+              cryptosuiteName, endpoints, expectedProofTypes, credential,
               testDescription: `${vendorName}: ${keyType}`, vendorName
             });
           }
         } else {
           this.implemented.push(vendorName);
           runDataIntegrityProofFormatTests({
-            cryptosuiteName, endpoints, expectedProofTypes,
-            testDescription: vendorName, vendorName
+            cryptosuiteName, credential, endpoints,
+            expectedProofTypes, testDescription: vendorName, vendorName
           });
         }
       }
