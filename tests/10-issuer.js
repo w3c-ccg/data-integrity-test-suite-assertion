@@ -33,32 +33,25 @@ describe('should issue all suites', function() {
 });
 
 function _runSuite({vcVersion, testDataOptions, credential}) {
-  const {suiteName} = testDataOptions;
-  return describe(`VC ${vcVersion} Suite ${suiteName}`, async function() {
-    const implemented = new Map();
-    before(function() {
-      try {
-        const {mandatoryPointers, cryptosuite, key} = testDataOptions;
-        const signer = key.signer();
-        const suite = createSuite({signer, cryptosuite, mandatoryPointers});
-        // pass the VC's context to the issuer
-        const {'@context': contexts} = credential;
-        const issuer = new MockIssuer({
-          tags, suite,
-          contexts, documentLoader
-        });
-        implemented.set(suiteName, {endpoints: [issuer]});
-      } catch(e) {
-        console.error(e);
-      }
-    });
-    it('foo', function() {
+  const {suiteName, keyType = ''} = testDataOptions;
+  return describe(`VC ${vcVersion} Suite ${suiteName} keyType ${keyType}`,
+    function() {
+      const implemented = new Map();
+      const {mandatoryPointers, cryptosuite, key} = testDataOptions;
+      const signer = key.signer();
+      const suite = createSuite({signer, cryptosuite, mandatoryPointers});
+      // pass the VC's context to the issuer
+      const {'@context': contexts} = credential;
+      const issuer = new MockIssuer({
+        tags, suite,
+        contexts, documentLoader
+      });
+      implemented.set(suiteName, {endpoints: [issuer]});
       checkDataIntegrityProofFormat({
         implemented,
         tag,
         credential,
-        cryptosuiteName: suiteName
+        cryptosuiteName: suiteName,
       });
     });
-  });
 }
