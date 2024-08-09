@@ -381,18 +381,21 @@ export function runDataIntegrityProofFormatTests({
       it('When an application is securing a document, if an @context ' +
       'property is not provided in the document or the Data Integrity ' +
       'terms used in the document are not mapped by existing values in ' +
-      'the @context property, implementations SHOULD inject or append ' +
-      'an @context property with a value of ' +
-      'https://w3id.org/security/data-integrity/v2 or one or more contexts ' +
-      'with at least the same declarations, such as the Verifiable ' +
-      'Credential Data Model v2.0 context (https://www.w3.org/ns/credentials/v2).',
+      'the @context property, implementations SHOULD inject or append an ' +
+      '@context property with a value of https://w3id.org/security/data' +
+      '-integrity/v2 or one or more contexts with at least the same ' +
+      'declarations, such as the Verifiable Credential Data Model v2.0 ' +
+      'context (https://www.w3.org/ns/credentials/v2).',
       async function() {
         if(!issuer) {
           throw new Error(`Expected ${vendorName} to have an issuer.`);
         }
-        this.test.link = 'https://w3c.github.io/vc-data-integrity/#context-injection:~:text=SHOULD%20inject%20or%20append%20an%20%40context%20property%20with%20a%20value%20of%20https%3A//w3id.org/security/data%2Dintegrity/v2';
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#context-injection:~:text=if%20an%20%40context%20property%20is%20not%20provided%20in%20the%20document%20or%20the%20Data%20Integrity%20terms%20used%20in%20the%20document%20are%20not%20mapped%20by%20existing%20values%20in%20the%20%40context%20property%2C%20implementations%20SHOULD%20inject%20or%20append';
         const vc = structuredClone(validVc);
-        const expectedContext = 'https://w3id.org/security/data-integrity/v2';
+        const expectedContexts = [
+          'https://w3id.org/security/data-integrity/v2',
+          'https://www.w3.org/ns/credentials/v2'
+        ];
         // remove the vc's context and expect context injection to occur
         delete vc['@context'];
         let err;
@@ -408,13 +411,15 @@ export function runDataIntegrityProofFormatTests({
           `VC with out an "@context" property`);
         should.exist(data, `Expected issuer ${vendorName} to return data.`);
         data.should.be.an('object', 'Expected response data to be an object.');
-        should.exist(
-          data['@context'],
+        should.exist(data['@context'],
           'Expected data to have an injected "@context" property.');
         if(Array.isArray(data['@context'])) {
-          return data['@context'].should.include(expectedContext);
+          const hasExpectedContext = expectedContexts.some(
+            ctx => data['@context'].includes(ctx));
+          return hasExpectedContext.should.equal(true,
+            `Expected injected context to contain one of ${expectedContexts}`);
         }
-        data['@context'].should.equal(expectedContext);
+        data['@context'].should.be.oneOf(expectedContexts);
       });
       it('The date and time the proof was created is OPTIONAL and, if ' +
       'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
