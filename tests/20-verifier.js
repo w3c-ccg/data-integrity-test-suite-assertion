@@ -3,7 +3,6 @@
  */
 import {checkDataIntegrityProofVerifyErrors} from '../index.js';
 import {cryptosuites} from './fixtures/constants.js';
-import {getMultiKey} from './fixtures/keys/index.js';
 import {validVerifierImplementations} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
 
@@ -22,10 +21,9 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
 });
 
 describe('should verify all suites', function() {
-  for(const [suiteName, testDataOptions] of cryptosuites) {
+  for(const testDataOptions of cryptosuites) {
     for(const [vcVersion, credential] of versionedCredentials) {
       _runSuite({
-        suiteName,
         vcVersion,
         testDataOptions,
         credential
@@ -35,19 +33,17 @@ describe('should verify all suites', function() {
 });
 
 function _runSuite({
-  suiteName, vcVersion, testDataOptions, credential
+  vcVersion, testDataOptions, credential
 }) {
-  return describe(`VC ${vcVersion} Suite ${suiteName}`, async function() {
-    before(async function() {
-      testDataOptions.key = await getMultiKey({
-        ...testDataOptions
+  return describe(`VC ${vcVersion} Suite ${testDataOptions.suiteName}`,
+    async function() {
+      before(async function() {
+        testDataOptions.testVector = structuredClone(credential);
       });
-      testDataOptions.testVector = structuredClone(credential);
+      checkDataIntegrityProofVerifyErrors({
+        implemented: validVerifierImplementations,
+        testDataOptions,
+        optionalTests: testDataOptions.optionalTests
+      });
     });
-    checkDataIntegrityProofVerifyErrors({
-      implemented: validVerifierImplementations,
-      testDataOptions,
-      optionalTests: testDataOptions.optionalTests
-    });
-  });
 }
