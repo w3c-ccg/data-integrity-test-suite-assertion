@@ -3,6 +3,7 @@
  */
 import {checkDataIntegrityProofFormat} from '../index.js';
 import {createSuite} from './helpers.js';
+import {cryptosuites} from './fixtures/constants.js';
 import {documentLoader} from '../vc-generator/documentLoader.js';
 import {MockIssuer} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
@@ -20,10 +21,9 @@ describe('Test checkDataIntegrityProofFormat()', function() {
 });
 
 describe('should issue all suites', function() {
-  for(const [suiteName, testDataOptions] of this.cryptosuites) {
+  for(const testDataOptions of cryptosuites) {
     for(const [vcVersion, credential] of versionedCredentials) {
       _runSuite({
-        suiteName,
         vcVersion,
         testDataOptions,
         credential
@@ -32,27 +32,33 @@ describe('should issue all suites', function() {
   }
 });
 
-function _runSuite({suiteName, vcVersion, testDataOptions, credential}) {
+function _runSuite({vcVersion, testDataOptions, credential}) {
+  const {suiteName} = testDataOptions;
   return describe(`VC ${vcVersion} Suite ${suiteName}`, async function() {
     const implemented = new Map();
-    before(async function() {
+    before(function() {
       try {
         const {mandatoryPointers, cryptosuite, key} = testDataOptions;
         const signer = key.signer();
         const suite = createSuite({signer, cryptosuite, mandatoryPointers});
         // pass the VC's context to the issuer
         const {'@context': contexts} = credential;
-        const issuer = new MockIssuer({tags, suite, contexts, documentLoader});
+        const issuer = new MockIssuer({
+          tags, suite,
+          contexts, documentLoader
+        });
         implemented.set(suiteName, {endpoints: [issuer]});
       } catch(e) {
         console.error(e);
       }
     });
-    checkDataIntegrityProofFormat({
-      implemented,
-      tag,
-      credential,
-      cryptosuiteName: suiteName
+    it('foo', function() {
+      checkDataIntegrityProofFormat({
+        implemented,
+        tag,
+        credential,
+        cryptosuiteName: suiteName
+      });
     });
   });
 }

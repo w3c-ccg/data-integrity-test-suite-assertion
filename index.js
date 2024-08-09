@@ -26,6 +26,7 @@ export const validVc = require('./validVc.json');
  *   the test description. The default value is set to
  *   `Data Integrity (issuer)`.
  *
+ * @param options.credential
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
