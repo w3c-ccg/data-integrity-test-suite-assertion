@@ -251,10 +251,20 @@ function noOffsetExpires({suite, selectiveSuite, ...args}) {
 
 function invalidBaseUrl({credential, ...args}) {
   const _credential = structuredClone(credential);
-  _credential['@context'].push({
+  const invalidBaseContext = {
     '@base': 'https://invalid.example.com/',
     '@vocab': '/vocab/'
-  });
-  _credential.type.push('UndefinedCredential');
+  };
+  if(Array.isArray(_credential['@context'])) {
+    _credential['@context'].push(invalidBaseContext);
+  } else {
+    _credential['@context'] = [_credential['@context'], invalidBaseContext];
+  }
+  const relativeType = 'UndefinedCredential';
+  if(Array.isArray(_credential.type)) {
+    _credential.type.push(relativeType);
+  } else {
+    _credential.type = [_credential.type, relativeType];
+  }
   return {...args, credential: _credential};
 }
