@@ -33,6 +33,7 @@ export const generators = {
     invalidCryptosuite,
     invalidProofPurpose,
     invalidProofType,
+    invalidBaseUrl,
     invalidVm,
     undefinedTerm
   },
@@ -246,4 +247,14 @@ function noOffsetExpires({suite, selectiveSuite, ...args}) {
     selectiveSuite.proof = {...suite.proof, ...selectiveSuite.proof};
   }
   return {...args, suite, selectiveSuite};
+}
+
+function invalidBaseUrl({credential, ...args}) {
+  const _credential = structuredClone(credential);
+  _credential['@context'].push({
+    '@base': 'https://invalid.example.com/',
+    '@vocab': '/vocab/'
+  });
+  _credential.type.push('UndefinedCredential');
+  return {...args, credential: _credential};
 }
