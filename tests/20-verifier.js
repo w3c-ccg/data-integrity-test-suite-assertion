@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2024 Digital Bazaar, Inc.
  */
 import {checkDataIntegrityProofVerifyErrors} from '../index.js';
-import {cryptosuites} from './fixtures/constants.js';
+import {cryptosuites} from './fixtures/cryptosuites.js';
 import {validVerifierImplementations} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
 

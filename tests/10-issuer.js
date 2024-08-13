@@ -3,7 +3,7 @@
  */
 import {checkDataIntegrityProofFormat} from '../index.js';
 import {createSuite} from './helpers.js';
-import {cryptosuites} from './fixtures/constants.js';
+import {cryptosuites} from './fixtures/cryptosuites.js';
 import {documentLoader} from '../vc-generator/documentLoader.js';
 import {MockIssuer} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
