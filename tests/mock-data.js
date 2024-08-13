@@ -3,6 +3,8 @@
  */
 import * as vc from '@digitalbazaar/vc';
 import {createRequire} from 'node:module';
+import {verifierSuites} from './fixtures/cryptosuites.js';
+
 // FIXME remove this once node has non-experimental support
 // for importing json via import
 // @see https://nodejs.org/api/esm.html#json-modules
@@ -57,7 +59,8 @@ export class MockIssuer {
 }
 
 class MockVerifier {
-  constructor({tags}) {
+  constructor({tags, documentLoader}) {
+    this.documentLoader = documentLoader;
     this._tags = tags;
     this.settings = {
       id: 'did:verifier:foo',
@@ -71,10 +74,16 @@ class MockVerifier {
   }
   async post({json}) {
     const {verifiableCredential, options} = json;
-    // verifier must return error for all the tests to pass.
-    const error = new Error('vc is invalid');
-    error.status = 400;
-    return {error};
+    const result = await vc.verifyCredential({
+      credential: verifiableCredential,
+      suite: verifierSuites,
+      documentLoader: this.documentLoader,
+      ...options
+    });
+    if(result.verified) {
+      return {data: {...result}, result: {status: 201}, statusCode: 201};
+    }
+    return {data: {...result}, error: {status: 400}, statusCode: 400};
   }
 }
 
