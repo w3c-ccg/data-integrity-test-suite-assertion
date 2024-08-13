@@ -8,6 +8,7 @@ import * as EcdsaMultikey from '@digitalbazaar/ecdsa-multikey';
 import * as ecdsaSd2023Cryptosuite from
   '@digitalbazaar/ecdsa-sd-2023-cryptosuite';
 import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
+import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import {
   cryptosuite as ecdsaRdfc2019Cryptosuite
 } from '@digitalbazaar/ecdsa-rdfc-2019-cryptosuite';
@@ -21,6 +22,7 @@ import {getMultiKey} from './keys/index.js';
 export const cryptosuites = [{
   suiteName: 'ecdsa-sd-2023',
   keyType: 'P-256',
+  derived: true,
   mandatoryPointers: ['/issuer'],
   selectivePointers: ['/credentialSubject/id'],
   optionalTests: {
@@ -36,6 +38,7 @@ export const cryptosuites = [{
 {
   suiteName: 'bbs-2023',
   keyType: 'P-381',
+  derived: true,
   mandatoryPointers: ['/issuer'],
   selectivePointers: ['/credentialSubject/id'],
   optionalTests: {
@@ -100,3 +103,19 @@ for(const suite of cryptosuites) {
     serializedKeys, multikey, keyType
   });
 }
+
+export const verifierSuites = cryptosuites.map(({
+  cryptosuite,
+  mandatoryPointers,
+  derived
+}) => {
+console.log({derived, mandatoryPointers, cryptosuite});
+  if(derived) {
+    return new DataIntegrityProof({
+      cryptosuite: cryptosuite.createVerifyCryptosuite({mandatoryPointers})
+    });
+  }
+  return new DataIntegrityProof({
+    cryptosuite
+  });
+});
