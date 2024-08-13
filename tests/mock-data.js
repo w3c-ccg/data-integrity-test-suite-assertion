@@ -69,7 +69,8 @@ class MockVerifier {
   get tags() {
     return new Set(this._tags);
   }
-  async post() {
+  async post({json}) {
+    const {verifiableCredential, options} = json;
     // verifier must return error for all the tests to pass.
     const error = new Error('vc is invalid');
     error.status = 400;
