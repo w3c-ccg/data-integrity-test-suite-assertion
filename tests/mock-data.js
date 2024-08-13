@@ -3,6 +3,9 @@
  */
 import * as vc from '@digitalbazaar/vc';
 import {createRequire} from 'node:module';
+import {
+  documentLoader as defaultLoader
+} from '../vc-generator/documentLoader.js';
 import {verifierSuites} from './fixtures/cryptosuites.js';
 
 // FIXME remove this once node has non-experimental support
@@ -59,7 +62,10 @@ export class MockIssuer {
 }
 
 class MockVerifier {
-  constructor({tags, documentLoader}) {
+  constructor({
+    tags,
+    documentLoader = defaultLoader
+  }) {
     this.documentLoader = documentLoader;
     this._tags = tags;
     this.settings = {
