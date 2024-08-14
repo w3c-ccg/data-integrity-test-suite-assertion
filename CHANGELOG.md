@@ -6,7 +6,11 @@
 - A new parameter `optionalTests` to `checkDataIntegrityProofFormat`.
 - A new parameter `credential` to `checkDataIntegrityProofFormat`.
 
-## 1.3.1 -
+## 1.3.1 - 2024-08-07
+
+### Added
+- export new API `createDocLoader` that can create documentLoaders with
+  contexts & did key support.
 
 ### Fixed
 - Adds a documentLoader to all issuer suite tests.

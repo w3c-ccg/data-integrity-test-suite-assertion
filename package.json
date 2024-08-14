@@ -39,6 +39,7 @@
     "@digitalbazaar/credentials-context": "^3.1.0",
     "@digitalbazaar/data-integrity": "^2.1.0",
     "@digitalbazaar/data-integrity-context": "^2.0.1",
+    "@digitalbazaar/did-method-key": "^5.2.0",
     "@digitalbazaar/ed25519-multikey": "^1.0.1",
     "@digitalbazaar/eddsa-2022-cryptosuite": "^1.0.0",
     "@digitalbazaar/multikey-context": "^2.0.1",
