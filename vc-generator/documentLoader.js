@@ -24,3 +24,16 @@ export const documentLoader = async url => {
     };
   }
 };
+
+export function createDocLoader({contexts, dids = []}) {
+  return async url => {
+    const document = contexts.get(url);
+    if(document) {
+      return {
+        contextUrl: null,
+        documentUrl: url,
+        document
+      };
+    }
+  };
+}
