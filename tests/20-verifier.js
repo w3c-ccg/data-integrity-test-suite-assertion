@@ -3,6 +3,7 @@
  */
 import {checkDataIntegrityProofVerifyErrors} from '../index.js';
 import {cryptosuites} from './fixtures/cryptosuites.js';
+import {documentLoader} from './fixtures/documentLoader.js';
 import {validVerifierImplementations} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
 

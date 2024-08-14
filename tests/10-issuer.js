@@ -1,9 +1,10 @@
 /*!
  * Copyright (c) 2022-2024 Digital Bazaar, Inc.
  */
-import {checkDataIntegrityProofFormat, createDocLoader} from '../index.js';
+import {checkDataIntegrityProofFormat} from '../index.js';
 import {createSuite} from './helpers.js';
 import {cryptosuites} from './fixtures/cryptosuites.js';
+import {documentLoader} from './fixtures/documentLoader.js';
 import {MockIssuer} from './mock-data.js';
 import {versionedCredentials} from './fixtures/credentials/index.js';
 
@@ -43,7 +44,7 @@ function _runSuite({vcVersion, testDataOptions, credential}) {
       const {'@context': contexts} = credential;
       const issuer = new MockIssuer({
         tags, suite,
-        contexts, documentLoader: createDocLoader()
+        contexts, documentLoader
       });
       implemented.set(suiteName, {endpoints: [issuer]});
       checkDataIntegrityProofFormat({
