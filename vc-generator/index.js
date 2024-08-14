@@ -40,6 +40,7 @@ export async function generateTestData({
   cryptosuite = eddsa2022CryptoSuite,
   mandatoryPointers,
   selectivePointers,
+  documentLoader,
   verify,
   optionalTests,
   testVector = validVc
@@ -64,7 +65,7 @@ export async function generateTestData({
       verify
     });
     const testData = await issueCloned(
-      generator({suite, selectiveSuite, credential}));
+      generator({suite, selectiveSuite, credential, loader: documentLoader}));
     vcCache.get(suiteName).set(id, testData);
   }
   return {

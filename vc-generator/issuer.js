@@ -2,7 +2,7 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as vc from '@digitalbazaar/vc';
-import {documentLoader} from './documentLoader.js';
+import {documentLoader as defaultLoader} from './documentLoader.js';
 import jsigs from 'jsonld-signatures';
 
 const {CredentialIssuancePurpose} = vc;
@@ -23,7 +23,7 @@ const {CredentialIssuancePurpose} = vc;
  * @returns {Promise<object>} - An issued VC.
  */
 export async function issueCloned({
-  suite, selectiveSuite, credential, loader = documentLoader,
+  suite, selectiveSuite, credential, loader = defaultLoader,
   purpose = new CredentialIssuancePurpose(),
 }) {
   const verifiableCredential = await vc.issue({
@@ -46,7 +46,7 @@ export async function issueCloned({
 export async function deriveCloned({
   verifiableCredential,
   selectiveSuite,
-  loader = documentLoader,
+  loader = defaultLoader,
   purpose = new CredentialIssuancePurpose(),
 }) {
   return jsigs.derive(verifiableCredential, {
