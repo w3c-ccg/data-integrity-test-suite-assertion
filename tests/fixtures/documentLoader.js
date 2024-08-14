@@ -4,8 +4,10 @@
  */
 import * as Bls12381Multikey from '@digitalbazaar/bls12-381-multikey';
 import * as EcdsaMultikey from '@digitalbazaar/ecdsa-multikey';
-import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
 import {createDocLoader} from '../../index.js';
+import {
+  Ed25519VerificationKey2020
+} from '@digitalbazaar/ed25519-verification-key-2020';
 
 export const documentLoader = createDocLoader({
   keyTypes: [{
@@ -13,7 +15,7 @@ export const documentLoader = createDocLoader({
     fromMultibase: Bls12381Multikey.from
   }, {
     header: 'z6Mk',
-    fromMultibase: Ed25519Multikey.from
+    fromMultibase: Ed25519VerificationKey2020.from
   }, {
     header: 'zDna',
     fromMultibase: EcdsaMultikey.from

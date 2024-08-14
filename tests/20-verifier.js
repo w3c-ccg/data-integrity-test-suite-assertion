@@ -41,6 +41,7 @@ function _runSuite({
     async function() {
       before(async function() {
         testDataOptions.testVector = structuredClone(credential);
+        testDataOptions.documentLoader = documentLoader;
       });
       checkDataIntegrityProofVerifyErrors({
         implemented: validVerifierImplementations,
