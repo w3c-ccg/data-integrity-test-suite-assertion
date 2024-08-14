@@ -14,6 +14,8 @@ export const validVc = require('./validVc.json');
  * Validates the structure of the "proof" property on a digital document.
  *
  * @param {object} options - Options to use.
+ * @param {object} [options.credential = validVc] - A credential for
+ *   the issuance tests.
  * @param {string} options.cryptosuiteName - A cryptosuite name.
  * @param {Map<string,object>} options.implemented - The vendors being tested.
  * @param {Array<string>} [options.expectedProofTypes] - An option to specify
@@ -26,7 +28,6 @@ export const validVc = require('./validVc.json');
  *   the test description. The default value is set to
  *   `Data Integrity (issuer)`.
  *
- * @param options.credential
  * @returns {object} Returns the test suite being run.
  */
 export function checkDataIntegrityProofFormat({
