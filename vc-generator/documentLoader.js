@@ -22,13 +22,14 @@ export const documentLoader = createDocLoader({contexts: contextMap});
  * multiple did key types.
  *
  * @param {object} options - Options to use.
- * @param {Map<string, object>} options.contexts - A list of contexts.
+ * @param {Map<string, object>} [options.contexts = contextMap] - A list of
+ *   contexts.
  * @param {[{header: string, fromMultibase: Function}]} options.keyTypes - An
  *  array of did key types to support.
  *
  * @returns {Function} A documentLoader function.
  */
-export function createDocLoader({contexts, keyTypes = []}) {
+export function createDocLoader({contexts = contextMap, keyTypes = []} = {}) {
   const driver = didKey.driver();
   for(const {header, fromMultibase} of keyTypes) {
     driver.use({
