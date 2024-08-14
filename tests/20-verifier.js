@@ -35,7 +35,8 @@ describe('should verify all suites', function() {
 function _runSuite({
   vcVersion, testDataOptions, credential
 }) {
-  return describe(`VC ${vcVersion} Suite ${testDataOptions.suiteName}`,
+  const {suiteName, keyType} = testDataOptions;
+  return describe(`VC ${vcVersion} Suite ${suiteName} keyType ${keyType}`,
     async function() {
       before(async function() {
         testDataOptions.testVector = structuredClone(credential);
