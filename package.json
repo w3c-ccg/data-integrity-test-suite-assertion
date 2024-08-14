@@ -25,6 +25,7 @@
     "@digitalbazaar/bbs-2023-cryptosuite": "^1.2.0",
     "@digitalbazaar/ecdsa-rdfc-2019-cryptosuite": "^1.0.1",
     "@digitalbazaar/ecdsa-sd-2023-cryptosuite": "^3.2.1",
+    "@digitalbazaar/ed25519-verification-key-2020": "^4.1.0",
     "@digitalbazaar/eddsa-rdfc-2022-cryptosuite": "^1.0.1",
     "chai": "^4.3.7",
     "eslint": "^8.43.0",
