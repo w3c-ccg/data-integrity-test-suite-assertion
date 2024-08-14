@@ -37,7 +37,7 @@ export const cryptosuites = [{
 },
 {
   suiteName: 'bbs-2023',
-  keyType: 'P-381',
+  keyType: 'Bls12381G2',
   derived: true,
   mandatoryPointers: ['/issuer'],
   selectivePointers: ['/credentialSubject/id'],
@@ -49,7 +49,7 @@ export const cryptosuites = [{
   cryptosuite: bbs2023Cryptosuite,
   multikey: Bls12381Multikey,
   serializedKeys: {
-    'P-381': 'bbs/p381KeyPair.json',
+    Bls12381G2: 'bbs/Bls12381G2KeyPair.json',
   }
 },
 {
