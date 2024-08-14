@@ -160,6 +160,7 @@ export function checkDataIntegrityProofVerifyErrors({
 export * as assertions from './assertions.js';
 export {generators} from './vc-generator/generators.js';
 export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
+export {createDocLoader} from './vc-generator/documentLoader.js';
 export {
   dateRegex, expectedMultibasePrefix, isObjectOrArrayOfObjects,
   shouldBeErrorResponse, shouldBeUrl, isStringOrArrayOfStrings,
