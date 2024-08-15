@@ -66,8 +66,10 @@ export async function generateTestData({
       selectivePointers,
       verify
     });
-    const testData = await issueCloned(
-      generator({suite, selectiveSuite, credential, loader: documentLoader}));
+    const testData = await issueCloned(generator({
+      suite, selectiveSuite,
+      credential, loader: documentLoader
+    }));
     vcCache.get(suiteName).set(id, testData);
   }
   return {
