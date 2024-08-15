@@ -46,9 +46,8 @@ export async function verificationFail({
     }
   };
   const {result, error} = await verifier.post({json: body});
-  const withReason = reason || '';
-  should.not.exist(result, 'Expected no result from verifier.' + withReason);
-  should.exist(error, 'Expected verifier to error.' + withReason);
+  should.not.exist(result, reason || 'Expected no result from verifier.');
+  should.exist(error, reason || 'Expected verifier to error.');
   shouldBeErrorResponse({response: error, reason});
   return {result, error};
 }
