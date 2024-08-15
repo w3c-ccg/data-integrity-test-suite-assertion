@@ -209,6 +209,17 @@ export function shouldBeProof({proof}) {
     'string', 'Expected "proof.proofValue" to be a string.');
 }
 
+const statusReasons = {
+  401: 'Received 401 Unauthorized.',
+  404: 'Received 404 Not Found.',
+  405: 'Received 405 Method Not Allowed.',
+  408: 'Received 408 Request Timeout.',
+  413: 'Received 413 Payload to large.',
+  415: 'Received 415 Unsupported Media Type.',
+  500: 'Received 500 Internal Server Error.',
+  501: 'Received 501 Not Implemented.'
+};
+
 /**
  * Throws an error if a negative test does not return 400 or 422.
  * A reason maybe provided such as "invalid proofValue" etc.
@@ -222,14 +233,17 @@ export function shouldBeProof({proof}) {
 export function shouldBeErrorResponse({
   response,
   expectedStatuses = [400, 422],
-  reason = ''
+  reason
 }) {
-  should.exist(response, 'Expected an Error Response. ${reason}');
+  should.exist(response, reason || 'Expected an Error Response. ${reason}');
   const {status} = response;
-  should.exist(status, 'Expected "response.status" to exist.');
-  status.should.be.oneOf(
-    expectedStatuses,
-    `Expected "status" to be oneOf ${expectedStatuses}. ${reason}`);
+  should.exist(status, reason || 'Expected "response.status" to exist.');
+  const statusNumber = Number.parseInt(status);
+  if(!expectedStatuses.includes(statusNumber)) {
+    const statusReason = statusReasons[statusNumber];
+    statusNumber.should.be.oneOf(
+      expectedStatuses, statusReason || 'received HTTP status ${status}');
+  }
 }
 
 /**
