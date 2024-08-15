@@ -25,6 +25,8 @@ const vcCache = new Map();
  * @param {string} options.suiteName - A suite name.
  * @param {object} options.key - A key.
  * @param {object} options.cryptosuite - A cryptosuite for the test.
+ * @param {Function} [options.documentLoader] - A documentLoader for test
+ *   data generation.
  * @param {Array<string>} options.mandatoryPointers - An array of JSON pointers.
  * @param {Array<string>} options.selectivePointers - An array of JSON pointers.
  * @param {boolean} options.verify - If a verify suite is needed.
