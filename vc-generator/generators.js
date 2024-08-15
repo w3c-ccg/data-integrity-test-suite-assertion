@@ -68,7 +68,7 @@ function invalidProofPurpose({
   suite,
   selectiveSuite,
   credential,
-  mockPurpose,
+  mockPurpose = 'invalidPurpose',
   ...args
 }) {
   //sets the proofPurpose for the proof
