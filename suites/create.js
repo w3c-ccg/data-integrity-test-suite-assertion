@@ -18,7 +18,11 @@ const should = chai.should();
 export function runDataIntegrityProofFormatTests({
   endpoints, expectedProofTypes, testDescription,
   vendorName, cryptosuiteName, credential,
-  optionalTests = false
+  optionalTests = {
+    dates: true,
+    contextInjection: true,
+    domain: true
+  }
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
@@ -405,7 +409,8 @@ export function runDataIntegrityProofFormatTests({
         });
       });
     }
-    if(optionalTests) {
+    // FIXME add skipMessage and skipReason to optional tests
+    if(optionalTests.contextInjection) {
       it('When an application is securing a document, if an @context ' +
       'property is not provided in the document or the Data Integrity ' +
       'terms used in the document are not mapped by existing values in ' +
@@ -449,6 +454,8 @@ export function runDataIntegrityProofFormatTests({
         }
         data['@context'].should.be.oneOf(expectedContexts);
       });
+    }
+    if(optionalTests.dates) {
       it('The date and time the proof was created is OPTIONAL and, if ' +
       'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
       'string, either in Universal Coordinated Time (UTC), denoted by a Z at ' +
@@ -477,6 +484,8 @@ export function runDataIntegrityProofFormatTests({
           }
         }
       });
+    }
+    if(optionalTests.domain) {
       it('The domain property is OPTIONAL. It conveys one or more security ' +
         'domains in which the proof is meant to be used. If specified, the ' +
         'associated value MUST be either a string, or an unordered set of ' +
