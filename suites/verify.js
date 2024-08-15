@@ -85,10 +85,11 @@ export function runDataIntegrityProofVerifyTests({
       const credential = credentials.clone('invalidProofPurpose');
       await verificationFail({credential, verifier});
     });
-    it('If the "proof.proofPurpose" value does not match ' +
-      '"options.expectedProofPurpose", an error MUST be raised.',
-    async function() {
-      const credential = credentials.clone('issuedVc');
+    it('If expectedProofPurpose was given, and it does not match ' +
+        'proof.proofPurpose, an error MUST be raised and SHOULD convey an ' +
+        'error type of PROOF_VERIFICATION_ERROR.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=If%20expectedProofPurpose%20was%20given%2C%20and%20it%20does%20not%20match%20proof.proofPurpose%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_VERIFICATION_ERROR.';
+      const credential = credentials.clone('invalidProofPurpose');
       await verificationFail({
         credential, verifier, options: {
           // this will fail since the vc generated is created with the
