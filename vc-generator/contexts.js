@@ -27,8 +27,10 @@ copyTerm({
   newTerm: 'UnknownProofType'
 });
 const diCtx = _dataIntegrityCtx['@context'];
+const v2Ctx = v2Context['@context'];
 // add invalidPurpose to context for test data
 // //FIXME this should be in a separate documentLoader
+v2Ctx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose =
 diCtx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose = {
   '@id': 'https://w3id.org/security#invalidPurpose',
   '@type': '@id',
