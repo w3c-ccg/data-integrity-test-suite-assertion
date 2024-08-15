@@ -424,17 +424,17 @@ export function runDataIntegrityProofFormatTests({
           throw new Error(`Expected ${vendorName} to have an issuer.`);
         }
         this.test.link = 'https://w3c.github.io/vc-data-integrity/#context-injection:~:text=if%20an%20%40context%20property%20is%20not%20provided%20in%20the%20document%20or%20the%20Data%20Integrity%20terms%20used%20in%20the%20document%20are%20not%20mapped%20by%20existing%20values%20in%20the%20%40context%20property%2C%20implementations%20SHOULD%20inject%20or%20append';
-        const vc = structuredClone(credential);
+        const _credential = structuredClone(credential);
         const expectedContexts = [
           'https://w3id.org/security/data-integrity/v2',
           'https://www.w3.org/ns/credentials/v2'
         ];
         // remove the vc's context and expect context injection to occur
-        delete vc['@context'];
+        delete _credential['@context'];
         let err;
         let data;
         try {
-          data = await createInitialVc({issuer, vc});
+          data = await createInitialVc({issuer, credential: _credential});
         } catch(e) {
           err = e;
         }
