@@ -27,7 +27,7 @@ export const validVc = require('./validVc.json');
  * @param {string} [options.testDescription] - An option to define
  *   the test description. The default value is set to
  *   `Data Integrity (issuer)`.
- * @param {boolean} [options.optionalTests = false] - Toggle for running
+ * @param {object} [options.optionalTests] - Toggle for running
  *   optional tests.
  *
  * @returns {object} Returns the test suite being run.
@@ -36,7 +36,11 @@ export function checkDataIntegrityProofFormat({
   implemented, expectedProofTypes = ['DataIntegrityProof'],
   cryptosuiteName, isEcdsaTests = false, credential = validVc,
   testDescription = 'Data Integrity (issuer)',
-  optionalTests = false
+  optionalTests = {
+    dates: true,
+    contextInjection: true,
+    domain: true
+  }
 } = {}) {
   return describe(testDescription, function() {
     // this will tell the report
