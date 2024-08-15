@@ -14,7 +14,10 @@ const contextMap = new Map(credentialsContexts);
 //so that other tests do not get the modified context
 //FIXME this also should be a structuredClone of the v2 context
 //which replaces the original jsonld context in the contextMap
-const {context: v2Context} = namedCredentialsContexts.get('v2');
+const {
+  id: v2ContextUrl,
+  context: v2Context
+} = structuredClone(namedCredentialsContexts.get('v2'));
 copyTerm({
   context: v2Context,
   oldTerm: 'DataIntegrityProof',
@@ -37,7 +40,7 @@ diCtx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose = {
   '@container': '@set'
 };
 //FIXME this should be in a separate documentLoader
-v2Context['@context'].undefinedTerm = diCtx.undefinedTerm = {
+v2Ctx.undefinedTerm = diCtx.undefinedTerm = {
   '@id': 'https://w3id.org/security#undefinedTerm',
   '@type': 'https://w3id.org/security#termString'
 };
@@ -49,14 +52,23 @@ contextMap.set(
   _dataIntegrityCtx
 );
 contextMap.set(
-  didCtx.constants.DID_CONTEXT_URL,
-  didCtx.contexts.get(
-    didCtx.constants.DID_CONTEXT_URL)
+  v2ContextUrl,
+  v2Context
 );
+addContexts({
+  contexts: didCtx.contexts,
+  map: contextMap
+});
 
 function copyTerm({context, oldTerm, newTerm}) {
   const ctx = context['@context'];
   ctx[newTerm] = structuredClone(ctx[oldTerm]);
+}
+
+function addContexts({contexts, map, mutate = id => id}) {
+  for(const [key, value] of contexts) {
+    map.set(key, mutate(structuredClone(value)));
+  }
 }
 
 export {contextMap};
