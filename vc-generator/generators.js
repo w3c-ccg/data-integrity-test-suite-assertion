@@ -79,10 +79,14 @@ function invalidProofPurpose({
   return {...args, suite, selectiveSuite, credential, purpose};
 }
 
-function undefinedTerm({credential, ...args}) {
+function undefinedTerm({credential, selectiveSuite, ...args}) {
   const _credential = structuredClone(credential);
   _credential.credentialSubject.undefinedTerm = 'undefinedTerm';
-  return {...args, credential: _credential};
+  if(selectiveSuite) {
+    selectiveSuite?._cryptosuite?.options?.selectivePointers.push(
+      '/credentialSubject/undefinedTerm');
+  }
+  return {...args, credential: _credential, selectiveSuite};
 }
 
 // adds an invalid domain
