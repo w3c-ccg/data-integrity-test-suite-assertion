@@ -213,6 +213,7 @@ const statusReasons = {
   404: 'Received 404 Not Found.',
   405: 'Received 405 Method Not Allowed.',
   408: 'Received 408 Request Timeout.',
+  409: 'Received 409 Conflict.',
   413: 'Received 413 Payload to large.',
   415: 'Received 415 Unsupported Media Type.',
   500: 'Received 500 Internal Server Error.',
