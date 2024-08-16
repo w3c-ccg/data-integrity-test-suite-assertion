@@ -1,11 +1,11 @@
 /*!
  * Copyright 2023 - 2024 Digital Bazaar, Inc.
  */
+import {getGenerators, setups} from './generators.js';
 import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {getDefaultKey} from './secret.js';
-import {getGenerators} from './generators.js';
 import {getSuites} from './cryptosuite.js';
 import {issueCloned} from './issuer.js';
 import {validVc} from '../index.js';
@@ -59,19 +59,14 @@ export async function generateTestData({
   const signer = key.signer();
   const vcGenerators = getGenerators(optionalTests);
   for(const [id, generator] of vcGenerators) {
-    const undefinedTerm = id === 'undefinedTerm';
-    let undefinedPointers;
-    if(selectivePointers && undefinedTerm) {
-      undefinedPointers = [
-        ...selectivePointers,
-        '/credentialSubject/undefinedTerm'
-      ];
-    }
-    const {suite, selectiveSuite} = getSuites({
+    // if a generator has a specific setup use it
+    // otherwise getSuites is fine
+    const setup = setups[id] || getSuites;
+    const {suite, selectiveSuite} = setup({
       cryptosuite,
       signer,
       mandatoryPointers,
-      selectivePointers: undefinedTerm ? undefinedPointers : selectivePointers,
+      selectivePointers,
       verify
     });
     const issuedCredential = await issueCloned(generator({
