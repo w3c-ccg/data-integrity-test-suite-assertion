@@ -33,11 +33,6 @@ export function runDataIntegrityProofVerifyTests({
         'base URL is set to null.', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#securing-data-losslessly:~:text=When%20deserializing%20to%20RDF%2C%20implementations%20MUST%20ensure%20that%20the%20base%20URL%20is%20set%20to%20null.';
       const credential = credentials.clone('invalidBaseUrl');
-      //FIXME this really should be done somewhere else, but do to time
-      //constraints removal of the invalid @context is done here
-      const index = credential['@context'].findIndex(
-        c => c?.['@base'] && c?.['@base']?.includes('invalid'));
-      credential['@context'].splice(index, 1);
       await verificationFail({
         credential,
         verifier,

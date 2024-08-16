@@ -1,7 +1,7 @@
 /*!
  * Copyright 2023 - 2024 Digital Bazaar, Inc.
  */
-import {getGenerators, setups} from './generators.js';
+import {cleanups, getGenerators, setups} from './generators.js';
 import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
@@ -73,7 +73,9 @@ export async function generateTestData({
       suite, selectiveSuite,
       credential, loader: documentLoader
     }));
-    vcCache.get(suiteName).set(id, issuedCredential);
+    const cleanup = cleanups[id];
+    const testValue = cleanup ? cleanup({issuedCredential}) : issuedCredential;
+    vcCache.get(suiteName).set(id, testValue);
   }
   return {
     clone(key) {
