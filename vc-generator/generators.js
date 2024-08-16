@@ -59,6 +59,18 @@ export const setups = {
   }
 };
 
+export const cleanups = {
+  invalidBaseUrl({issuedCredential}) {
+    issuedCredential['@context'] = issuedCredential['@context'].filter(c => {
+      if(typeof c === 'string') {
+        return true;
+      }
+      // if it has a base drop it from contexts
+      return !('@base' in c);
+    });
+    return issuedCredential;
+  }
+};
 /**
  * Takes in optionalTests and creates generators for those tests.
  *
@@ -253,7 +265,6 @@ function invalidBaseUrl({credential, ...args}) {
   const _credential = structuredClone(credential);
   const invalidBaseContext = {
     '@base': 'https://invalid.example.com/',
-    '@vocab': '/vocab/'
   };
   if(Array.isArray(_credential['@context'])) {
     _credential['@context'].push(invalidBaseContext);
