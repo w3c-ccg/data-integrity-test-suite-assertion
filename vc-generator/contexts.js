@@ -40,10 +40,7 @@ diCtx.DataIntegrityProof['@context'].proofPurpose['@context'].invalidPurpose = {
   '@container': '@set'
 };
 //FIXME this should be in a separate documentLoader
-v2Ctx.undefinedTerm = diCtx.undefinedTerm = {
-  '@id': 'https://w3id.org/security#undefinedTerm',
-  '@type': 'https://w3id.org/security#termString'
-};
+v2Ctx.undefinedTerm = diCtx.undefinedTerm = 'urn:example:undefinedTerm';
 
 // add contexts for the documentLoader
 contextMap.set(multikeyCtx.constants.CONTEXT_URL, multikeyCtx.CONTEXT);
