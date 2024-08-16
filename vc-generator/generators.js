@@ -2,6 +2,7 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as vc from '@digitalbazaar/vc';
+import {getSuites} from './cryptosuite.js';
 import {invalidCreateProof} from './helpers.js';
 import jsigs from 'jsonld-signatures';
 
@@ -39,6 +40,22 @@ export const generators = {
   // not necessarily used in DI Assertion itself, but used
   // in multiple suites
   shared: {}
+};
+
+// some generators require bespoke setup
+export const setups = {
+  undefinedTerm({selectivePointers, ...args}) {
+    if(selectivePointers) {
+      return getSuites({
+        ...args,
+        selectivePointers: [
+          ...selectivePointers,
+          '/credentialSubject/undefinedTerm'
+        ]
+      });
+    }
+    return getSuites({...args});
+  }
 };
 
 /**
