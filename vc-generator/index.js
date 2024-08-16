@@ -74,11 +74,11 @@ export async function generateTestData({
       selectivePointers: undefinedTerm ? undefinedPointers : selectivePointers,
       verify
     });
-    const testData = await issueCloned(generator({
+    const issuedCredential = await issueCloned(generator({
       suite, selectiveSuite,
       credential, loader: documentLoader
     }));
-    vcCache.get(suiteName).set(id, testData);
+    vcCache.get(suiteName).set(id, issuedCredential);
   }
   return {
     clone(key) {
