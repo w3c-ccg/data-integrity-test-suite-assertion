@@ -59,11 +59,19 @@ export async function generateTestData({
   const signer = key.signer();
   const vcGenerators = getGenerators(optionalTests);
   for(const [id, generator] of vcGenerators) {
+    const undefinedTerm = id === 'undefinedTerm';
+    let undefinedPointers;
+    if(selectivePointers && undefinedTerm) {
+      undefinedPointers = [
+        ...selectivePointers,
+        '/credentialSubject/undefinedTerm'
+      ];
+    }
     const {suite, selectiveSuite} = getSuites({
       cryptosuite,
       signer,
       mandatoryPointers,
-      selectivePointers,
+      selectivePointers: undefinedTerm ? undefinedPointers : selectivePointers,
       verify
     });
     const testData = await issueCloned(generator({
