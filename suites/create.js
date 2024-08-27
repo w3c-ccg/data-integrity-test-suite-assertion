@@ -52,7 +52,7 @@ export function runDataIntegrityProofFormatTests({
       shouldHaveProof({vc: data});
     });
     it('If present (proof), its value MUST be either a single object, or an ' +
-    'unordered set of objects', function() {
+    'unordered set of objects.', function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#conformance:~:text=If%20present%2C%20its%20value%20MUST%20be%20either%20a%20single%20object%2C%20or%20an%20unordered%20set%20of%20objects';
       shouldHaveProof({vc: data});
       const {proof} = data;
