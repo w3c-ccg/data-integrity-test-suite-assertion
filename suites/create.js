@@ -146,8 +146,7 @@ export function runDataIntegrityProofFormatTests({
       });
     }
     it('If the proof type is DataIntegrityProof, cryptosuite MUST be ' +
-    'specified; otherwise, cryptosuite MAY be specified. If specified, its ' +
-    'value MUST be a string.', function() {
+    'specified; otherwise, cryptosuite MAY be specified.', function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=If%20the%20proof%20type%20is%20DataIntegrityProof%2C%20cryptosuite%20MUST%20be%20specified%3B%20otherwise%2C%20cryptosuite%20MAY%20be%20specified.%20If%20specified%2C%20its%20value%20MUST%20be%20a%20string.';
       for(const proof of proofs) {
         if(proof.type && proof.type === 'DataIntegrityProof') {
@@ -155,12 +154,20 @@ export function runDataIntegrityProofFormatTests({
             proof.cryptosuite,
             'If the proof type is DataIntegrityProof, cryptosuite MUST ' +
             'be specified');
-          proof.cryptosuite.should.be.a(
-            'string',
-            'cryptosuite value MUST be a string.');
         }
       }
     });
+    it('If specified (proof.cryptosuite), its value MUST be a string.',
+      function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#introduction:~:text=If%20the%20proof%20type%20is%20DataIntegrityProof%2C%20cryptosuite%20MUST%20be%20specified%3B%20otherwise%2C%20cryptosuite%20MAY%20be%20specified.%20If%20specified%2C%20its%20value%20MUST%20be%20a%20string.';
+        for(const proof of proofs) {
+          if(proof.cryptosuite) {
+            proof.cryptosuite.should.be.a(
+              'string',
+              'cryptosuite value MUST be a string.');
+          }
+        }
+      });
     it('A verification method is the means and information needed to verify ' +
         'the proof. If included, the value MUST be a string that maps ' +
         'to a [URL]', async function() {
