@@ -69,9 +69,9 @@ export function runDataIntegrityProofFormatTests({
         }
       }
     });
-    it('The specific proof type used for the cryptographic proof MUST be ' +
-        'specified as a string that maps to a URL.', async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20specific%20proof%20type%20used%20for%20the%20cryptographic%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
+    it('The specific type of proof MUST be specified as a string that maps ' +
+        'to a URL.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=The%20specific%20type%20of%20proof%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
       const prop = '@type';
       for(const proof of proofs) {
         proof.should.have.property('type');
