@@ -188,7 +188,7 @@ export function runDataIntegrityProofFormatTests({
       }
     });
     it('The reason the proof was created ("proof.proofPurpose") MUST be ' +
-        'specified as a string that maps to a URL', async function() {
+        'specified as a string that maps to a URL.', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20reason%20the%20proof%20was%20created%20MUST%20be%20specified%20as%20a%20string%20that%20maps%20to%20a%20URL';
       for(const proof of proofs) {
         proof.should.have.property('proofPurpose');
