@@ -13,6 +13,7 @@ const {CredentialIssuancePurpose} = vc;
  *
  * @param {object} options - Options to use.
  * @param {object} options.suite - A DataIntegrityProof.
+ * @param {Array<object>} options.suites - DataIntegrityProof(s).
  * @param {object} [options.selectiveSuite] - A D.I. Proof for a selective
  *   suite.
  * @param {object} options.credential - A credential to be signed.
@@ -23,15 +24,18 @@ const {CredentialIssuancePurpose} = vc;
  * @returns {Promise<object>} - An issued VC.
  */
 export async function issueCloned({
-  suite, selectiveSuite, credential, loader = defaultLoader,
+  suite, suites, selectiveSuite, credential, loader = defaultLoader,
   purpose = new CredentialIssuancePurpose(),
 }) {
-  const verifiableCredential = await vc.issue({
-    credential: structuredClone(credential),
-    suite,
-    documentLoader: loader,
-    purpose
-  });
+  let verifiableCredential = structuredClone(credential);
+  for(const _suite of (suites ? suites : [suite])) {
+    verifiableCredential = await vc.issue({
+      credential: verifiableCredential,
+      suite: _suite,
+      documentLoader: loader,
+      purpose
+    });
+  }
   if(!selectiveSuite) {
     return verifiableCredential;
   }
