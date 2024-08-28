@@ -204,14 +204,16 @@ export function runDataIntegrityProofFormatTests({
         });
       }
     });
-    it('("proof.proofValue") A string value that contains the base-encoded ' +
+    it('("proof.proofValue") A string value that expresses base-encoded ' +
     'binary data necessary to verify the digital proof using the ' +
-    'verificationMethod specified. The contents of the value MUST be ' +
-    'expressed with a header and encoding as described in Section 2.4 ' +
-    'Multibase of the Controller Documents 1.0 specification.', function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=string%20value%20that%20contains%20the%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof';
+    'verificationMethod specified. The value MUST use a header and ' +
+    'encoding as described in Section 2.4 Multibase of the Controller ' +
+    'Documents 1.0 specification to express the binary data.', function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=A%20string%20value%20that%20expresses%20base%2Dencoded%20binary%20data%20necessary%20to%20verify%20the%20digital%20proof%20using%20the%20verificationMethod%20specified.%20The%20value%20MUST%20use%20a%20header%20and%20encoding%20as%20described%20in%20Section%202.4%20Multibase%20of%20the%20Controller%20Documents%201.0%20specification%20to%20express%20the%20binary%20data.';
       for(const proof of proofs) {
         should.exist(proof, 'Expected proof to exist.');
+        //FIXME the suite should pass in the expectedPrefix and
+        //encodingName or type
         const {
           prefix: expectedPrefix,
           name: encodingName
