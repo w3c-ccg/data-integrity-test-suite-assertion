@@ -62,7 +62,7 @@ export async function generateTestData({
     // if a generator has a specific setup use it
     // otherwise getSuites is fine
     const setup = setups[id] || getSuites;
-    const {suite, selectiveSuite} = setup({
+    const {suite, suites, selectiveSuite} = setup({
       cryptosuite,
       signer,
       mandatoryPointers,
@@ -70,7 +70,7 @@ export async function generateTestData({
       verify
     });
     const issuedCredential = await issueCloned(generator({
-      suite, selectiveSuite,
+      suite, suites, selectiveSuite,
       credential, loader: documentLoader
     }));
     const cleanup = cleanups[id];
