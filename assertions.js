@@ -33,6 +33,39 @@ export const shouldBeBase64NoPadUrl = s => BASE_64URL_NOPAD_REGEX.test(s);
  *
  * @returns {Promise<object>} The result of the verification.
  */
+export async function verificationSuccess({
+  credential, verifier, reason, options = {}
+} = {}) {
+  const {settings: {options: verifierOptions}} = verifier;
+  const body = {
+    verifiableCredential: credential,
+    options: {
+      ...verifierOptions,
+      // request specific options should overwrite endpoint options
+      ...options
+    }
+  };
+  const {result, error} = await verifier.post({json: body});
+  should.not.exist(error, reason || 'Expected no error from verifier.');
+  should.exist(result, reason || 'Expected verification to succeed.');
+  result.status.should.equal(
+    200,
+    reason || 'Expected HTTP status 200 for successful verification'
+  );
+  return {result, error};
+}
+
+/**
+ * Posts a VC to a verifier and asserts on the response.
+ *
+ * @param {object} options - Options to use.
+ * @param {object} options.credential - The credential to post.
+ * @param {object} options.verifier - The verifier to post to.
+ * @param {string} [options.reason] - The expected reason for the failure.
+ * @param {object} [options.options] - Request specific options.
+ *
+ * @returns {Promise<object>} The result of the verification.
+ */
 export async function verificationFail({
   credential, verifier, reason, options = {}
 } = {}) {
