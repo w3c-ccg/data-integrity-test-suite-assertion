@@ -9,6 +9,9 @@ import jsigs from 'jsonld-signatures';
 const {AuthenticationProofPurpose} = jsigs.purposes;
 const {CredentialIssuancePurpose} = vc;
 
+// default gen just passes params to issueCloned
+const defaultGen = params => params;
+
 // generator categories
 export const generators = {
   // creates test vectors for `proof.created` & `proof.expires`
@@ -36,7 +39,12 @@ export const generators = {
     invalidProofType,
     invalidBaseUrl,
     invalidVm,
-    undefinedTerm
+    undefinedTerm,
+    previousProofString: defaultGen,
+    previousProofArray: defaultGen,
+    missingPreviousProofString: defaultGen,
+    missingPreviousProofArray: defaultGen,
+    proofSet: defaultGen
   },
   // creates a set of shared test vector generators
   // not necessarily used in DI Assertion itself, but used
@@ -57,6 +65,46 @@ export const setups = {
       });
     }
     return getSuites({...args});
+  },
+  previousProofString({
+    cryptosuite,
+    signer,
+    mandatorypointers,
+    selectivepointers,
+  }) {
+
+  },
+  previousProofArray({
+    cryptosuite,
+    signer,
+    mandatorypointers,
+    selectivepointers,
+  }) {
+
+  },
+  missingPreviousProofString({
+    cryptosuite,
+    signer,
+    mandatorypointers,
+    selectivepointers,
+  }) {
+
+  },
+  missingPreviousProofArray({
+    cryptosuite,
+    signer,
+    mandatorypointers,
+    selectivepointers,
+  }) {
+
+  },
+  proofSet({
+    cryptosuite,
+    signer,
+    mandatorypointers,
+    selectivepointers,
+  }) {
+
   }
 };
 
