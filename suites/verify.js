@@ -29,6 +29,28 @@ export function runDataIntegrityProofVerifyTests({
     before(async function() {
       proofValueTests = shouldBeProofValue({credentials, verifier});
     });
+    it('An OPTIONAL string value (proof.previousProof) or unordered list of ' +
+    'string values. Each value identifies another data integrity proof that ' +
+    'MUST verify before the current proof is processed.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=An%20OPTIONAL%20string%20value%20or%20unordered%20list%20of%20string%20values.%20Each%20value%20identifies%20another%20data%20integrity%20proof%20that%20MUST%20verify%20before%20the%20current%20proof%20is%20processed';
+
+    });
+    it('If an unordered list (proof.previousProof), all referenced proofs in ' +
+    'the array MUST verify.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=If%20an%20unordered%20list%2C%20all%20referenced%20proofs%20in%20the%20array%20MUST%20verify';
+
+    });
+    it('If a proof with id equal to previousProof does not exist in ' +
+    'allProofs, an error MUST be raised and SHOULD convey an error type ' +
+    'of PROOF_GENERATION_ERROR.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=If%20a%20proof%20with%20id%20equal%20to%20previousProof%20does%20not%20exist%20in%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+    });
+    it('If any element of previousProof list has an id attribute that does ' +
+    'not match the id attribute of any element of allProofs, an error MUST ' +
+    'be raised and SHOULD convey an error type of PROOF_GENERATION_ERROR.',
+    async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=If%20any%20element%20of%20previousProof%20list%20has%20an%20id%20attribute%20that%20does%20not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+    });
     it('When deserializing to RDF, implementations MUST ensure that the ' +
         'base URL is set to null.', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#securing-data-losslessly:~:text=When%20deserializing%20to%20RDF%2C%20implementations%20MUST%20ensure%20that%20the%20base%20URL%20is%20set%20to%20null.';
