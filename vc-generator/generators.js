@@ -69,42 +69,105 @@ export const setups = {
   previousProofString({
     cryptosuite,
     signer,
-    mandatorypointers,
-    selectivepointers,
+    mandatoryPointers,
+    selectivePointers,
+    proofId = 'urn:uuid:test:first:proof'
   }) {
-
+    const {suite: firstSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    firstSuite.proof = {id: proofId};
+    const {suite: secondSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    secondSuite.proof = {previousProof: proofId};
+    return {
+      suites: [firstSuite, secondSuite]
+    };
   },
   previousProofArray({
     cryptosuite,
     signer,
-    mandatorypointers,
-    selectivepointers,
+    mandatoryPointers,
+    selectivePointers,
+    proofId = 'urn:uuid:test:first:proof'
   }) {
+    const {suite: firstSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    firstSuite.proof = {id: proofId};
+    const {suite: secondSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    secondSuite.proof = {previousProof: [proofId]};
+    return {
+      suites: [firstSuite, secondSuite]
+    };
 
   },
   missingPreviousProofString({
     cryptosuite,
     signer,
-    mandatorypointers,
-    selectivepointers,
+    mandatoryPointers,
+    selectivePointers,
+    proofId = 'urn:uuid:test:first:proof'
   }) {
-
+    const {suite: firstSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    firstSuite.proof = {id: proofId};
+    const {suite: secondSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    secondSuite.proof = {previousProof: 'urn:uuid:test:missing:proof'};
+    return {
+      suites: [firstSuite, secondSuite]
+    };
   },
   missingPreviousProofArray({
     cryptosuite,
     signer,
-    mandatorypointers,
-    selectivepointers,
+    mandatoryPointers,
+    selectivePointers,
+    proofId = 'urn:uuid:test:first:proof'
   }) {
-
+    const {suite: firstSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    firstSuite.proof = {id: proofId};
+    const {suite: secondSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    secondSuite.proof = {previousProof: ['urn:uuid:test:missing:proof']};
+    return {
+      suites: [firstSuite, secondSuite]
+    };
   },
   proofSet({
     cryptosuite,
     signer,
-    mandatorypointers,
-    selectivepointers,
+    mandatoryPointers,
+    selectivePointers,
   }) {
-
+    const {suite: firstSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    const {suite: secondSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    return {
+      suites: [firstSuite, secondSuite]
+    };
   }
 };
 
