@@ -33,7 +33,16 @@ export function runDataIntegrityProofVerifyTests({
     'string values. Each value identifies another data integrity proof that ' +
     'MUST verify before the current proof is processed.', async function() {
       this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=An%20OPTIONAL%20string%20value%20or%20unordered%20list%20of%20string%20values.%20Each%20value%20identifies%20another%20data%20integrity%20proof%20that%20MUST%20verify%20before%20the%20current%20proof%20is%20processed';
-
+      await verificationSuccess({
+        credential: credentials.clone('previousProofString'),
+        verifier,
+        reason: 'Should verify VC with a string "proof.previousProof"'
+      });
+      await verificationSuccess({
+        credential: credentials.clone('previousProofArray'),
+        verifier,
+        reason: 'Should verify VC with an Array "proof.previousProof"'
+      });
     });
     it('If an unordered list (proof.previousProof), all referenced proofs in ' +
     'the array MUST verify.', async function() {
