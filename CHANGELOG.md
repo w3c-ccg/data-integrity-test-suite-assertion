@@ -5,6 +5,7 @@
 ### Added
 - A new parameter `optionalTests` to `checkDataIntegrityProofFormat`.
 - A new parameter `credential` to `checkDataIntegrityProofFormat`.
+- Add a new assertion `verificationSucess` to `assertions`.
 
 ## 1.3.1 - 2024-08-07
 
