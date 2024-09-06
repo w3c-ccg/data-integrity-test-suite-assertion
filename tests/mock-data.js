@@ -85,7 +85,7 @@ class MockVerifier {
       ...options
     });
     if(result.verified) {
-      return {data: {...result}, result: {status: 201}, statusCode: 201};
+      return {data: {...result}, result: {status: 200}, statusCode: 200};
     }
     return {data: {...result}, error: {status: 400}, statusCode: 400};
   }

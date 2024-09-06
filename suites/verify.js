@@ -1,8 +1,8 @@
 /*!
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
+import {verificationFail, verificationSuccess} from '../assertions.js';
 import {expect} from 'chai';
-import {verificationFail} from '../assertions.js';
 
 export function runDataIntegrityProofVerifyTests({
   endpoints,
@@ -198,7 +198,7 @@ export function runDataIntegrityProofVerifyTests({
       it('(created) A conforming processor MAY chose to consume time values ' +
       'that were incorrectly serialized without an offset.', async function() {
         this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#proofs:~:text=be%20a%20string.-,created,-The%20date%20and';
-        await verificationFail({
+        await verificationSuccess({
           credential: credentials.clone('noOffsetCreated'),
           verifier
         });
@@ -206,7 +206,7 @@ export function runDataIntegrityProofVerifyTests({
       it('(expires) A conforming processor MAY chose to consume time values ' +
       'that were incorrectly serialized without an offset.', async function() {
         this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#proofs:~:text=interpreted%20as%20UTC.-,expires,-The%20expires%20property';
-        await verificationFail({
+        await verificationSuccess({
           credential: credentials.clone('noOffsetExpires'),
           verifier
         });
