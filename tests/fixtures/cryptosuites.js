@@ -26,7 +26,7 @@ export const cryptosuites = [{
   mandatoryPointers: ['/issuer'],
   selectivePointers: ['/credentialSubject/id'],
   optionalTests: {
-    created: true,
+    dates: true,
     authentication: true
   },
   cryptosuite: ecdsaSd2023Cryptosuite,
@@ -43,7 +43,7 @@ export const cryptosuites = [{
   selectivePointers: ['/credentialSubject/id'],
   optionalTests: {
     //bbs deletes created in order to prevent data leakages
-    created: false,
+    dates: false,
     authentication: true
   },
   cryptosuite: bbs2023Cryptosuite,
@@ -56,7 +56,7 @@ export const cryptosuites = [{
   suiteName: 'ecdsa-rdfc-2019',
   keyType: 'P-256',
   optionalTests: {
-    created: true,
+    dates: true,
     authentication: true
   },
   cryptosuite: ecdsaRdfc2019Cryptosuite,
@@ -68,7 +68,7 @@ export const cryptosuites = [{
   suiteName: 'ecdsa-rdfc-2019',
   keyType: 'P-384',
   optionalTests: {
-    created: true,
+    dates: true,
     authentication: true
   },
   cryptosuite: ecdsaRdfc2019Cryptosuite,
@@ -79,7 +79,7 @@ export const cryptosuites = [{
 }, {
   suiteName: 'eddsa-2022',
   optionalTests: {
-    created: true,
+    dates: true,
     authentication: true
   },
   cryptosuite: eddsa2022CryptoSuite,
@@ -88,7 +88,7 @@ export const cryptosuites = [{
 }, {
   suiteName: 'eddsa-rdfc-2022',
   optionalTests: {
-    created: true,
+    dates: true,
     authentication: true
   },
   cryptosuite: eddsaRdfc2022CryptoSuite,
