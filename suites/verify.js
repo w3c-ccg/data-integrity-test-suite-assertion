@@ -158,7 +158,10 @@ export function runDataIntegrityProofVerifyTests({
       const credential = credentials.clone('invalidCryptosuite');
       await verificationFail({credential, verifier});
     });
-    if(optionalTests?.created) {
+    // for backwards compatibility in a minor release we need to support
+    // all 3 optionalTests names for this section
+    const {dates, created, expires} = optionalTests;
+    if(dates || created || expires) {
       it('The date and time the proof was created is OPTIONAL and, if ' +
       'included, MUST be specified as an [XMLSCHEMA11-2] dateTimeStamp ' +
       'string, either in Universal Coordinated Time (UTC), denoted by a Z ' +
