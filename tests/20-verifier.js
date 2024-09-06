@@ -37,7 +37,11 @@ function _runSuite({
   vcVersion, testDataOptions, credential
 }) {
   const {suiteName, keyType} = testDataOptions;
-  return describe(`VC ${vcVersion} Suite ${suiteName} keyType ${keyType}`,
+  let testTitle = `VC ${vcVersion} Suite ${suiteName}`;
+  if(keyType) {
+    testTitle += ` keyType ${keyType}`;
+  }
+  return describe(testTitle,
     async function() {
       before(async function() {
         testDataOptions.testVector = structuredClone(credential);
