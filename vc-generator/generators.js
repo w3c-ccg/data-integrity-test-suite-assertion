@@ -17,6 +17,7 @@ export const generators = {
     noOffsetCreated,
     noOffsetExpires,
     invalidCreated,
+    invalidExpires,
     createdOneYearAgo
   },
   // creates test vectors for Authentication Purpose tests
@@ -173,13 +174,23 @@ function noVerificationMethod({suite, selectiveSuite, credential, ...args}) {
   return {...args, suite, selectiveSuite, credential};
 }
 
-function invalidCreated({suite, selectiveSuite, credential, ...args}) {
+function invalidCreated({suite, selectiveSuite, ...args}) {
   // suite.date will be used as created when signing
   suite.date = 'invalidDate';
   if(selectiveSuite) {
     selectiveSuite.date = 'invalidDate';
   }
-  return {...args, suite, selectiveSuite, credential};
+  return {...args, suite, selectiveSuite};
+}
+
+function invalidExpires({suite, selectiveSuite, ...args}) {
+  suite.proof = suite.proof || {};
+  suite.proof.expires = 'invalidDate';
+  if(selectiveSuite) {
+    selectiveSuite.proof = selectiveSuite.proof || {};
+    selectiveSuite.proof.expires = 'invalidDate';
+  }
+  return {...args, suite, selectiveSuite};
 }
 
 function createdOneYearAgo({
@@ -214,7 +225,8 @@ function invalidProofType({
   suite.type = proofType;
   if(selectiveSuite) {
     const proofId = 'urn:uuid:no-proof-type-test';
-    suite.proof = {id: proofId};
+    suite.proof = suite.proof || {};
+    suite.proof.id = proofId;
     selectiveSuite._cryptosuite.options.proofId = proofId;
     selectiveSuite.type = proofType;
   }
@@ -252,11 +264,13 @@ function noOffsetCreated({suite, selectiveSuite, ...args}) {
 }
 
 function noOffsetExpires({suite, selectiveSuite, ...args}) {
-  const expires = new Date().toISOString().replace(/\.\d+Z$/, '');
   // lop off ms precision from ISO timestamp
-  suite.proof = {expires};
+  const expires = new Date().toISOString().replace(/\.\d+Z$/, '');
+  suite.proof = suite.proof || {};
+  suite.proof.expires = expires;
   if(selectiveSuite) {
-    selectiveSuite.proof = {...suite.proof, ...selectiveSuite.proof};
+    selectiveSuite.proof = selectiveSuite.proof || {};
+    selectiveSuite.proof.expires = expires;
   }
   return {...args, suite, selectiveSuite};
 }
