@@ -165,8 +165,20 @@ export function runDataIntegrityProofVerifyTests({
       'at the end of the value, or with a time zone offset relative ' +
       'to UTC.', async function() {
         this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=MUST%20be%20specified%20as%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC';
-        const credential = credentials.clone('invalidCreated');
-        await verificationFail({credential, verifier});
+        await verificationFail({
+          credential: credentials.clone('invalidCreated'),
+          verifier
+        });
+      });
+      it('If present (expires), it MUST be an [XMLSCHEMA11-2] dateTimeStamp ' +
+      'string, either in Universal Coordinated Time (UTC), denoted by a Z ' +
+      'at the end of the value, or with a time zone offset relative to UTC.',
+      async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=If%20present%2C%20it%20MUST%20be%20an%20%5BXMLSCHEMA11%2D2%5D%20dateTimeStamp%20string%2C%20either%20in%20Universal%20Coordinated%20Time%20(UTC)%2C%20denoted%20by%20a%20Z%20at%20the%20end%20of%20the%20value%2C%20or%20with%20a%20time%20zone%20offset%20relative%20to%20UTC.';
+        await verificationFail({
+          credential: credentials.clone('invalidExpires'),
+          verifier
+        });
       });
       // we can't tell if its interpreted correctly but we can ensure their
       // verifier at least takes timestamps without Z or an offset.
