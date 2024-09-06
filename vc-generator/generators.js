@@ -11,8 +11,8 @@ const {CredentialIssuancePurpose} = vc;
 
 // generator categories
 export const generators = {
-  // creates test vectors for `proof.created`
-  created: {
+  // creates test vectors for `proof.created` & `proof.expires`
+  dates: {
     noCreated,
     noOffsetCreated,
     noOffsetExpires,
@@ -76,15 +76,17 @@ export const cleanups = {
  * Takes in optionalTests and creates generators for those tests.
  *
  * @param {object} optionalTests - An optionalTests object.
- * @param {boolean} optionalTests.created - Add the created generators?
+ * @param {boolean} optionalTests.created - Add the date generators.
+ * @param {boolean} optionalTests.expires - Add the date generators.
+ * @param {boolean} optionalTests.dates - Add the date generators.
  * @param {boolean} optionalTests.authentication - Add the auth generators?
  *
  * @returns {Map<string, Function>} A map of generators.
  */
-export const getGenerators = ({created, authentication}) => {
+export const getGenerators = ({created, authentication, expires, dates}) => {
   let entries = Object.entries(generators.mandatory);
-  if(created) {
-    entries = entries.concat(Object.entries(generators.created));
+  if(created || expires || dates) {
+    entries = entries.concat(Object.entries(generators.dates));
   }
   if(authentication) {
     entries = entries.concat(Object.entries(generators.authentication));
