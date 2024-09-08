@@ -23,8 +23,6 @@ export const cryptosuites = [{
   suiteName: 'ecdsa-sd-2023',
   keyType: 'P-256',
   derived: true,
-  mandatoryPointers: ['/issuer'],
-  selectivePointers: ['/credentialSubject/id'],
   optionalTests: {
     dates: true,
     authentication: true
@@ -39,8 +37,6 @@ export const cryptosuites = [{
   suiteName: 'bbs-2023',
   keyType: 'Bls12381G2',
   derived: true,
-  mandatoryPointers: ['/issuer'],
-  selectivePointers: ['/credentialSubject/id'],
   optionalTests: {
     //bbs deletes created in order to prevent data leakages
     dates: false,
