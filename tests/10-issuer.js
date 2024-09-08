@@ -22,24 +22,34 @@ describe('Test checkDataIntegrityProofFormat()', function() {
 
 describe('should issue all suites', function() {
   for(const testDataOptions of cryptosuites) {
-    for(const [vcVersion, {credential}] of versionedCredentials) {
+    for(const [
+      vcVersion,
+      {credential, mandatoryPointers}
+    ] of versionedCredentials) {
       _runSuite({
         vcVersion,
         testDataOptions,
-        credential
+        credential,
+        mandatoryPointers
       });
     }
   }
 });
 
-function _runSuite({vcVersion, testDataOptions, credential}) {
+function _runSuite({
+  vcVersion, testDataOptions,
+  credential, mandatoryPointers
+}) {
   const {suiteName, keyType = ''} = testDataOptions;
   return describe(`VC ${vcVersion} Suite ${suiteName} keyType ${keyType}`,
     function() {
       const implemented = new Map();
-      const {mandatoryPointers, cryptosuite, key} = testDataOptions;
+      const {cryptosuite, key, derived} = testDataOptions;
       const signer = key.signer();
-      const suite = createSuite({signer, cryptosuite, mandatoryPointers});
+      const suite = createSuite({
+        signer, cryptosuite,
+        mandatoryPointers, derived
+      });
       // pass the VC's context to the issuer
       const {'@context': contexts} = credential;
       const issuer = new MockIssuer({
