@@ -22,7 +22,7 @@ describe('Test checkDataIntegrityProofFormat()', function() {
 
 describe('should issue all suites', function() {
   for(const testDataOptions of cryptosuites) {
-    for(const [vcVersion, credential] of versionedCredentials) {
+    for(const [vcVersion, {credential}] of versionedCredentials) {
       _runSuite({
         vcVersion,
         testDataOptions,
