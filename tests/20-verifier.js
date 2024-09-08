@@ -23,20 +23,27 @@ describe('Test checkDataIntegrityProofVerifyErrors()', function() {
 
 describe('should verify all suites', function() {
   for(const testDataOptions of cryptosuites) {
-    for(const [vcVersion, {credential}] of versionedCredentials) {
+    for(const [
+      vcVersion,
+      {credential, mandatoryPointers, selectivePointers}
+    ] of versionedCredentials) {
       _runSuite({
         vcVersion,
         testDataOptions,
-        credential
+        credential,
+        mandatoryPointers,
+        selectivePointers
       });
     }
   }
 });
 
 function _runSuite({
-  vcVersion, testDataOptions, credential
+  vcVersion, testDataOptions,
+  credential, mandatoryPointers,
+  selectivePointers
 }) {
-  const {suiteName, keyType} = testDataOptions;
+  const {suiteName, keyType, derived} = testDataOptions;
   let testTitle = `VC ${vcVersion} Suite ${suiteName}`;
   if(keyType) {
     testTitle += ` keyType ${keyType}`;
@@ -46,6 +53,10 @@ function _runSuite({
       before(async function() {
         testDataOptions.testVector = structuredClone(credential);
         testDataOptions.documentLoader = documentLoader;
+        if(derived) {
+          testDataOptions.mandatoryPointers = mandatoryPointers;
+          testDataOptions.selectivePointers = selectivePointers;
+        }
       });
       checkDataIntegrityProofVerifyErrors({
         implemented: validVerifierImplementations,
