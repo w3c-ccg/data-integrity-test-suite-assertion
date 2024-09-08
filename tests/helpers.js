@@ -3,8 +3,11 @@
  */
 import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 
-export function createSuite({cryptosuite, signer, mandatoryPointers}) {
-  if(mandatoryPointers) {
+export function createSuite({
+  cryptosuite, signer,
+  mandatoryPointers, derived = false
+}) {
+  if(derived) {
     return new DataIntegrityProof({
       signer,
       cryptosuite: cryptosuite.createSignCryptosuite({mandatoryPointers})
