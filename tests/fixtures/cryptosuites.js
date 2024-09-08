@@ -106,12 +106,11 @@ for(const suite of cryptosuites) {
 
 export const verifierSuites = cryptosuites.map(({
   cryptosuite,
-  mandatoryPointers,
   derived
 }) => {
   if(derived) {
     return new DataIntegrityProof({
-      cryptosuite: cryptosuite.createVerifyCryptosuite({mandatoryPointers})
+      cryptosuite: cryptosuite.createVerifyCryptosuite()
     });
   }
   return new DataIntegrityProof({
