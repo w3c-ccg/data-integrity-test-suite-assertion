@@ -5,11 +5,9 @@ const expect = chai.expect;
 
 export function algorithmsAssertions({
   endpoints,
-  expectedProofType,
   testDescription,
   vendorName,
-  credentials,
-  optionalTests
+  credential,
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
