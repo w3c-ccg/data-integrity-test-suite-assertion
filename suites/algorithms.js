@@ -3,15 +3,14 @@ import {createInitialVc} from '../helpers.js';
 
 const expect = chai.expect;
 
-export function algorithmsAssertions(
-  {
-    endpoints, testDescription,
-    vendorName, credential = {
-      dates: true,
-      contextInjection: true,
-      domain: true
-    }
-  }) {
+export function algorithmsAssertions({
+  endpoints,
+  expectedProofType,
+  testDescription,
+  vendorName,
+  credentials,
+  optionalTests
+}) {
   return describe(testDescription, function() {
     const columnId = testDescription;
     const [issuer] = endpoints;
