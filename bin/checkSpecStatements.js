@@ -19,9 +19,13 @@ yargs(hideBin(argv))
           describe: 'The URL of a specification',
           demandOption: true
         })
+        .option('suiteLog', {
+          type: 'string',
+          describe: 'The path to the suiteLog',
+          demandOption: true
+        })
     }
   ).demandCommand().argv;
 
 async function checkSpecHandler(commands) {
-
 }
