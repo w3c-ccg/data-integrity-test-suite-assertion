@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import {argv} from 'node:process';
-import {writeFile} from 'node:fs/promises';
-import yargs from 'yargs';
+import {checkSpecText} from './handlers.js';
 import {hideBin} from 'yargs/helpers';
+import yargs from 'yargs';
 
 yargs(hideBin(argv))
   .scriptName('specStatements')
@@ -12,7 +12,7 @@ yargs(hideBin(argv))
     'check',
     'Checks the spec\'s normative statements again the specs specified',
     {
-      handler: checkSpecHandler,
+      handler: checkSpecText,
       builder: _yargs => _yargs
         .option('specUrl', {
           type: 'string',
@@ -26,6 +26,3 @@ yargs(hideBin(argv))
         })
     }
   ).demandCommand().argv;
-
-async function checkSpecHandler(commands) {
-}
