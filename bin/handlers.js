@@ -1,8 +1,8 @@
 /*!
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
+import {parse, TextNode} from 'node-html-parser';
 import {writeFile} from 'node:fs/promises';
-import {parse, TextNode, HTMLElement} from 'node-html-parser';
 
 export async function checkSpecText({specUrl, suiteLog}) {
   const specUrls = Array.isArray(specUrl) ? specUrl : [specUrl];
