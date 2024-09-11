@@ -3,26 +3,7 @@
  */
 import {parse, TextNode} from 'node-html-parser';
 import {readFile} from 'node:fs/promises';
-
-class Visitor {
-  constructor({condition, accumulator, props}) {
-    this.condition = condition;
-    this.accumulator = accumulator;
-    this.props = props;
-  }
-  visit({nodes}) {
-    for(const node of nodes) {
-      if(this.condition(node)) {
-        this.accumulator.push(node);
-      }
-      for(const prop of this.props) {
-        if(node[prop]) {
-          this.visit({nodes: node[prop]});
-        }
-      }
-    }
-  }
-}
+import {Visitor} from './Visitor.js';
 
 export async function checkSpecText({specUrl, suiteLog}) {
   const specUrls = Array.isArray(specUrl) ? specUrl : [specUrl];
@@ -45,13 +26,12 @@ export async function checkSpecText({specUrl, suiteLog}) {
   if(suiteLog) {
     log = JSON.parse(await readFile(suiteLog));
   }
-  //console.log(accumulator);
   if(log) {
     testVisitor.visit({nodes: log.suites});
     testVisitor.visit({nodes: log.tests});
   }
   const testTitles = new Set(tests.map(test => test?.title));
-  const normStatements = new Set(statements);
+  const normStatements = new Set(statements.map(s => s.text));
   console.log(`Test Title Count ${testTitles.size}`);
   console.log(`Normative Statement Count ${normStatements.size}`);
 }
