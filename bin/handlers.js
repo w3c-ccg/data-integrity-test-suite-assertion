@@ -26,10 +26,10 @@ class Visitor {
 
 export async function checkSpecText({specUrl, suiteLog}) {
   const specUrls = Array.isArray(specUrl) ? specUrl : [specUrl];
-  const nodes = [];
+  const statements = [];
   const specVisitor = new Visitor({
     condition: textNodeWithMust,
-    accumulator: nodes,
+    accumulator: statements,
     props: ['childNodes']
   });
   const tests = [];
@@ -51,6 +51,9 @@ export async function checkSpecText({specUrl, suiteLog}) {
     testVisitor.visit({nodes: log.tests});
   }
   const testTitles = new Set(tests.map(test => test?.title));
+  const normStatements = new Set(statements);
+  console.log(`Test Title Count ${testTitles.size}`);
+  console.log(`Normative Statement Count ${normStatements.size}`);
 }
 
 // the condition for the spec
