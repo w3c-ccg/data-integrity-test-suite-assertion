@@ -2,6 +2,7 @@
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
 import {parse, TextNode} from 'node-html-parser';
+import {readFile} from 'node:fs/promises';
 
 class Visitor {
   constructor({condition, accumulator}) {
@@ -18,7 +19,7 @@ class Visitor {
   }
 }
 
-export async function checkSpecText({specUrl}) {
+export async function checkSpecText({specUrl, suiteLog}) {
   const specUrls = Array.isArray(specUrl) ? specUrl : [specUrl];
   const accumulator = [];
   const visitor = new Visitor({
@@ -28,9 +29,13 @@ export async function checkSpecText({specUrl}) {
   for(const url of specUrls) {
     await parseSpec({url, visitor});
   }
-  console.log(accumulator);
+  if(suiteLog) {
+    const log = JSON.parse(await readFile(suiteLog));
+  }
+  //console.log(accumulator);
 }
 
+// the condition for the spec
 function textNodeWithMust(node) {
   if(node instanceof TextNode) {
     const {text} = node;
@@ -39,6 +44,11 @@ function textNodeWithMust(node) {
     }
   }
   return false;
+}
+
+// the condition for the test results
+function testWithTitle(node) {
+
 }
 
 async function parseSpec({url, visitor}) {
