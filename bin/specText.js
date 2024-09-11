@@ -6,11 +6,11 @@ import {hideBin} from 'yargs/helpers';
 import yargs from 'yargs';
 
 yargs(hideBin(argv))
-  .scriptName('specStatements')
+  .scriptName('specText')
   .usage('Usage: $0 <command>')
   .command(
     'check',
-    'Checks the spec\'s normative statements again the specs specified',
+    'Checks specification normative statements again test suite titles',
     {
       handler: checkSpecText,
       builder: _yargs => _yargs
