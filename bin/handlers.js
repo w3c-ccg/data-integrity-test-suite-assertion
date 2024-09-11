@@ -5,34 +5,52 @@ import {parse, TextNode} from 'node-html-parser';
 import {readFile} from 'node:fs/promises';
 
 class Visitor {
-  constructor({condition, accumulator}) {
+  constructor({condition, accumulator, props}) {
     this.condition = condition;
     this.accumulator = accumulator;
+    this.props = props;
   }
   visit({nodes}) {
     for(const node of nodes) {
       if(this.condition(node)) {
         this.accumulator.push(node);
       }
-      this.visit({nodes: node.childNodes});
+      for(const prop of this.props) {
+        if(node[prop]) {
+          this.visit({nodes: node[prop]});
+        }
+      }
     }
   }
 }
 
 export async function checkSpecText({specUrl, suiteLog}) {
   const specUrls = Array.isArray(specUrl) ? specUrl : [specUrl];
-  const accumulator = [];
-  const visitor = new Visitor({
+  const nodes = [];
+  const specVisitor = new Visitor({
     condition: textNodeWithMust,
-    accumulator
+    accumulator: nodes,
+    props: ['childNodes']
+  });
+  const tests = [];
+  const testVisitor = new Visitor({
+    condition: testWithTitle,
+    accumulator: tests,
+    props: ['suites', 'tests']
   });
   for(const url of specUrls) {
-    await parseSpec({url, visitor});
+    await parseSpec({url, visitor: specVisitor});
   }
+  let log;
   if(suiteLog) {
-    const log = JSON.parse(await readFile(suiteLog));
+    log = JSON.parse(await readFile(suiteLog));
   }
   //console.log(accumulator);
+  if(log) {
+    testVisitor.visit({nodes: log.suites});
+    testVisitor.visit({nodes: log.tests});
+  }
+  const testTitles = new Set(tests.map(test => test?.title));
 }
 
 // the condition for the spec
@@ -48,7 +66,10 @@ function textNodeWithMust(node) {
 
 // the condition for the test results
 function testWithTitle(node) {
-
+  if(node?.type === 'test') {
+    return true;
+  }
+  return false;
 }
 
 async function parseSpec({url, visitor}) {
