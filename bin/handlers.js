@@ -32,17 +32,18 @@ export async function checkSpecText({specUrl, suiteLog}) {
   }
   const testTitles = new Set(tests.map(test => test?.title));
   const normStatements = statements.map(s => s.text);
+  const sentences = new Set(statements.flatMap(
+    s => s.text.split(/\./)).filter(s => s.includes('MUST')));
   console.log(`Test Title Count ${testTitles.size}`);
   console.log(`Normative Statement Count ${normStatements.length}`);
+  console.log(`Sentence Count ${sentences.size}`);
 }
 
 // the condition for the spec
 function textNodeWithMust(node) {
-  if(node instanceof TextNode) {
-    const {text} = node;
-    if(text.includes('MUST')) {
-      return true;
-    }
+  const {text = ''} = node;
+  if(text.includes('MUST')) {
+    return true;
   }
   return false;
 }
