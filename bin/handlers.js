@@ -31,9 +31,9 @@ export async function checkSpecText({specUrl, suiteLog}) {
     testVisitor.visit({nodes: log.tests});
   }
   const testTitles = new Set(tests.map(test => test?.title));
-  const normStatements = new Set(statements.map(s => s.text));
+  const normStatements = statements.map(s => s.text);
   console.log(`Test Title Count ${testTitles.size}`);
-  console.log(`Normative Statement Count ${normStatements.size}`);
+  console.log(`Normative Statement Count ${normStatements.length}`);
 }
 
 // the condition for the spec
