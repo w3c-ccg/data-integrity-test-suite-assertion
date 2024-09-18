@@ -17,11 +17,7 @@ const should = chai.should();
 export function runDataIntegrityProofFormatTests({
   endpoints, expectedProofTypes, testDescription,
   vendorName, cryptosuiteName, credential,
-  optionalTests = {
-    dates: false,
-    contextInjection: false,
-    domain: false
-  }
+  optionalTests
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;

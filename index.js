@@ -37,9 +37,9 @@ export function checkDataIntegrityProofFormat({
   cryptosuiteName, isEcdsaTests = false, credential = validVc,
   testDescription = 'Data Integrity (issuer)',
   optionalTests = {
-    dates: true,
-    contextInjection: true,
-    domain: true
+    dates: false,
+    contextInjection: false,
+    domain: false
   }
 } = {}) {
   return describe(testDescription, function() {
@@ -105,8 +105,8 @@ export function checkDataIntegrityProofVerifyErrors({
   isEcdsaTests = false, testDescription = 'Data Integrity (verifier)',
   testDataOptions,
   optionalTests = {
-    created: true,
-    authentication: true
+    dates: false,
+    authentication: false
   }
 } = {}) {
   return describe(testDescription, async function() {
