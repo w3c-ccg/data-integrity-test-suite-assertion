@@ -103,7 +103,7 @@ const credential = {
 };
 // if the suite is data integrity complaint
 // cryptosuiteName is mandatory
-const cryptosuiteName = 'ecdsa-sd-2023';
+const cryptosuiteName = 'eddsa-2022';
 
 // an optional list of proof types VC
 // issued by an implementation will have
