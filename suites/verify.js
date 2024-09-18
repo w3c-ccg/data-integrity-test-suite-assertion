@@ -10,7 +10,10 @@ export function runDataIntegrityProofVerifyTests({
   testDescription,
   vendorName,
   credentials,
-  optionalTests
+  optionalTests = {
+    dates: false,
+    authentication: false
+  }
 }) {
   return describe(testDescription, function() {
     const [verifier] = endpoints;

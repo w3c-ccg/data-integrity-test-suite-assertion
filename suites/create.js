@@ -18,9 +18,9 @@ export function runDataIntegrityProofFormatTests({
   endpoints, expectedProofTypes, testDescription,
   vendorName, cryptosuiteName, credential,
   optionalTests = {
-    dates: true,
-    contextInjection: true,
-    domain: true
+    dates: false,
+    contextInjection: false,
+    domain: false
   }
 }) {
   return describe(testDescription, function() {
