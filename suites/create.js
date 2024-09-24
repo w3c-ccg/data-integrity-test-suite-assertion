@@ -408,15 +408,10 @@ export function runDataIntegrityProofFormatTests({
         'value or unordered list of string values.', function() {
         for(const proof of proofs) {
           if(proof.previousProof) {
-            proof.previousProof.should.be.
-              oneOf(['string', 'object'], 'Expected ' +
-              '"proof.previousProof" to be a string or an array.');
-            if(typeof proof.previousProof === 'object') {
-              for(const previousProof in proof.previousProof) {
-                previousProof.should.be.a('string', 'Expected ' +
-                '"previousProof" items to be a string.');
-              }
-            }
+            isStringOrArrayOfStrings(proof.previousProof).should.equal(
+              true,
+              '"proof.previousProof" should be a string or an Array of strings.'
+            );
           }
         }
       });
