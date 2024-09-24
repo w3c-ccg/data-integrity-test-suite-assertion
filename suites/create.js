@@ -216,23 +216,6 @@ export function runDataIntegrityProofFormatTests({
         shouldHaveProofValue({proof, expectedPrefix, encodingName});
       }
     });
-    it('If "proof.previousProof" property exists, it MUST be a string value ' +
-      'or unordered list of string values.',
-    function() {
-      for(const proof of proofs) {
-        if(proof.previousProof) {
-          proof.previousProof.should.be.
-            oneOf(['string', 'object'], 'Expected ' +
-            '"proof.previousProof" to be a string or an array.');
-          if(typeof proof.previousProof === 'object') {
-            for(const previousProof in proof.previousProof) {
-              previousProof.should.be.a('string', 'Expected ' +
-              '"previousProof" items to be a string.');
-            }
-          }
-        }
-      }
-    });
     it('Cryptographic suite designers MUST use mandatory proof value ' +
     'properties defined in Section 2.1 Proofs, and MAY define other ' +
     'properties specific to their cryptographic suite.', async function() {
@@ -416,6 +399,24 @@ export function runDataIntegrityProofFormatTests({
               'to be specified.');
             proof.challenge.should.be.a('string', 'Expected ' +
               '"proof.challenge" to be a string.');
+          }
+        }
+      });
+    }
+    if(optionalTests.proofChain) {
+      it('If "proof.previousProof" property exists, it MUST be a string ' +
+        'value or unordered list of string values.', function() {
+        for(const proof of proofs) {
+          if(proof.previousProof) {
+            proof.previousProof.should.be.
+              oneOf(['string', 'object'], 'Expected ' +
+              '"proof.previousProof" to be a string or an array.');
+            if(typeof proof.previousProof === 'object') {
+              for(const previousProof in proof.previousProof) {
+                previousProof.should.be.a('string', 'Expected ' +
+                '"previousProof" items to be a string.');
+              }
+            }
           }
         }
       });
