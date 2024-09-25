@@ -53,7 +53,8 @@ export const cryptosuites = [{
   keyType: 'P-256',
   optionalTests: {
     dates: true,
-    authentication: true
+    authentication: true,
+    proofChain: true
   },
   cryptosuite: ecdsaRdfc2019Cryptosuite,
   multikey: EcdsaMultikey,
@@ -65,7 +66,8 @@ export const cryptosuites = [{
   keyType: 'P-384',
   optionalTests: {
     dates: true,
-    authentication: true
+    authentication: true,
+    proofChain: true
   },
   cryptosuite: ecdsaRdfc2019Cryptosuite,
   multikey: EcdsaMultikey,
@@ -85,7 +87,8 @@ export const cryptosuites = [{
   suiteName: 'eddsa-rdfc-2022',
   optionalTests: {
     dates: true,
-    authentication: true
+    authentication: true,
+    proofChain: true
   },
   cryptosuite: eddsaRdfc2022CryptoSuite,
   multikey: Ed25519Multikey,
