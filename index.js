@@ -39,7 +39,8 @@ export function checkDataIntegrityProofFormat({
   optionalTests = {
     dates: false,
     contextInjection: false,
-    domain: false
+    domain: false,
+    proofChain: false
   }
 } = {}) {
   return describe(testDescription, function() {
@@ -106,7 +107,8 @@ export function checkDataIntegrityProofVerifyErrors({
   testDataOptions,
   optionalTests = {
     dates: false,
-    authentication: false
+    authentication: false,
+    proofChain: false
   }
 } = {}) {
   return describe(testDescription, async function() {
