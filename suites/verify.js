@@ -274,7 +274,18 @@ export function runDataIntegrityProofVerifyTests({
           reason: 'Should not verify VC with invalid "proof.previousProof".'
         });
       });
+      it('Each value identifies another data integrity proof, all of which ' +
+      'MUST also verify for the current proof to be considered verified',
+      async function() {
+        this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=Each%20value%20identifies%20another%20data%20integrity%20proof%2C%20all%20of%20which%20MUST%20also%20verify%20for%20the%20current%20proof%20to%20be%20considered%20verified';
+        await verificationFail({
+          credential: credentials.clone('previousProofFail'),
+          verifier,
+          reason: 'Should not verify VC with a "previousProof" that does ' +
+          'not verify.'
+        });
 
+      });
     }
   });
 }

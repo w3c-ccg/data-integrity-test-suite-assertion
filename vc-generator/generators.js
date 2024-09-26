@@ -41,6 +41,7 @@ export const generators = {
     invalidVm,
     undefinedTerm,
     previousProofString: defaultGen,
+    previousProofFail: defaultGen,
     previousProofArray: defaultGen,
     missingPreviousProofString: defaultGen,
     missingPreviousProofArray: defaultGen,
@@ -72,6 +73,28 @@ export const setups = {
     mandatoryPointers,
     selectivePointers,
     proofId = 'urn:uuid:test:first:proof'
+  }) {
+    const {suite: firstSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    firstSuite.proof = {id: proofId};
+    const {suite: secondSuite} = getSuites({
+      cryptosuite, signer,
+      mandatoryPointers, selectivePointers
+    });
+    secondSuite.proof = {previousProof: proofId};
+    return {
+      suites: [firstSuite, secondSuite]
+    };
+  },
+  previousProofFail({
+    cryptosuite,
+    signer,
+    mandatoryPointers,
+    selectivePointers,
+    proofId = 'urn:uuid:test:first:proof'
+
   }) {
     const {suite: firstSuite} = getSuites({
       cryptosuite, signer,
@@ -180,6 +203,11 @@ export const cleanups = {
       // if it has a base drop it from contexts
       return !('@base' in c);
     });
+    return issuedCredential;
+  },
+  previousProofFail({issuedCredential}) {
+    // make the first proof fail verification
+    issuedCredential.proof[0].proofValue = 'invalidProofValue';
     return issuedCredential;
   }
 };
