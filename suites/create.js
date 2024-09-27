@@ -403,11 +403,11 @@ export function runDataIntegrityProofFormatTests({
         }
       });
     }
-    if(optionalTests.proofChain) {
+    if(optionalTests?.proofChain) {
       it('If "proof.previousProof" property exists, it MUST be a string ' +
         'value or unordered list of string values.', function() {
         for(const proof of proofs) {
-          if(proof.previousProof) {
+          if(proof?.previousProof) {
             isStringOrArrayOfStrings(proof.previousProof).should.equal(
               true,
               '"proof.previousProof" should be a string or an Array of strings.'
