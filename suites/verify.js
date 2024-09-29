@@ -51,18 +51,37 @@ export function runDataIntegrityProofVerifyTests({
         reason: 'Should not verify VC with invalid "proof.type"'
       });
     });
-    it('If the "proof" field is missing, an error MUST be raised.',
-      async function() {
-        const credential = credentials.clone('issuedVc');
-        delete credential.proof;
-        await verificationFail({credential, verifier});
+    it('If one or more of proof.type, proof.verificationMethod, and ' +
+      'proof.proofPurpose does not exist, an error MUST be raised and ' +
+      'SHOULD convey an error type of PROOF_VERIFICATION_ERROR',
+    async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=If%20one%20or%20more%20of%20proof.type%2C%20proof.verificationMethod%2C%20and%20proof.proofPurpose%20does%20not%20exist%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_VERIFICATION_ERROR.';
+      const credential = credentials.clone('issuedVc');
+      delete credential.proof;
+      await verificationFail({
+        credential,
+        verifier,
+        reason: 'MUST not verify VC w/o a proof'
       });
-    it('If the "proof" field is invalid, an error MUST be raised.',
-      async function() {
-        const credential = credentials.clone('issuedVc');
-        credential.proof = null;
-        await verificationFail({credential, verifier});
+    });
+    it('If either securedDocument is not a map or securedDocument.proof is ' +
+      'not a map, an error MUST be raised and SHOULD convey an error type ' +
+      'of PARSING_ERROR.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=If%20either%20securedDocument%20is%20not%20a%20map%20or%20securedDocument.proof%20is%20not%20a%20map%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PARSING_ERROR.';
+      const credential = credentials.clone('issuedVc');
+      credential.proof = null;
+      await verificationFail({
+        credential,
+        verifier,
+        reason: 'MUST not verify VC with proof that is not a map.'
       });
+      await verificationFail({
+        // use a string as the non map representation of a VC
+        credential: JSON.stringify(credentials.clone('issuedVc')),
+        verifier,
+        reason: 'MUST not verify VC that is not a map.'
+      });
+    });
     it('If the "proof.type" field is missing, an error MUST be raised.',
       async function() {
         const credential = credentials.clone('issuedVc');
