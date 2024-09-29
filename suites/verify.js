@@ -51,19 +51,6 @@ export function runDataIntegrityProofVerifyTests({
         reason: 'Should not verify VC with invalid "proof.type"'
       });
     });
-    it('If one or more of proof.type, proof.verificationMethod, and ' +
-      'proof.proofPurpose does not exist, an error MUST be raised and ' +
-      'SHOULD convey an error type of PROOF_VERIFICATION_ERROR',
-    async function() {
-      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=If%20one%20or%20more%20of%20proof.type%2C%20proof.verificationMethod%2C%20and%20proof.proofPurpose%20does%20not%20exist%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_VERIFICATION_ERROR.';
-      const credential = credentials.clone('issuedVc');
-      delete credential.proof;
-      await verificationFail({
-        credential,
-        verifier,
-        reason: 'MUST not verify VC w/o a proof'
-      });
-    });
     it('If either securedDocument is not a map or securedDocument.proof is ' +
       'not a map, an error MUST be raised and SHOULD convey an error type ' +
       'of PARSING_ERROR.', async function() {
@@ -82,31 +69,47 @@ export function runDataIntegrityProofVerifyTests({
         reason: 'MUST not verify VC that is not a map.'
       });
     });
-    it('If the "proof.type" field is missing, an error MUST be raised.',
-      async function() {
-        const credential = credentials.clone('issuedVc');
-        delete credential.proof.type;
-        await verificationFail({credential, verifier});
+    it('If one or more of proof.type, proof.verificationMethod, and ' +
+      'proof.proofPurpose does not exist, an error MUST be raised and ' +
+      'SHOULD convey an error type of PROOF_VERIFICATION_ERROR',
+    async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#:~:text=If%20one%20or%20more%20of%20proof.type%2C%20proof.verificationMethod%2C%20and%20proof.proofPurpose%20does%20not%20exist%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_VERIFICATION_ERROR.';
+      const credential = credentials.clone('issuedVc');
+      delete credential.proof;
+      await verificationFail({
+        credential,
+        verifier,
+        reason: 'MUST not verify VC w/o a proof'
       });
+      const noType = credentials.clone('issuedVc');
+      delete noType.proof.type;
+      await verificationFail({
+        credential: noType,
+        verifier,
+        reason: 'MUST not verify VC w/o a "proof.type".'
+      });
+      const noVm = credentials.clone('noVm');
+      await verificationFail({
+        credential: noVm,
+        verifier,
+        reason: 'MUST not verify VC w/o "proof.verificationMethod"."'
+      });
+      const noProofPurpose = credentials.clone('noProofPurpose');
+      await verificationFail({
+        credential: noProofPurpose,
+        verifier,
+        reason: 'MUST not verify VC w/o "proof.proofPurpose"'
+      });
+    });
     it(`If the "proof.type" field is not the string ` +
       `"${expectedProofType}", an error MUST be raised.`,
     async function() {
       const credential = credentials.clone('invalidProofType');
       await verificationFail({credential, verifier});
     });
-    it('If the "proof.verificationMethod" field is missing, an error ' +
-      'MUST be raised.', async function() {
-      const credential = credentials.clone('noVm');
-      await verificationFail({credential, verifier});
-    });
     it('If the "proof.verificationMethod" field is invalid, an error ' +
       'MUST be raised.', async function() {
       const credential = credentials.clone('invalidVm');
-      await verificationFail({credential, verifier});
-    });
-    it('If the "proof.proofPurpose" field is missing, an error MUST ' +
-      'be raised.', async function() {
-      const credential = credentials.clone('noProofPurpose');
       await verificationFail({credential, verifier});
     });
     it('If the "proof.proofPurpose" field is invalid, an error MUST ' +
