@@ -245,6 +245,19 @@ export function runDataIntegrityProofFormatTests({
         reason: 'Expected issuer to error when VC has an undefined term.'
       });
     });
+    it('If the algorithm produces an error, the error MUST be propagated ' +
+      'and SHOULD convey the error type.', async function() {
+      this.test.link = 'https://w3c.github.io/vc-data-integrity/#dfn-input-document:~:text=If%20the%20algorithm%20produces%20an%20error%2C%20the%20error%20MUST%20be%20propagated%20and%20SHOULD%20convey%20the%20error%20type';
+      const noSubject = structuredClone(credential);
+      delete noSubject.credentialSubject;
+      // FIXME this test should look for a propagated error such as
+      // PROOF_GENERATION_ERROR
+      await shouldFailIssuance({
+        credential: noSubject,
+        issuer,
+        reason: 'Expected issuer to error when VC has no credentialSubject.'
+      });
+    });
     if(cryptosuiteName) {
       it('The value of the cryptosuite property MUST be a string that ' +
         'identifies the cryptographic suite.', async function() {
