@@ -45,14 +45,14 @@ export async function verificationSuccess({
       ...options
     }
   };
-  const {result, error} = await verifier.post({json: body});
+  const {data, error, result} = await verifier.post({json: body});
   should.not.exist(error, reason || 'Expected no error from verifier.');
   should.exist(result, reason || 'Expected verification to succeed.');
   result.status.should.equal(
     200,
     reason || 'Expected HTTP status 200 for successful verification'
   );
-  return {result, error};
+  return {data, result, error};
 }
 
 /**
@@ -78,11 +78,11 @@ export async function verificationFail({
       ...options
     }
   };
-  const {result, error} = await verifier.post({json: body});
+  const {data, error, result} = await verifier.post({json: body});
   should.not.exist(result, reason || 'Expected no result from verifier.');
   should.exist(error, reason || 'Expected verifier to error.');
   shouldBeErrorResponse({response: error, reason});
-  return {result, error};
+  return {data, error, result};
 }
 
 export async function shouldFailIssuance({
@@ -100,7 +100,7 @@ export async function shouldFailIssuance({
       ...options
     }
   };
-  const {result, error} = await issuer.post({json: body});
+  const {data, error, result} = await issuer.post({json: body});
   should.not.exist(result, reason || 'Expected no result from issuer.');
   should.exist(error, reason || 'Expected issuer to error.');
   shouldBeErrorResponse({
@@ -110,7 +110,7 @@ export async function shouldFailIssuance({
     expectedStatuses: [400, 422, 500],
     reason
   });
-  return {result, error};
+  return {data, error, result};
 }
 
 export function expectedMultibasePrefix(cryptosuite) {
@@ -268,9 +268,9 @@ export function shouldBeErrorResponse({
   expectedStatuses = [400, 422],
   reason
 }) {
-  should.exist(response, reason || 'Expected an Error Response. ${reason}');
+  should.exist(response, reason || 'Expected an Error Response.');
   const {status} = response;
-  should.exist(status, reason || 'Expected "response.status" to exist.');
+  should.exist(status, reason || 'Expected "errorResponse.status" to exist.');
   const statusNumber = Number.parseInt(status);
   if(!expectedStatuses.includes(statusNumber)) {
     const statusReason = statusReasons[statusNumber];
