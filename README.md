@@ -10,11 +10,11 @@
 
 ## Background
 The library exports normative suites for Data Integrity:
-- `checkDataIntegrityProofFormat` checks the proofs of VCs issued with a specific suite.
+- `checkDataIntegrityProofFormat` checks the proofs of VCs issued with a Data Integrity Suite.
 - `checkDataIntegrityProofVerifyErrors` checks conformant verifiers for support of a Data Integrity Suite.
 
-The suites test normative statements found in the [Verifiable Credential Data Integrity 1.0 specification.](https://w3c.github.io/vc-data-integrity/)
 These functions create mocha suites intended to work with the [mocha-w3c-interop-reporter](https://www.npmjs.com/package/@digitalbazaar/mocha-w3c-interop-reporter)
+The suites test normative statements found in the [Verifiable Credential Data Integrity 1.0 specification.](https://w3c.github.io/vc-data-integrity/)
 
 ## Install
 
@@ -161,7 +161,7 @@ This suite requires that an implementer have implemented at least 2 routes for a
 2. POST [/credentials/verify](https://w3c-ccg.github.io/vc-api/#verify-credential) in verifiers
 3. POST [/presentations/verify](https://w3c-ccg.github.io/vc-api/#verify-presentation) in vpVerifiers
 
-Additionally, endpoints should conform to [VC-API Error Handling](https://w3c-ccg.github.io/vc-api/#error-handling)
-When handling errors, errors should conform to [Data Integrity Processing Errors](https://w3c.github.io/vc-data-integrity/#processing-errors)
+Endpoints should conform to [VC-API Error Handling](https://w3c-ccg.github.io/vc-api/#error-handling).
+Errors should conform to [Data Integrity Processing Errors](https://w3c.github.io/vc-data-integrity/#processing-errors)
 
 See the [VC Test Suite Implementations README](https://github.com/w3c/vc-test-suite-implementations) for more details on endpoints.
