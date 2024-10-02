@@ -6,11 +6,15 @@
 - [Install](#install)
 - [Test](#test)
 - [Usage](#usage)
+- [Implementations](#implementations)
 
 ## Background
-This library exports a function `checkDataIntegrityProofFormat()` that can be
-called in other test suites (such as Ed25519, BBS+, etc.) to validate the
-structure of the proofs on a document.
+The library exports normative suites for Data Integrity:
+- `checkDataIntegrityProofFormat` checks the proofs of VCs issued with a Data Integrity Suite.
+- `checkDataIntegrityProofVerifyErrors` checks conformant verifiers for support of a Data Integrity Suite.
+
+These functions create mocha suites intended to work with the [mocha-w3c-interop-reporter](https://www.npmjs.com/package/@digitalbazaar/mocha-w3c-interop-reporter).
+The suites test normative statements found in the [Verifiable Credential Data Integrity 1.0 specification.](https://w3c.github.io/vc-data-integrity/).
 
 ## Install
 
@@ -149,3 +153,15 @@ checkDataIntegrityProofVerifyErrors({
   testDataOptions
 });
 ```
+
+## Implementations
+Implementations passed to this suite must implement the [VC-API](https://w3c-ccg.github.io/vc-api/).
+This suite requires that an implementer have implemented at least 2 routes for a Data Integrity Suite:
+1. POST [/credentials/issue](https://w3c-ccg.github.io/vc-api/#issue-credential) in issuers.
+2. POST [/credentials/verify](https://w3c-ccg.github.io/vc-api/#verify-credential) in verifiers.
+3. POST [/presentations/verify](https://w3c-ccg.github.io/vc-api/#verify-presentation) in vpVerifiers.
+
+Endpoints should conform to [VC-API Error Handling](https://w3c-ccg.github.io/vc-api/#error-handling).
+Errors should conform to [Data Integrity Processing Errors](https://w3c.github.io/vc-data-integrity/#processing-errors).
+
+See the [VC Test Suite Implementations README](https://github.com/w3c/vc-test-suite-implementations) for more details on endpoints.
