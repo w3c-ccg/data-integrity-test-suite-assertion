@@ -1,6 +1,11 @@
 # data-integrity-test-suite-assertion Changelog
 
-## 1.4.0 -
+## 1.4.1 -
+
+### Fixed
+- previousProof/ProofChain tests now use static test vectors.
+
+## 1.4.0 - 2024-10-06
 
 ### Added
 - A new parameter `optionalTests` to `checkDataIntegrityProofFormat`.
