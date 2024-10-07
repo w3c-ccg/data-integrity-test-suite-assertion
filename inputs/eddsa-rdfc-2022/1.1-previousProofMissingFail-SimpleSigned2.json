@@ -3,6 +3,7 @@
     "https://www.w3.org/2018/credentials/v1",
     {
       "@context": {
+        "AlumniCredential": "https://www.example.org/AlumniCredential",
         "alumniOf": "https://www.example.org/alumniOf",
         "description": "https://www.example.com/description",
         "name": "https://www.example.com/name"
@@ -30,7 +31,7 @@
       "created": "2023-02-26T22:06:38Z",
       "verificationMethod": "did:key:z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7#z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7",
       "proofPurpose": "assertionMethod",
-      "proofValue": "z2NNMUK789yAaFg9uWt9deyhFMbuhcirX1VvCARsebEiCx5ikF1L4AHnZ78wNMJ9temZT62VvxAJgqwDLkDXMpPck"
+      "proofValue": "z677hKy2FJKAmZP7uZY3wvtf71WyAtbY2goK435rqnJ4jt7MaNtekuupi3bk5mzGjKqEMQbGgvMHapezRe16xNjpg"
     },
     {
       "type": "DataIntegrityProof",
@@ -39,7 +40,7 @@
       "verificationMethod": "did:key:z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E#z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E",
       "proofPurpose": "assertionMethod",
       "previousProof": "urn:uuid:38329423-2179-4b2e-88cb-a7c7d9dc4544",
-      "proofValue": "z3wBizijLeU8xVdw43SwuwQSrbstpitjtNxo9ptR3UEP5fJUwapqXFg75Ys2zJD54fAiBWSwQSpGpeRmokEjHAunc"
+      "proofValue": "z4uZBmaUWMApJ2PdNz7HS44ac611WVLEkQnCL7TPiAW4HpbXv96NNPXnoHkDX6kG32uwdhL6qa9eHWD1yACVHdB25"
     }
   ]
 }
