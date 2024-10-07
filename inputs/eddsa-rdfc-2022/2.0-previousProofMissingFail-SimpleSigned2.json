@@ -3,6 +3,7 @@
     "https://www.w3.org/ns/credentials/v2",
     {
       "@context": {
+        "AlumniCredential": "https://www.example.org/AlumniCredential",
         "alumniOf": "https://www.example.org/alumniOf"
       }
     }
@@ -28,7 +29,7 @@
       "created": "2023-02-26T22:06:38Z",
       "verificationMethod": "did:key:z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7#z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7",
       "proofPurpose": "assertionMethod",
-      "proofValue": "z4zHjvHjY2fM4E7pvCruQ6xpvCA2mHXHF4EzEuuZueC9dGqSMYLUquPP8YmnhWvdBE3UrfsXNcUzxGuiWEu3KdVGp"
+      "proofValue": "z3MPPHM5VFhWw2teqGvjXDzsrqPcJoruJryZKCfhjpfpMjqgJq2D3whcG23BKnonAyT8c45VK4SfiQfkShFWPGmsi"
     },
     {
       "type": "DataIntegrityProof",
@@ -37,7 +38,7 @@
       "verificationMethod": "did:key:z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E#z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E",
       "proofPurpose": "assertionMethod",
       "previousProof": "urn:uuid:38329423-2179-4b2e-88cb-a7c7d9dc4544",
-      "proofValue": "z2jNS2zahsb3JvEGA1AtogaqqszzBtddGuodRRei8RKPs9aKacPCQ8dykai67J8cNWAUhQ7mCx437Bdx17LG5YrNg"
+      "proofValue": "z5pV8tTyZ5jyKpxFULw4LvGNE74rL4EbQ8mF4HvDWGdxk9A9ULvqEPSuHg3QezpY4ee4h9teDGBgTFKe3hmJEE64q"
     }
   ]
 }
