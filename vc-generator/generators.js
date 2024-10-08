@@ -54,22 +54,26 @@ export const generators = {
 };
 
 export const staticFixtures = {
-  previousProofString({suiteName}){
-    return getStatic({suiteName, fileName});
+  previousProofString({suiteName, version}){
+    return getStaticFile({
+      suiteName,
+      fileName: '',
+      version
+    });
   },
-  previousProofFail({suiteName}){
+  previousProofFail({suiteName, version}){
 
   },
-  previousProofArray({suiteName}) {
+  previousProofArray({suiteName, version}) {
 
   },
-  missingPreviousProofString({suiteName}) {
+  missingPreviousProofString({suiteName, version}) {
 
   },
-  missingPreviousProofArray({suiteName}) {
+  missingPreviousProofArray({suiteName, version}) {
 
   },
-  proofSet({suiteName}) {
+  proofSet({suiteName, version}) {
 
   }
 };
