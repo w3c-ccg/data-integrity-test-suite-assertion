@@ -2,8 +2,8 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as vc from '@digitalbazaar/vc';
-import {getStaticFile, invalidCreateProof} from './helpers.js';
 import {getSuites} from './cryptosuite.js';
+import {invalidCreateProof} from './helpers.js';
 import jsigs from 'jsonld-signatures';
 
 const {AuthenticationProofPurpose} = jsigs.purposes;
@@ -51,51 +51,6 @@ export const generators = {
   // not necessarily used in DI Assertion itself, but used
   // in multiple suites
   shared: {}
-};
-
-export const staticFixtures = {
-  previousProofString({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: 'previousProofStringOk',
-      version
-    });
-  },
-  previousProofFail({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: 'previousProofNotStringFail',
-      version
-    });
-  },
-  previousProofArray({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: 'previousProofArrayOk',
-      version
-    });
-  },
-  missingPreviousProofString({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: 'previousProofMissingFail',
-      version
-    });
-  },
-  missingPreviousProofArray({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: '',
-      version
-    });
-  },
-  proofSet({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: '',
-      version
-    });
-  }
 };
 
 // some generators require bespoke setup
