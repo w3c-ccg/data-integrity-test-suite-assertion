@@ -1,6 +1,9 @@
 /*!
  * Copyright 2023-2024 Digital Bazaar, Inc.
  */
+import {createRequire} from 'node:module';
+
+const require = createRequire(import.meta.url);
 
 export function invalidCreateProof({
   addCreated = true,
@@ -95,4 +98,14 @@ export function invalidCreateProof({
 
     return proof;
   };
+}
+
+export function getStaticFile({
+  suiteName,
+  fileName,
+  version
+}) {
+  const filePath = `../inputs/${suiteName}/${version}-${fileName}` +
+    `-SimpleSigned2.json`;
+  return require(filePath);
 }
