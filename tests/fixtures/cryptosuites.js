@@ -54,7 +54,7 @@ export const cryptosuites = [{
   optionalTests: {
     dates: true,
     authentication: true,
-    proofChain: true
+    proofChain: false
   },
   cryptosuite: ecdsaRdfc2019Cryptosuite,
   multikey: EcdsaMultikey,
