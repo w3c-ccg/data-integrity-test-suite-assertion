@@ -53,6 +53,27 @@ export const generators = {
   shared: {}
 };
 
+export const staticFixtures = {
+  previousProofString({suiteName}){
+    return getStatic({suiteName, fileName});
+  },
+  previousProofFail({suiteName}){
+
+  },
+  previousProofArray({suiteName}) {
+
+  },
+  missingPreviousProofString({suiteName}) {
+
+  },
+  missingPreviousProofArray({suiteName}) {
+
+  },
+  proofSet({suiteName}) {
+
+  }
+};
+
 // some generators require bespoke setup
 export const setups = {
   undefinedTerm({selectivePointers, ...args}) {
