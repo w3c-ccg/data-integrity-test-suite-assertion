@@ -1,7 +1,7 @@
 /*!
  * Copyright 2023 - 2024 Digital Bazaar, Inc.
  */
-import {cleanups, getGenerators, setups} from './generators.js';
+import {cleanups, getGenerators, setups, staticFixtures} from './generators.js';
 import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
@@ -59,6 +59,13 @@ export async function generateTestData({
   const signer = key.signer();
   const vcGenerators = getGenerators(optionalTests);
   for(const [id, generator] of vcGenerators) {
+    const getFixture = staticFixtures[id];
+    const staticFixture = getFixture({id, suiteName, testVector});
+    // if there is a static fixture for this generator and suite use it
+    if(staticFixture) {
+      vcCache.get(suiteName).set(id, staticFixture);
+      continue;
+    }
     // if a generator has a specific setup use it
     // otherwise getSuites is fine
     const setup = setups[id] || getSuites;
