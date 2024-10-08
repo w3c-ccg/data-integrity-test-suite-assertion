@@ -1,13 +1,14 @@
 /*!
  * Copyright 2023 - 2024 Digital Bazaar, Inc.
  */
-import {cleanups, getGenerators, setups, staticFixtures} from './generators.js';
+import {cleanups, getGenerators, setups} from './generators.js';
 import {
   cryptosuite as eddsa2022CryptoSuite
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {getDefaultKey} from './secret.js';
 import {getSuites} from './cryptosuite.js';
 import {issueCloned} from './issuer.js';
+import {staticFixtures} from './staticFixtures.js';
 import {validVc} from '../index.js';
 
 const _initCache = () => new Map([
@@ -62,7 +63,10 @@ export async function generateTestData({
   for(const [id, generator] of vcGenerators) {
     const getFixture = staticFixtures[id];
     if(getFixture) {
-      const staticFixture = getFixture({id, suiteName, testVector, version: vcVersion});
+      const staticFixture = getFixture({
+        suiteName,
+        version: vcVersion
+      });
       // if there is a static fixture for this generator and suite use it
       if(staticFixture) {
         vcCache.get(suiteName).set(id, staticFixture);
