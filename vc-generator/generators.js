@@ -2,8 +2,8 @@
  * Copyright 2023-2024 Digital Bazaar, Inc.
  */
 import * as vc from '@digitalbazaar/vc';
+import {getStaticFile, invalidCreateProof} from './helpers.js';
 import {getSuites} from './cryptosuite.js';
-import {invalidCreateProof} from './helpers.js';
 import jsigs from 'jsonld-signatures';
 
 const {AuthenticationProofPurpose} = jsigs.purposes;
@@ -54,27 +54,47 @@ export const generators = {
 };
 
 export const staticFixtures = {
-  previousProofString({suiteName, version}){
+  previousProofString({suiteName, version}) {
+    return getStaticFile({
+      suiteName,
+      fileName: 'previousProofStringOk',
+      version
+    });
+  },
+  previousProofFail({suiteName, version}) {
+    return getStaticFile({
+      suiteName,
+      fileName: 'previousProofNotStringFail',
+      version
+    });
+  },
+  previousProofArray({suiteName, version}) {
+    return getStaticFile({
+      suiteName,
+      fileName: 'previousProofArrayOk',
+      version
+    });
+  },
+  missingPreviousProofString({suiteName, version}) {
+    return getStaticFile({
+      suiteName,
+      fileName: 'previousProofMissingFail',
+      version
+    });
+  },
+  missingPreviousProofArray({suiteName, version}) {
     return getStaticFile({
       suiteName,
       fileName: '',
       version
     });
   },
-  previousProofFail({suiteName, version}){
-
-  },
-  previousProofArray({suiteName, version}) {
-
-  },
-  missingPreviousProofString({suiteName, version}) {
-
-  },
-  missingPreviousProofArray({suiteName, version}) {
-
-  },
   proofSet({suiteName, version}) {
-
+    return getStaticFile({
+      suiteName,
+      fileName: '',
+      version
+    });
   }
 };
 
