@@ -6,35 +6,35 @@ import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 
 export const staticFixtures = {
-  async previousProofString({suiteName, version}) {
+  previousProofString({suiteName, version}) {
     return getStaticFile({
       suiteName,
       fileName: 'previousProofStringOk',
       version
     });
   },
-  async previousProofFail({suiteName, version}) {
+  previousProofFail({suiteName, version}) {
     return getStaticFile({
       suiteName,
       fileName: 'previousProofNotStringFail',
       version
     });
   },
-  async previousProofArray({suiteName, version}) {
+  previousProofArray({suiteName, version}) {
     return getStaticFile({
       suiteName,
       fileName: 'previousProofArrayOk',
       version
     });
   },
-  async missingPreviousProofString({suiteName, version}) {
+  missingPreviousProofString({suiteName, version}) {
     return getStaticFile({
       suiteName,
       fileName: 'previousProofStringMissingFail',
       version
     });
   },
-  async missingPreviousProofArray({suiteName, version}) {
+  missingPreviousProofArray({suiteName, version}) {
     return getStaticFile({
       suiteName,
       fileName: 'previousProofArrayMissingFail',
@@ -43,7 +43,7 @@ export const staticFixtures = {
   }
 };
 
-export async function getStaticFile({
+export function getStaticFile({
   suiteName,
   fileName,
   version

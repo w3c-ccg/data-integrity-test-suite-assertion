@@ -63,7 +63,7 @@ export async function generateTestData({
   for(const [id, generator] of vcGenerators) {
     const getFixture = staticFixtures[id];
     if(getFixture) {
-      const staticFixture = await getFixture({
+      const staticFixture = getFixture({
         suiteName,
         version: getVcVersion(testVector)
       });
