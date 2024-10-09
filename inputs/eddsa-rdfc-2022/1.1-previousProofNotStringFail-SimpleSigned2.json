@@ -1,12 +1,13 @@
 {
   "@context": [
     "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/security/data-integrity/v2",
     {
       "@context": {
         "AlumniCredential": "https://www.example.org/AlumniCredential",
         "alumniOf": "https://www.example.org/alumniOf",
-        "description": "https://www.example.com/description",
-        "name": "https://www.example.com/name"
+        "description": "https://schema.org/description",
+        "name": "https://schema.org/name"
       }
     }
   ],
@@ -31,7 +32,7 @@
       "created": "2023-02-26T22:06:38Z",
       "verificationMethod": "did:key:z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7#z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7",
       "proofPurpose": "assertionMethod",
-      "proofValue": "z677hKy2FJKAmZP7uZY3wvtf71WyAtbY2goK435rqnJ4jt7MaNtekuupi3bk5mzGjKqEMQbGgvMHapezRe16xNjpg"
+      "proofValue": "zzn81y4DtwGccgE728zZDpxcczae3WU7L4dqJuuSuB3n81Q1amVDnLmTi5zvgTV7peNknfFfg3wPVkMn3S9YBk6V"
     },
     {
       "type": "DataIntegrityProof",
@@ -40,7 +41,7 @@
       "verificationMethod": "did:key:z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E#z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E",
       "proofPurpose": "assertionMethod",
       "previousProof": 456321,
-      "proofValue": "z4uZBmaUWMApJ2PdNz7HS44ac611WVLEkQnCL7TPiAW4HpbXv96NNPXnoHkDX6kG32uwdhL6qa9eHWD1yACVHdB25"
+      "proofValue": "z3VhtuTTYhNDU9NQZCtB2rU3AKvbZ7S597Gp6ysK6obtGXXok3CQrjNxqCwhsj5FrDKLKT6ahMmaQiX5dYQKq6Z27"
     }
   ]
 }
