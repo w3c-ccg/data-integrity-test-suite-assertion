@@ -219,16 +219,22 @@ export const cleanups = {
  * @param {boolean} optionalTests.expires - Add the date generators.
  * @param {boolean} optionalTests.dates - Add the date generators.
  * @param {boolean} optionalTests.authentication - Add the auth generators?
+ * @param {boolean} optionalTests.proofChain - Add the proofChain generators.
  *
  * @returns {Map<string, Function>} A map of generators.
  */
-export const getGenerators = ({created, authentication, expires, dates}) => {
+export const getGenerators = optionalTests => {
   let entries = Object.entries(generators.mandatory);
-  if(created || expires || dates) {
+  // for backwards compatibility check for these
+  const {created, expires} = optionalTests;
+  if(created || expires) {
     entries = entries.concat(Object.entries(generators.dates));
   }
-  if(authentication) {
-    entries = entries.concat(Object.entries(generators.authentication));
+  for(const key in optionalTests) {
+    // if the key is true and there are generator for it
+    if(optionalTests[key] && (key in generators)) {
+      entries = entries.concat(Object.entries(generators[key]));
+    }
   }
   return new Map(entries);
 };
