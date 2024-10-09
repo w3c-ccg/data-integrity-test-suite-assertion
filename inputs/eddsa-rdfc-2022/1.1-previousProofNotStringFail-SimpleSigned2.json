@@ -18,7 +18,7 @@
   ],
   "name": "Alumni Credential",
   "description": "A minimum viable example of a VC 1.1 Alumni Credential.",
-  "issuer": "https://vc.example/issuers/5678",
+  "issuer": "did:key:z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E",
   "issuanceDate": "2023-01-01T00:00:00Z",
   "credentialSubject": {
     "id": "did:example:abcdefgh",
@@ -32,7 +32,7 @@
       "created": "2023-02-26T22:06:38Z",
       "verificationMethod": "did:key:z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7#z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7",
       "proofPurpose": "assertionMethod",
-      "proofValue": "zzn81y4DtwGccgE728zZDpxcczae3WU7L4dqJuuSuB3n81Q1amVDnLmTi5zvgTV7peNknfFfg3wPVkMn3S9YBk6V"
+      "proofValue": "zC5qkYVg1H7RfF8hGocqksLvLEqNheasBFEfbJ43cgUN2dFWFPBqmekrJhtxLh9SbmWG5Bqn7CG5bN8UKrtRUuuK"
     },
     {
       "type": "DataIntegrityProof",
@@ -41,7 +41,7 @@
       "verificationMethod": "did:key:z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E#z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E",
       "proofPurpose": "assertionMethod",
       "previousProof": 456321,
-      "proofValue": "z3VhtuTTYhNDU9NQZCtB2rU3AKvbZ7S597Gp6ysK6obtGXXok3CQrjNxqCwhsj5FrDKLKT6ahMmaQiX5dYQKq6Z27"
+      "proofValue": "z3xweNMbNHQJnLJ9GtieTQB7vE8mGx4AavAm7RaLx4kU8pUyabuE6bdaRsJyBgdcSahMjLYtPbPskeCWBhp4qLb8N"
     }
   ]
 }
