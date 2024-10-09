@@ -41,6 +41,7 @@ export const generators = {
     invalidVm,
     undefinedTerm,
   },
+  // tests related previousProof & multiple proofs
   proofChain: {
     previousProofString: defaultGen,
     previousProofFail: defaultGen,
