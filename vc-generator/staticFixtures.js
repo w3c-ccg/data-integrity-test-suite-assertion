@@ -40,13 +40,6 @@ export const staticFixtures = {
       fileName: 'previousProofArrayMissingFail',
       version
     });
-  },
-  async proofSet({suiteName, version}) {
-    return getStaticFile({
-      suiteName,
-      fileName: '',
-      version
-    });
   }
 };
 
