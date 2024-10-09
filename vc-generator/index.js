@@ -46,8 +46,7 @@ export async function generateTestData({
   documentLoader,
   verify,
   optionalTests,
-  testVector = validVc,
-  vcVersion = '1.1'
+  testVector = validVc
 } = {}) {
   // if no key was supplied use the eddsa key
   if(!key) {
@@ -63,9 +62,9 @@ export async function generateTestData({
   for(const [id, generator] of vcGenerators) {
     const getFixture = staticFixtures[id];
     if(getFixture) {
-      const staticFixture = getFixture({
+      const staticFixture = await getFixture({
         suiteName,
-        version: vcVersion
+        version: '1.1'
       });
       // if there is a static fixture for this generator and suite use it
       if(staticFixture) {
