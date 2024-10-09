@@ -1,0 +1,46 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    {
+      "@context": {
+        "AlumniCredential": "https://www.example.org/AlumniCredential",
+        "alumniOf": "https://www.example.org/alumniOf"
+      }
+    }
+  ],
+  "id": "urn:uuid:58172aac-d8ba-11ed-83dd-0b3aef56cc33",
+  "type": [
+    "VerifiableCredential",
+    "AlumniCredential"
+  ],
+  "name": "Alumni Credential",
+  "description": "A minimum viable example of a VC 2.0 Alumni Credential.",
+  "issuer": "https://vc.example/issuers/5678",
+  "validFrom": "2023-01-01T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:abcdefgh",
+    "alumniOf": "The School of Examples"
+  },
+  "proof": [
+    {
+      "type": "DataIntegrityProof",
+      "id": "urn:uuid:26329423-bec9-4b2e-88cb-a7c7d9dc4544",
+      "cryptosuite": "eddsa-rdfc-2022",
+      "created": "2023-02-26T22:06:38Z",
+      "verificationMethod": "did:key:z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7#z6MktgKTsu1QhX6QPbyqG6geXdw6FQCZBPq7uQpieWbiQiG7",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "z3MPPHM5VFhWw2teqGvjXDzsrqPcJoruJryZKCfhjpfpMjqgJq2D3whcG23BKnonAyT8c45VK4SfiQfkShFWPGmsi"
+    },
+    {
+      "type": "DataIntegrityProof",
+      "cryptosuite": "eddsa-rdfc-2022",
+      "created": "2023-02-26T22:16:38Z",
+      "verificationMethod": "did:key:z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E#z6MkhWqdDBPojHA7cprTGTt5yHv5yUi1B8cnXn8ReLumkw6E",
+      "proofPurpose": "assertionMethod",
+      "previousProof": [
+        "urn:uuid:38329423-2179-4b2e-88cb-a7c7d9dc4544"
+      ],
+      "proofValue": "z5pV8tTyZ5jyKpxFULw4LvGNE74rL4EbQ8mF4HvDWGdxk9A9ULvqEPSuHg3QezpY4ee4h9teDGBgTFKe3hmJEE64q"
+    }
+  ]
+}
