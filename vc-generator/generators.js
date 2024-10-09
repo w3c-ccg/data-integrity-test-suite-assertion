@@ -14,6 +14,11 @@ const defaultGen = params => params;
 
 // generator categories
 export const generators = {
+  // creates test vectors for Authentication Purpose tests
+  authentication: {
+    invalidDomain,
+    invalidChallenge
+  },
   // creates test vectors for `proof.created` & `proof.expires`
   dates: {
     noCreated,
@@ -22,11 +27,6 @@ export const generators = {
     invalidCreated,
     invalidExpires,
     createdOneYearAgo
-  },
-  // creates test vectors for Authentication Purpose tests
-  authentication: {
-    invalidDomain,
-    invalidChallenge
   },
   // these generators are needed for DI specific tests
   // and maybe be needed in suite specific tests
@@ -40,6 +40,8 @@ export const generators = {
     invalidBaseUrl,
     invalidVm,
     undefinedTerm,
+  },
+  proofChain: {
     previousProofString: defaultGen,
     previousProofFail: defaultGen,
     previousProofArray: defaultGen,
