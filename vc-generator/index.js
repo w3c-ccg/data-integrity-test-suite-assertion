@@ -7,6 +7,7 @@ import {
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {getDefaultKey} from './secret.js';
 import {getSuites} from './cryptosuite.js';
+import {getVcVersion} from './contexts.js';
 import {issueCloned} from './issuer.js';
 import {staticFixtures} from './staticFixtures.js';
 import {validVc} from '../index.js';
@@ -64,7 +65,7 @@ export async function generateTestData({
     if(getFixture) {
       const staticFixture = await getFixture({
         suiteName,
-        version: '1.1'
+        version: getVcVersion(testVector)
       });
       // if there is a static fixture for this generator and suite use it
       if(staticFixture) {

@@ -68,4 +68,19 @@ function addContexts({contexts, map, mutate = id => id}) {
   }
 }
 
-export {contextMap};
+const {
+  id: v1ContextUrl,
+} = structuredClone(namedCredentialsContexts.get('v1'));
+
+function getVcVersion(credential) {
+  const [firstContext] = credential?.['@context'];
+  if(firstContext === v2ContextUrl) {
+    return '2.0';
+  }
+  if(firstContext === v1ContextUrl) {
+    return '1.1';
+  }
+  throw new Error(`Could not determine vcVersion from context ${firstContext}`);
+}
+
+export {contextMap, getVcVersion};
