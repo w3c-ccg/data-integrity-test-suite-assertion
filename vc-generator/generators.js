@@ -11,9 +11,18 @@ const {CredentialIssuancePurpose} = vc;
 
 // default gen just passes params to issueCloned
 const defaultGen = params => params;
+const throwNotImplemented = ({suiteName, generatorName}) => {
+  throw new Error(`Generator ${generatorName} not ` +
+    `implemented for ${suiteName}`);
+};
 
 // generator categories
 export const generators = {
+  // creates test vectors for Authentication Purpose tests
+  authentication: {
+    invalidDomain,
+    invalidChallenge
+  },
   // creates test vectors for `proof.created` & `proof.expires`
   dates: {
     noCreated,
@@ -22,11 +31,6 @@ export const generators = {
     invalidCreated,
     invalidExpires,
     createdOneYearAgo
-  },
-  // creates test vectors for Authentication Purpose tests
-  authentication: {
-    invalidDomain,
-    invalidChallenge
   },
   // these generators are needed for DI specific tests
   // and maybe be needed in suite specific tests
@@ -40,11 +44,14 @@ export const generators = {
     invalidBaseUrl,
     invalidVm,
     undefinedTerm,
-    previousProofString: defaultGen,
-    previousProofFail: defaultGen,
-    previousProofArray: defaultGen,
-    missingPreviousProofString: defaultGen,
-    missingPreviousProofArray: defaultGen,
+  },
+  // tests related previousProof & multiple proofs
+  proofChain: {
+    previousProofString: throwNotImplemented,
+    previousProofFail: throwNotImplemented,
+    previousProofArray: throwNotImplemented,
+    missingPreviousProofString: throwNotImplemented,
+    missingPreviousProofArray: throwNotImplemented,
     proofSet: defaultGen
   },
   // creates a set of shared test vector generators
@@ -219,16 +226,22 @@ export const cleanups = {
  * @param {boolean} optionalTests.expires - Add the date generators.
  * @param {boolean} optionalTests.dates - Add the date generators.
  * @param {boolean} optionalTests.authentication - Add the auth generators?
+ * @param {boolean} optionalTests.proofChain - Add the proofChain generators.
  *
  * @returns {Map<string, Function>} A map of generators.
  */
-export const getGenerators = ({created, authentication, expires, dates}) => {
+export const getGenerators = optionalTests => {
   let entries = Object.entries(generators.mandatory);
-  if(created || expires || dates) {
+  // for backwards compatibility check for these
+  const {created, expires} = optionalTests;
+  if(created || expires) {
     entries = entries.concat(Object.entries(generators.dates));
   }
-  if(authentication) {
-    entries = entries.concat(Object.entries(generators.authentication));
+  for(const key in optionalTests) {
+    // if the key is true and there are generator for it
+    if(optionalTests[key] && (key in generators)) {
+      entries = entries.concat(Object.entries(generators[key]));
+    }
   }
   return new Map(entries);
 };

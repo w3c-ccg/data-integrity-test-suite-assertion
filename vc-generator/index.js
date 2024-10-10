@@ -7,7 +7,9 @@ import {
 } from '@digitalbazaar/eddsa-2022-cryptosuite';
 import {getDefaultKey} from './secret.js';
 import {getSuites} from './cryptosuite.js';
+import {getVcVersion} from './contexts.js';
 import {issueCloned} from './issuer.js';
+import {staticFixtures} from './staticFixtures.js';
 import {validVc} from '../index.js';
 
 const _initCache = () => new Map([
@@ -59,6 +61,18 @@ export async function generateTestData({
   const signer = key.signer();
   const vcGenerators = getGenerators(optionalTests);
   for(const [id, generator] of vcGenerators) {
+    const getFixture = staticFixtures[id];
+    if(getFixture) {
+      const staticFixture = getFixture({
+        suiteName,
+        version: getVcVersion(testVector)
+      });
+      // if there is a static fixture for this generator and suite use it
+      if(staticFixture) {
+        vcCache.get(suiteName).set(id, staticFixture);
+        continue;
+      }
+    }
     // if a generator has a specific setup use it
     // otherwise getSuites is fine
     const setup = setups[id] || getSuites;
@@ -70,6 +84,7 @@ export async function generateTestData({
       verify
     });
     const issuedCredential = await issueCloned(generator({
+      suiteName, generatorName: id,
       suite, suites, selectiveSuite,
       credential, loader: documentLoader
     }));
