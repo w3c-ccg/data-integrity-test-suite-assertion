@@ -1,9 +1,12 @@
 # data-integrity-test-suite-assertion Changelog
 
-## 1.4.1 -
+## 1.5.1 -
+
+### Added
+- Test fixtures can now be provided from static json files in `/inputs`.
 
 ### Fixed
-- previousProof/ProofChain tests now use static test vectors.
+- Tests for `eddsa-rdfc-2022` previousProof/ProofChain now use correct fixtures.
 
 ## 1.4.0 - 2024-10-06
 
