@@ -11,7 +11,7 @@ const {CredentialIssuancePurpose} = vc;
 
 // default gen just passes params to issueCloned
 const defaultGen = params => params;
-const notImplemented = ({suiteName, generatorName}) => {
+const throwNotImplemented = ({suiteName, generatorName}) => {
   throw new Error(`Generator ${generatorName} not ` +
     `implemented for ${suiteName}`);
 };
@@ -47,11 +47,11 @@ export const generators = {
   },
   // tests related previousProof & multiple proofs
   proofChain: {
-    previousProofString: notImplemented,
-    previousProofFail: notImplemented,
-    previousProofArray: notImplemented,
-    missingPreviousProofString: notImplemented,
-    missingPreviousProofArray: notImplemented,
+    previousProofString: throwNotImplemented,
+    previousProofFail: throwNotImplemented,
+    previousProofArray: throwNotImplemented,
+    missingPreviousProofString: throwNotImplemented,
+    missingPreviousProofArray: throwNotImplemented,
     proofSet: defaultGen
   },
   // creates a set of shared test vector generators
