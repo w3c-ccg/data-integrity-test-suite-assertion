@@ -11,8 +11,9 @@ const {CredentialIssuancePurpose} = vc;
 
 // default gen just passes params to issueCloned
 const defaultGen = params => params;
-const notImplemented = ({suiteName}) => {
-  throw new Error(`Generator not implemented for ${suiteName}`);
+const notImplemented = ({suiteName, generatorName}) => {
+  throw new Error(`Generator ${generatorName} not ` +
+    `implemented for ${suiteName}`);
 };
 
 // generator categories
