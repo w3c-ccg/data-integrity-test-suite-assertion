@@ -84,6 +84,7 @@ export async function generateTestData({
       verify
     });
     const issuedCredential = await issueCloned(generator({
+      suiteName, generatorName: id,
       suite, suites, selectiveSuite,
       credential, loader: documentLoader
     }));
