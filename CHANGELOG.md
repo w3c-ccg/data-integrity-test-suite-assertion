@@ -1,6 +1,6 @@
 # data-integrity-test-suite-assertion Changelog
 
-## 1.5.1 -
+## 1.5.0 -
 
 ### Added
 - Test fixtures can now be provided from static json files in `/inputs`.
