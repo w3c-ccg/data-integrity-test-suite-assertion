@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2022-2023 Digital Bazaar, Inc.
+ * Copyright (c) 2022-2024 Digital Bazaar, Inc.
  */
 import {checkKeyType} from './assertions.js';
 import {createRequire} from 'node:module';
@@ -160,6 +160,7 @@ export function checkDataIntegrityProofVerifyErrors({
 }
 // export all assertions
 export * as assertions from './assertions.js';
+export * as fixtures from './fixtures.js';
 export {generators} from './vc-generator/generators.js';
 export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
 export {createDocLoader} from './vc-generator/documentLoader.js';
