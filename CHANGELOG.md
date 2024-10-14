@@ -4,6 +4,7 @@
 
 ### Added
 - Test fixtures can now be provided from static json files in `/inputs`.
+- Library has a new export `fixtures` which exports unsecured credentials.
 
 ### Fixed
 - Tests for `eddsa-rdfc-2022` previousProof/ProofChain now use correct fixtures.
