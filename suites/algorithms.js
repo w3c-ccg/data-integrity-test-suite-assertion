@@ -8,6 +8,10 @@ export function algorithmsAssertions({
   testDescription,
   vendorName,
   credential,
+  features = {
+    authentication: false,
+    proofChain: false
+  }
 }) {
   return describe(testDescription, function() {
     const columnId = testDescription;
@@ -54,78 +58,73 @@ and proof.proofPurpose values is not set, an error MUST be raised.',
           'type', 'proofPurpose', 'verificationMethod');
       }
     });
-    it('If options has a non-null domain item, it MUST be equal to \
-proof.domain or an error MUST be raised.',
-    function() {
-      this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20options%20has%20a%20non%2Dnull%20domain%20item%2C%20it%20MUST%20be%20equal%20to%20proof.domain%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
-      this.test.cell.skipMessage = 'Pending test.';
-      this.skip();
-    });
-    it('If options has a non-null challenge item, it MUST be equal to \
-proof.challenge or an error MUST be raised.',
-    function() {
-      this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20options%20has%20a%20non%2Dnull%20challenge%20item%2C%20it%20MUST%20be%20equal%20to%20proof.challenge%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
-      this.test.cell.skipMessage = 'Pending test.';
-      this.skip();
-    });
-    it('Whenever this algorithm encodes strings, it MUST use UTF-8 encoding.',
+    if(features?.authentication) {
+      it('If options has a non-null domain item, it MUST be equal to \
+  proof.domain or an error MUST be raised.',
       function() {
-        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=(map).-,Whenever%20this%20algorithm%20encodes%20strings%2C%20it%20MUST%20use%20UTF%2D8%20encoding.,-Let%20proof%20be';
-        for(const proof of proofs) {
-          expect(proof.proofValue.isWellFormed()).to.be.true;
-        }
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20options%20has%20a%20non%2Dnull%20domain%20item%2C%20it%20MUST%20be%20equal%20to%20proof.domain%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+        this.test.cell.skipMessage = 'Pending test.';
+        this.skip();
       });
-    it('If a proof with id equal to previousProof does not exist in allProofs, \
-an error MUST be raised.',
-    function() {
-      this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20a%20proof%20with%20id%20equal%20to%20previousProofdoes%20not%20exist%20in%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
-      for(const proof of proofs) {
-        if('previousProof' in proof) {
-          if(typeof proof.previousProof === 'string') {
-            proofs.some(
-              otherProof => otherProof.id == proof.previousProof).
-              should.equal(true,
-                'Expected previousProof ' +
-                    `${proof.previousProof} ` +
-                    'to be the id of another included proof.'
-              );
-          } if(Array.isArray(proof.previousProof)) {
-            for(const previousProof in proof.previousProof) {
+      it('If options has a non-null challenge item, it MUST be equal to \
+  proof.challenge or an error MUST be raised.',
+      function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20options%20has%20a%20non%2Dnull%20challenge%20item%2C%20it%20MUST%20be%20equal%20to%20proof.challenge%20or%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+        this.test.cell.skipMessage = 'Pending test.';
+        this.skip();
+      });
+    }
+    if(features?.proofChain) {
+      it('If a proof with id equal to previousProof does not exist in ' +
+        'allProofs, an error MUST be raised.', function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20a%20proof%20with%20id%20equal%20to%20previousProofdoes%20not%20exist%20in%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+        for(const proof of proofs) {
+          if('previousProof' in proof) {
+            if(typeof proof.previousProof === 'string') {
               proofs.some(
-                otherProof => otherProof.id == previousProof).
+                otherProof => otherProof.id == proof.previousProof).
                 should.equal(true,
                   'Expected previousProof ' +
-                        `${proof.previousProof} ` +
-                        'to be the id of another included proof.'
+                      `${proof.previousProof} ` +
+                      'to be the id of another included proof.'
                 );
+            } if(Array.isArray(proof.previousProof)) {
+              for(const previousProof in proof.previousProof) {
+                proofs.some(
+                  otherProof => otherProof.id == previousProof).
+                  should.equal(true,
+                    'Expected previousProof ' +
+                          `${proof.previousProof} ` +
+                          'to be the id of another included proof.'
+                  );
+              }
             }
           }
         }
-      }
-    });
-    it('If any element of previousProof array has an id attribute \
-that does not match the id attribute of any element of allProofs, \
-an error MUST be raised.',
-    function() {
-      this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20any%20element%20of%20previousProof%20array%20has%20an%20id%20attribute%20that%20does%20not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
-      const previousProofs = [];
-      for(const proof of proofs) {
-        if('previousProof' in proof) {
-          if(typeof proof.previousProof === 'string') {
-            previousProofs.push(proof.previousProof);
-          } if(Array.isArray(proof.previousProof)) {
-            previousProofs.concat(proof.previousProof);
+      });
+      it('If any element of previousProof array has an id attribute' +
+        ' that does not match the id attribute of any element of allProofs,' +
+        ' an error MUST be raised.', function() {
+        this.test.link = 'https://www.w3.org/TR/vc-data-integrity/#:~:text=If%20any%20element%20of%20previousProof%20array%20has%20an%20id%20attribute%20that%20does%20not%20match%20the%20id%20attribute%20of%20any%20element%20of%20allProofs%2C%20an%20error%20MUST%20be%20raised%20and%20SHOULD%20convey%20an%20error%20type%20of%20PROOF_GENERATION_ERROR.';
+        const previousProofs = [];
+        for(const proof of proofs) {
+          if('previousProof' in proof) {
+            if(typeof proof.previousProof === 'string') {
+              previousProofs.push(proof.previousProof);
+            } if(Array.isArray(proof.previousProof)) {
+              previousProofs.concat(proof.previousProof);
+            }
           }
         }
-      }
-      for(const previousProof of previousProofs) {
-        proofs.some(
-          otherProof => otherProof.id == previousProof).should.equal(
-          true,
-          'Expected all previousProof values to be the id of \
-another included proof.'
-        );
-      }
-    });
+        for(const previousProof of previousProofs) {
+          proofs.some(
+            otherProof => otherProof.id == previousProof).should.equal(
+            true,
+            'Expected all previousProof values to be the id of \
+  another included proof.'
+          );
+        }
+      });
+    }
   });
 }

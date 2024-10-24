@@ -163,6 +163,8 @@ export * as assertions from './assertions.js';
 export {generators} from './vc-generator/generators.js';
 export {deriveCloned, issueCloned} from './vc-generator/issuer.js';
 export {createDocLoader} from './vc-generator/documentLoader.js';
+// this is just here for backwards compatitility to avoid a major release
+// FIXME remove this on next MAJOR release
 export {
   dateRegex, expectedMultibasePrefix, isObjectOrArrayOfObjects,
   shouldBeErrorResponse, shouldBeUrl, isStringOrArrayOfStrings,
@@ -170,3 +172,4 @@ export {
   verificationFail
 } from './assertions.js';
 export {createInitialVc} from './helpers.js';
+export {algorithmsAssertions} from './suites/algorithms.js';
