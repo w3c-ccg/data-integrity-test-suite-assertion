@@ -53,7 +53,7 @@ function _runSuite({
       });
       implemented.set(suiteName, {endpoints: [issuer]});
       algorithmsSuite({
-        endpoints: [issuer],
+        implemented,
         tag,
         credential,
         cryptosuiteName: suiteName,

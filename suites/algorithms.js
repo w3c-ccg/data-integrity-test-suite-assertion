@@ -7,9 +7,8 @@ import {createInitialVc} from '../helpers.js';
 const expect = chai.expect;
 
 export function algorithmsSuite({
-  endpoints,
+  implemented,
   testDescription = 'Data Integrity - Algorithms',
-  vendorName,
   credential,
   features = {
     authentication: false,
@@ -17,11 +16,28 @@ export function algorithmsSuite({
   }
 }) {
   return describe(testDescription, function() {
-    const columnId = testDescription;
+    // this will tell the report
+    // to make an interop matrix with this suite
+    this.matrix = true;
+    this.report = true;
+    this.rowLabel = 'Test Name';
+    this.columnLabel = 'Verifier';
+    this.implemented = [];
+    for(const [vendorName, {endpoints}] of implemented) {
+      if(!endpoints) {
+        throw new Error(`Expected ${vendorName} to have endpoints.`);
+      }
+      algorithmsAssert({vendorName, credential, endpoints, features});
+    }
+  });
+}
+
+function algorithmsAssert({vendorName, credential, endpoints, features}) {
+  return describe(vendorName, function() {
     const [issuer] = endpoints;
     beforeEach(function() {
       this.currentTest.cell = {
-        columnId,
+        columnId: vendorName,
         rowId: this.currentTest.title
       };
     });
