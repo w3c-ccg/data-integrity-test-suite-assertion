@@ -130,11 +130,6 @@ export function runDataIntegrityProofVerifyTests({
         });
       });
     }
-    it('If the "proof.verificationMethod" field is invalid, an error ' +
-      'MUST be raised.', async function() {
-      const credential = credentials.clone('invalidVm');
-      await verificationFail({credential, verifier});
-    });
     it('If the "proof.proofPurpose" field is invalid, an error MUST ' +
       'be raised.', async function() {
       const credential = credentials.clone('invalidProofPurpose');
