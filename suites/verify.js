@@ -104,12 +104,32 @@ export function runDataIntegrityProofVerifyTests({
         reason: 'MUST not verify VC w/o "proof.proofPurpose"'
       });
     });
-    it(`If the "proof.type" field is not the string ` +
-      `"${expectedProofType}", an error MUST be raised.`,
-    async function() {
-      const credential = credentials.clone('invalidProofType');
-      await verificationFail({credential, verifier});
-    });
+    // use updated statement for DataIntegrityProof tests
+    if(expectedProofType === 'DataIntegrityProof') {
+      it('The type property MUST contain the string DataIntegrityProof.',
+        async function() {
+          this.test.link = 'https://w3c.github.io/vc-data-integrity/#proofs:~:text=The%20type%20property%20MUST%20contain%20the%20string%20DataIntegrityProof.';
+          const credential = credentials.clone('invalidProofType');
+          await verificationFail({
+            credential,
+            verifier,
+            reason: 'Should not verify VC with invalid "proof.type"'
+          });
+        });
+    } else {
+      // if the expectedProofType if Ed25519Sig etc. use the
+      // deprecated statement
+      it(`If the "proof.type" field is not the string ` +
+        `"${expectedProofType}", an error MUST be raised.`,
+      async function() {
+        const credential = credentials.clone('invalidProofType');
+        await verificationFail({
+          credential,
+          verifier,
+          reason: 'Should not verify VC with invalid "proof.type"'
+        });
+      });
+    }
     it('If the "proof.verificationMethod" field is invalid, an error ' +
       'MUST be raised.', async function() {
       const credential = credentials.clone('invalidVm');
