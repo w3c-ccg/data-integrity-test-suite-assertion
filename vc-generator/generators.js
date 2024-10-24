@@ -308,6 +308,7 @@ function invalidVm({
   suite,
   selectiveSuite,
   credential,
+  //FIXME this generator should support non-string verificationMethods
   mockVM = 'did:key:invalidVm',
   ...args
 }) {
