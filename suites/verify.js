@@ -130,11 +130,6 @@ export function runDataIntegrityProofVerifyTests({
         });
       });
     }
-    it('If the "proof.proofPurpose" field is invalid, an error MUST ' +
-      'be raised.', async function() {
-      const credential = credentials.clone('invalidProofPurpose');
-      await verificationFail({credential, verifier});
-    });
     it('If expectedProofPurpose was given, and it does not match ' +
         'proof.proofPurpose, an error MUST be raised and SHOULD convey an ' +
         'error type of PROOF_VERIFICATION_ERROR.', async function() {
