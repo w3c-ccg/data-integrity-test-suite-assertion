@@ -5,6 +5,7 @@ import chai from 'chai';
 import jsonld from 'jsonld';
 
 const should = chai.should();
+const {expect} = chai;
 // RegExp with bs58 characters in it
 const bs58 =
   /^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/;
@@ -297,4 +298,36 @@ export function shouldHaveProofValue({proof, expectedPrefix, encodingName}) {
   isValidMultibaseEncoded(proof.proofValue, expectedPrefix).should.equal(
     true,
     `Expected "proof.proofValue" to be a valid ${encodingName} value`);
+}
+
+export async function shouldBeProofValue({credentials, verifier}) {
+  expect(credentials, 'Expected test data to be generated.').to.exist;
+  expect(credentials.clone('issuedVc'), 'Expected a valid Vc to be issued.').
+    to.exist;
+  // proofValue is added after signing so we can
+  // safely delete it for this test
+  const noProofValue = credentials.clone('issuedVc');
+  delete noProofValue.proof.proofValue;
+  await verificationFail({
+    credential: noProofValue,
+    verifier,
+    reason: 'MUST not verify VC with no "proofValue".'
+  });
+  // null should be an invalid proofValue for almost any proof
+  const nullProofValue = credentials.clone('issuedVc');
+  nullProofValue.proof.proofValue = null;
+  await verificationFail({
+    credential: nullProofValue,
+    verifier,
+    reason: 'MUST not verify VC with "proofValue" null.'
+  });
+  const noProofValueHeader = credentials.clone('issuedVc');
+  // Remove the multibase header to cause validation error
+  noProofValueHeader.proof.proofValue = noProofValueHeader.proof.proofValue.
+    slice(1);
+  await verificationFail({
+    credential: noProofValueHeader,
+    verifier,
+    reason: 'MUST not verify VC with invalid multibase header on "proofValue"'
+  });
 }

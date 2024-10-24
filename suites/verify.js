@@ -1,8 +1,11 @@
 /*!
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
-import {verificationFail, verificationSuccess} from '../assertions.js';
-import {expect} from 'chai';
+import {
+  shouldBeProofValue,
+  verificationFail,
+  verificationSuccess
+} from '../assertions.js';
 
 export function runDataIntegrityProofVerifyTests({
   endpoints,
@@ -309,37 +312,5 @@ export function runDataIntegrityProofVerifyTests({
 
       });
     }
-  });
-}
-
-async function shouldBeProofValue({credentials, verifier}) {
-  expect(credentials, 'Expected test data to be generated.').to.exist;
-  expect(credentials.clone('issuedVc'), 'Expected a valid Vc to be issued.').
-    to.exist;
-  // proofValue is added after signing so we can
-  // safely delete it for this test
-  const noProofValue = credentials.clone('issuedVc');
-  delete noProofValue.proof.proofValue;
-  await verificationFail({
-    credential: noProofValue,
-    verifier,
-    reason: 'MUST not verify VC with no "proofValue".'
-  });
-  // null should be an invalid proofValue for almost any proof
-  const nullProofValue = credentials.clone('issuedVc');
-  nullProofValue.proof.proofValue = null;
-  await verificationFail({
-    credential: nullProofValue,
-    verifier,
-    reason: 'MUST not verify VC with "proofValue" null.'
-  });
-  const noProofValueHeader = credentials.clone('issuedVc');
-  // Remove the multibase header to cause validation error
-  noProofValueHeader.proof.proofValue = noProofValueHeader.proof.proofValue.
-    slice(1);
-  await verificationFail({
-    credential: noProofValueHeader,
-    verifier,
-    reason: 'MUST not verify VC with invalid multibase header on "proofValue"'
   });
 }
