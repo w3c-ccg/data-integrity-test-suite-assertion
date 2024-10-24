@@ -172,4 +172,4 @@ export {
   verificationFail
 } from './assertions.js';
 export {createInitialVc} from './helpers.js';
-export {algorithmsAssertions} from './suites/algorithms.js';
+export {algorithmsSuite} from './suites/algorithms.js';

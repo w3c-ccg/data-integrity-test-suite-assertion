@@ -1,11 +1,14 @@
+/*!
+ * Copyright (c) 2024 Digital Bazaar, Inc.
+ */
 import chai from 'chai';
 import {createInitialVc} from '../helpers.js';
 
 const expect = chai.expect;
 
-export function algorithmsAssertions({
+export function algorithmsSuite({
   endpoints,
-  testDescription,
+  testDescription = 'Data Integrity - Algorithms',
   vendorName,
   credential,
   features = {
