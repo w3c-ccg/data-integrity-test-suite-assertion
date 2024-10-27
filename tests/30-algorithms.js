@@ -11,7 +11,7 @@ import {versionedCredentials} from './fixtures/credentials/index.js';
 const tag = 'Test-Issuer-Valid';
 const tags = [tag];
 
-describe('should issue all suites', function() {
+describe('should run with all suites', function() {
   for(const testDataOptions of cryptosuites) {
     for(const [
       vcVersion,
