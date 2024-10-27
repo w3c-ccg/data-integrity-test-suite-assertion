@@ -21,7 +21,7 @@ export function algorithmsSuite({
     this.matrix = true;
     this.report = true;
     this.rowLabel = 'Test Name';
-    this.columnLabel = 'Verifier';
+    this.columnLabel = 'Implementation';
     this.implemented = [];
     for(const [vendorName, {endpoints}] of implemented) {
       if(!endpoints) {
