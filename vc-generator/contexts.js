@@ -9,16 +9,20 @@ import dataIntegrityCtx from '@digitalbazaar/data-integrity-context';
 import didCtx from '@digitalcredentials/did-context';
 import multikeyCtx from '@digitalbazaar/multikey-context';
 
-const contextMap = new Map(credentialsContexts);
-addContexts({
-  contexts: dataIntegrityCtx.contexts,
-  map: contextMap
-});
+// setup the context map;
+export const contextMap = new Map();
+// add all the contexts here
+addContexts({contexts: dataIntegrityCtx.contexts});
+addContexts({contexts: didCtx.contexts});
+addContexts({contexts: credentialsContexts});
 
 //FIXME this really should be done in separate documentLoaders
 //so that other tests do not get the modified context
 //FIXME this also should be a structuredClone of the v2 context
 //which replaces the original jsonld context in the contextMap
+const {
+  id: v1ContextUrl,
+} = structuredClone(namedCredentialsContexts.get('v1'));
 const {
   id: v2ContextUrl,
   context: v2Context
@@ -57,27 +61,19 @@ contextMap.set(
   v2ContextUrl,
   v2Context
 );
-addContexts({
-  contexts: didCtx.contexts,
-  map: contextMap
-});
 
 function copyTerm({context, oldTerm, newTerm}) {
   const ctx = context['@context'];
   ctx[newTerm] = structuredClone(ctx[oldTerm]);
 }
 
-function addContexts({contexts, map, mutate = id => id}) {
+function addContexts({contexts, map = contextMap, mutate = id => id}) {
   for(const [key, value] of contexts) {
     map.set(key, mutate(structuredClone(value)));
   }
 }
 
-const {
-  id: v1ContextUrl,
-} = structuredClone(namedCredentialsContexts.get('v1'));
-
-function getVcVersion(credential) {
+export function getVcVersion(credential) {
   const [firstContext] = credential?.['@context'];
   if(firstContext === v2ContextUrl) {
     return '2.0';
@@ -87,5 +83,3 @@ function getVcVersion(credential) {
   }
   throw new Error(`Could not determine vcVersion from context ${firstContext}`);
 }
-
-export {contextMap, getVcVersion};
