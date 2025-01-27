@@ -41,7 +41,7 @@ export async function issueCloned({
   }
   return deriveCloned({
     verifiableCredential,
-    documentLoader: loader,
+    loader,
     purpose,
     selectiveSuite
   });
