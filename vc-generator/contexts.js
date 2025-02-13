@@ -22,11 +22,11 @@ addContexts({contexts: credentialsContexts});
 //which replaces the original jsonld context in the contextMap
 const {
   id: v1ContextUrl,
-} = structuredClone(namedCredentialsContexts.get('v1'));
+} = namedCredentialsContexts.get('v1');
 const {
   id: v2ContextUrl,
-  context: v2Context
-} = structuredClone(namedCredentialsContexts.get('v2'));
+} = namedCredentialsContexts.get('v2');
+const v2Context = structuredClone(namedCredentialsContexts.get('v2').context);
 copyTerm({
   context: v2Context,
   oldTerm: 'DataIntegrityProof',
