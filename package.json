@@ -31,7 +31,7 @@
     "eslint": "^8.43.0",
     "eslint-config-digitalbazaar": "^5.0.1",
     "eslint-plugin-jsdoc": "^46.4.0",
-    "mocha": "^10.2.0"
+    "mocha": "^11.7.6"
   },
   "engines": {
     "node": ">= 18"
@@ -49,6 +49,6 @@
     "jsonld": "^8.3.2",
     "jsonld-document-loader": "^2.0.0",
     "jsonld-signatures": "^11.2.1",
-    "uuid": "^9.0.0"
+    "uuid": "^14.0.1"
   }
 }
