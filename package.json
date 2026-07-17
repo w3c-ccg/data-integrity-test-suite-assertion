@@ -48,7 +48,6 @@
     "@digitalcredentials/did-context": "^1.0.0",
     "jsonld": "^8.3.2",
     "jsonld-document-loader": "^2.0.0",
-    "jsonld-signatures": "^11.2.1",
-    "uuid": "^14.0.1"
+    "jsonld-signatures": "^11.2.1"
   }
 }
