@@ -1,7 +1,7 @@
 /*!
  * Copyright (c) 2024 Digital Bazaar, Inc.
  */
-import {v4 as uuidv4} from 'uuid';
+import {randomUUID} from 'node:crypto';
 
 /**
  * Calls on an issuer to create a Vc for the test.
@@ -19,7 +19,7 @@ export async function createInitialVc({issuer, credential, options} = {}) {
   const {settings: {id: issuerId, options: issuerOptions}} = issuer;
   const _credential = structuredClone(credential);
   // set a fresh id on the credential
-  _credential.id = `urn:uuid:${uuidv4()}`;
+  _credential.id = `urn:uuid:${randomUUID()}`;
   // use the issuer's id for the issuer property
   _credential.issuer = issuerId;
   const {data, error} = await issuer.post({json: {
