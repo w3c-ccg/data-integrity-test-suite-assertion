@@ -59,6 +59,42 @@ export class MockIssuer {
   }
 }
 
+// the underlying vc / data-integrity / jsonld-signatures libraries verify
+// each proof's signature independently, but do not check that a
+// `previousProof` reference points to a proof that exists and itself
+// verified; that chain requirement is enforced here instead
+function _checkPreviousProofs({credential, result}) {
+  if(!result.verified) {
+    return result;
+  }
+  const allProofs = Array.isArray(credential.proof) ?
+    credential.proof : [credential.proof];
+  const verifiedById = new Map();
+  allProofs.forEach((proof, index) => {
+    if(proof.id) {
+      verifiedById.set(proof.id, result.results[index]?.verified === true);
+    }
+  });
+  for(const proof of allProofs) {
+    if(!('previousProof' in proof)) {
+      continue;
+    }
+    const previousProofIds = Array.isArray(proof.previousProof) ?
+      proof.previousProof : [proof.previousProof];
+    for(const previousProofId of previousProofIds) {
+      if(verifiedById.get(previousProofId) !== true) {
+        result.verified = false;
+        result.error = new Error(
+          `Proof with id "${previousProofId}" from previousProof does not ` +
+          'exist in allProofs or did not verify.'
+        );
+        return result;
+      }
+    }
+  }
+  return result;
+}
+
 class MockVerifier {
   constructor({
     tags,
@@ -84,6 +120,7 @@ class MockVerifier {
       documentLoader: this.documentLoader,
       ...options
     });
+    _checkPreviousProofs({credential: verifiableCredential, result});
     if(result.verified) {
       return {data: {...result}, result: {status: 200}, statusCode: 200};
     }
