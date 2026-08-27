@@ -34,7 +34,7 @@
     "mocha": "^11.7.6"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "dependencies": {
     "@digitalbazaar/credentials-context": "^3.1.0",
